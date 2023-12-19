@@ -1,13 +1,18 @@
 from docxcompose.properties import CustomProperties
+from jproperties import Properties
 from docx2pdf import convert
 from docx import Document
 import pandas as pd
 
+configs = Properties()
+with open('env/prod.properties', 'rb') as read_prop:
+    configs.load(read_prop)
+
 # Path constructions
-resource_path = 'res/'
-output_path = 'output/'
-excel_file_path = resource_path + 'Offers.xlsx'
-base_document_name = 'Recht om te vertegenwoordigen'
+resource_path = configs.get("path.resource").data
+output_path = configs.get("path.output").data
+excel_file_path = resource_path + configs.get("base.excel.offers").data
+base_document_name = configs.get("base.word.template").data
 word_template_path = resource_path + base_document_name + '.docx'
 base_output_document_path = output_path + base_document_name
 
