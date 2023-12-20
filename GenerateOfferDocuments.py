@@ -4,6 +4,7 @@ from docx2pdf import convert
 from docx import Document
 import pandas as pd
 
+# Fetch properties
 configs = Properties()
 with open('env/prod.properties', 'rb') as read_prop:
     configs.load(read_prop)
@@ -34,7 +35,8 @@ def _main():
             for (column_name_prov, column_data_prov) in new_data_frame_provider.items():
                 CustomProperties(document).update(column_name_prov, row_prov[column_name_prov])
                 last_row_prov = row_prov
-                # improvements: throw exception line count > 1!
+            if index_prov > 0:
+                raise ValueError(f"provider count in " + excel_offers_provider + " is supposed to be only 1, got more")
         for (column_name_cust, column_data_cust) in new_data_frame_customer.items():
             CustomProperties(document).update(column_name_cust, row_cust[column_name_cust])
         # For each row (offer)...
@@ -45,29 +47,30 @@ def _main():
         log_data_frame = move_row_to_log(index_cust, row_cust, new_data_frame_customer, log_data_frame)
 
 
-def move_row_to_log(index_cust, row_cust, new_data_frame_customer, log_data_frame):
+def move_row_to_log(index, row, data_frame, log_data_frame):
     # operation succeeded, append row to 'log' + drop row from 'new'
-    log_data_frame = pd.concat([log_data_frame, row_cust.to_frame().T], axis='index', ignore_index=True)
+    log_data_frame = pd.concat([log_data_frame, row.to_frame().T], axis='index', ignore_index=True)
     log_data_frame.reindex()
-    new_data_frame_customer.drop(labels=[index_cust], axis='index', inplace=True)
+    data_frame.drop(labels=[index], axis='index', inplace=True)
 
     with pd.ExcelWriter(excel_offers_log) as log_writer:
         log_data_frame.to_excel(log_writer, engine='xlsxwriter', sheet_name='log', index=False)
     with pd.ExcelWriter(excel_offers_customer) as cust_writer:
-        new_data_frame_customer.to_excel(cust_writer, engine='xlsxwriter', sheet_name='new', index=False)
+        data_frame.to_excel(cust_writer, engine='xlsxwriter', sheet_name='new', index=False)
     return log_data_frame
 
 
-def convert_to_pdf(base_document_to_save):
-    save_as_docx = base_document_to_save + ".docx"
-    save_as_pdf = base_document_to_save + ".pdf"
+def convert_to_pdf(base_document):
+    save_as_docx = base_document + ".docx"
+    save_as_pdf = base_document + ".pdf"
+    # Convert the output
     convert(save_as_docx, save_as_pdf)
     print("Word file: " + save_as_docx)
-    print("has been converted to Pdf file: " + save_as_pdf)
+    print("converted to Pdf file: " + save_as_pdf)
 
 
-def save_updated_document(document, base_document_to_save):
-    save_as_docx = base_document_to_save + ".docx"
+def save_updated_document(document, base_document):
+    save_as_docx = base_document + ".docx"
     # Save the output
     document.save(save_as_docx)
     print("Word file " + save_as_docx + " metadata is updated")
