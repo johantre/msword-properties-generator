@@ -11,7 +11,9 @@ with open('env/prod.properties', 'rb') as read_prop:
 # Path constructions
 resource_path = configs.get("path.resource").data
 output_path = configs.get("path.output").data
-excel_file_path = resource_path + configs.get("base.excel.offers").data
+excel_offers_log = resource_path + configs.get("base.excel.offers.log").data
+excel_offers_provider = resource_path + configs.get("base.excel.offers.provider").data
+excel_offers_customer = resource_path + configs.get("base.excel.offers.customer").data
 base_document_name = configs.get("base.word.template").data
 word_template_path = resource_path + base_document_name + '.docx'
 base_output_document_path = output_path + base_document_name
@@ -20,32 +22,39 @@ base_output_document_path = output_path + base_document_name
 def _main():
     document = Document(word_template_path)
 
-    # Read the Excel file into a DataFrame
-    new_data_frame = pd.read_excel(excel_file_path, 'new')
-    log_data_frame = pd.read_excel(excel_file_path, 'log')
+    # Read the Excel files into a DataFrames
+    log_data_frame = pd.read_excel(excel_offers_log, 'log')
+    new_data_frame_provider = pd.read_excel(excel_offers_provider, 'new')
+    new_data_frame_customer = pd.read_excel(excel_offers_customer, 'new')
 
     # Each row = new offer docx + pdf
-    for index, row in new_data_frame.iterrows():
-        for (column_name, column_data) in new_data_frame.items():
-            property_data = row[column_name]
-            CustomProperties(document).update(column_name, property_data)
+    for (index_cust, row_cust) in new_data_frame_customer.iterrows():
+        last_row_prov = ""    # to initialise w correct type?
+        for (index_prov, row_prov) in new_data_frame_provider.iterrows():
+            for (column_name_prov, column_data_prov) in new_data_frame_provider.items():
+                CustomProperties(document).update(column_name_prov, row_prov[column_name_prov])
+                last_row_prov = row_prov
+                # improvements: throw exception line count > 1!
+        for (column_name_cust, column_data_cust) in new_data_frame_customer.items():
+            CustomProperties(document).update(column_name_cust, row_cust[column_name_cust])
         # For each row (offer)...
-        base_document_to_save = build_base_document_to_save(row)
+        base_document_to_save = build_base_document_to_save(last_row_prov, row_cust)
         save_updated_document(document, base_document_to_save)
         convert_to_pdf(base_document_to_save)
         # Update log sheet w fresh offer
-        log_data_frame = move_row_to_sheet(index, row, new_data_frame, log_data_frame)
-
-    with pd.ExcelWriter(excel_file_path) as writer:
-        new_data_frame.to_excel(writer, engine='xlsxwriter', sheet_name='new', index=False)
-        log_data_frame.to_excel(writer, engine='xlsxwriter', sheet_name='log', index=False)
+        log_data_frame = move_row_to_log(index_cust, row_cust, new_data_frame_customer, log_data_frame)
 
 
-def move_row_to_sheet(index, row, new_data_frame, log_data_frame):
+def move_row_to_log(index_cust, row_cust, new_data_frame_customer, log_data_frame):
     # operation succeeded, append row to 'log' + drop row from 'new'
-    log_data_frame = pd.concat([log_data_frame, row.to_frame().T], axis='index', ignore_index=True)
+    log_data_frame = pd.concat([log_data_frame, row_cust.to_frame().T], axis='index', ignore_index=True)
     log_data_frame.reindex()
-    new_data_frame.drop(labels=[index], axis='index', inplace=True)
+    new_data_frame_customer.drop(labels=[index_cust], axis='index', inplace=True)
+
+    with pd.ExcelWriter(excel_offers_log) as log_writer:
+        log_data_frame.to_excel(log_writer, engine='xlsxwriter', sheet_name='log', index=False)
+    with pd.ExcelWriter(excel_offers_customer) as cust_writer:
+        new_data_frame_customer.to_excel(cust_writer, engine='xlsxwriter', sheet_name='new', index=False)
     return log_data_frame
 
 
@@ -64,11 +73,11 @@ def save_updated_document(document, base_document_to_save):
     print("Word file " + save_as_docx + " metadata is updated")
 
 
-def build_base_document_to_save(row):
-    leverancier_naam = row["Leverancier Naam"]
-    klant_naam = row["Klant Naam"]
-    klant_job_title = row["Klant JobTitle"]
-    klant_job_reference = row["Klant JobReference"]
+def build_base_document_to_save(row_prov, row_cust):
+    leverancier_naam = row_prov["Leverancier Naam"]
+    klant_naam = row_cust["Klant Naam"]
+    klant_job_title = row_cust["Klant JobTitle"]
+    klant_job_reference = row_cust["Klant JobReference"]
     base_document = (base_output_document_path + " - " + leverancier_naam + " - " +
                      klant_naam + " - " + klant_job_title + " - " + klant_job_reference)
     return base_document
