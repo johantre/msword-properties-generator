@@ -77,10 +77,10 @@ def save_updated_document(document, base_document):
 
 
 def build_base_document_to_save(row_prov, row_cust):
-    leverancier_naam = row_prov["Leverancier Naam"]
-    klant_naam = row_cust["Klant Naam"]
-    klant_job_title = row_cust["Klant JobTitle"]
-    klant_job_reference = row_cust["Klant JobReference"]
+    leverancier_naam = str(row_prov["Leverancier Naam"]).strip()
+    klant_naam = str(row_cust["Klant Naam"]).strip()
+    klant_job_title = str(row_cust["Klant JobTitle"]).strip()
+    klant_job_reference = str(row_cust["Klant JobReference"]).strip()
     base_document = (base_output_document_path + " - " + leverancier_naam + " - " +
                      klant_naam + " - " + klant_job_title + " - " + klant_job_reference)
     return base_document
