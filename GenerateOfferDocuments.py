@@ -105,7 +105,7 @@ def _main(verbose=False):
         customers_data_frame.drop(labels=[index_cust], axis='index', inplace=True)
 
         recipient_email = 'johan_tre@hotmail.com'
-        generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
+        generated_files = [base_document_to_save + ".docx"]
 
         send_email(generated_files, recipient_email)
 
