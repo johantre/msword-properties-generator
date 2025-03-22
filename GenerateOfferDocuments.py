@@ -5,17 +5,15 @@ from docx import Document
 from lxml import etree as ET
 import pandas as pd
 import subprocess
+import argparse
 import tempfile
 import logging
 import smtplib
 import zipfile
 import shutil
+import sys
 import re
 import os
-
-
-#logging
-logging.basicConfig(level=logging.INFO, filename='offer_generation.log', format='%(asctime)s %(levelname)s %(message)s')
 
 # Fetch properties
 try:
@@ -23,7 +21,7 @@ try:
     with open('env/prod.properties', 'rb') as read_prop:
         configs.load(read_prop)
 except (FileNotFoundError, Exception) as e:
-    logging.error(f"Error reading properties file: {e}")
+    logging.error(f"❌Error reading properties file: {e}")
     raise SystemExit(e)
 
 # Mail constructions
@@ -49,8 +47,31 @@ base_document_image_alt_text_right =  configs.get("base.word.template.image_alt_
 word_template_path =  os.path.join(resource_path, base_document_name + '.docx')
 base_output_document_path = os.path.join(output_path, base_document_name)
 
+# Remove any existing handlers explicitly:
+handlers = logging.root.handlers[:]
+for handler in handlers:
+    logging.root.removeHandler(handler)
 
-def _main():
+# Explicitly set up root logger clearly once, explicitly:
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
+# Now all logging calls explicitly will appear clearly:
+logging.debug("🐞 Explicit debug from root setup. Explicitly visible now?")
+logging.info("✅ Explicit info from root setup explicitly clearly visible now.")
+
+
+def _main(verbose=False):
+    logging.debug("🐞 Explicit debug logging clearly enabled.")
+    logging.info("ℹ️ Explicit info logging clearly visible.")
+    logging.warning("⚠️ Explicit warning logging clearly shown.")
+    logging.error("❌ Explicit error logging clearly available.")
+    logging.critical("🔥 Explicit critical logging clearly activated.")
+    logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
+
     # Read the Excel files into a DataFrames
     log_data_frame = safely_read_excel(xls_offers_log, xls_offers_log_sheetname, "offers log")
 
@@ -206,7 +227,7 @@ def repack_docx(extracted_dir, base_document):
 def create_sanitized_replacements(excel_filepath, sheet_name):
     df = pd.read_excel(excel_filepath, sheet_name=sheet_name, header=0)
     if df.empty:
-        logging.warning(f"The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data tor process. Please verify the contents.")
+        logging.warning(f"⚠️The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data tor process. Please verify the contents.")
         sanitized_dict = {
             sanitize_spaces_to_variable_name(column_name): ''
             for column_name in df.columns
@@ -227,6 +248,8 @@ def replace_direct_text(document, replacements):
             for old, new in replacements.items():
                 if old in run.text:
                     run.text = run.text.replace(old, new)
+                    logging.info(f"ℹ️'{old}' successfully replaced by '{new}' in target file in paragraphs")
+
     # Replace in paragraphs
     for paragraph in document.paragraphs:
         replace_in_paragraph(paragraph, replacements)
@@ -236,6 +259,7 @@ def replace_direct_text(document, replacements):
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     replace_in_paragraph(paragraph, replacements)
+                    logging.info(f"ℹ️'{replacements}' in target file successfully replaced in tables")
 
 def replace_images(document):
     replace_images_by_alt_text(document, base_document_image_alt_text_left, image_file_path)
@@ -253,7 +277,9 @@ def replace_images_by_alt_text(doc, alt_text, new_image_path):
             replaced = True
             pass
     if not replaced:
-        logging.warning(f"No image found with alt_text '{alt_text}'")
+        logging.warning(f"⚠️No image found with alt_text '{alt_text}'")
+    else:
+        logging.info(f"ℹ️Image with alt_text '{alt_text}' in target file successfully replaced")
 
 
 def save_to_excel(data_frame, log_data_frame):
@@ -270,17 +296,19 @@ def safely_read_excel(excel_file, sheet_name, description):
     try:
         return pd.read_excel(excel_file, sheet_name)
     except ValueError as e:
-        error_msg = f"ValueError occurred reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
+        error_msg = f"❌ValueError occurred reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
         logging.error(error_msg)
         raise
     except Exception as e:
-        error_msg = f"Unexpected error reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
+        error_msg = f"❌Unexpected error reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
         logging.error(error_msg)
         raise
 
 
 def convert_to_pdf(base_document):
     convert_from_docx = base_document + ".docx"
+    save_as_pdf = base_document + ".pdf"
+
     if not os.path.exists(output_path):
         os.makedirs(output_path)
     try:
@@ -293,8 +321,10 @@ def convert_to_pdf(base_document):
             output_path,
             convert_from_docx
         ], check=True)
+        logging.info("ℹ️Word file: " + convert_from_docx)
+        logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf)
     except subprocess.CalledProcessError as e:
-        logging.error(f"Could not convert PDF: {e}")
+        logging.error(f"❌Could not convert PDF: {e}")
 
 def convert_to_pdf_traditional(base_document):
     save_as_docx = base_document + ".docx"
@@ -302,13 +332,12 @@ def convert_to_pdf_traditional(base_document):
     try:
         # Convert the output
         convert(save_as_docx, save_as_pdf)
-        logging.info("Word file: " + save_as_docx)
-        logging.info("converted to Pdf file: " + save_as_pdf)
-        logging.info(f"Successfully converted {save_as_docx} to PDF")
+        logging.info("ℹ️Word file: " + save_as_docx)
+        logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf)
     except Exception as e:
-        logging.error(f"Failed to convert {save_as_docx} to PDF: {e}")
+        logging.error(f"❌Failed to convert {save_as_docx} to PDF: {e}")
         if os.path.exists(save_as_docx):  # to avoid stale files
-            logging.info(f"Cleaning up incomplete conversion file {save_as_docx}")
+            logging.info(f"ℹ️Cleaning up incomplete conversion file {save_as_docx}")
             os.remove(save_as_docx)
         raise
 
@@ -340,4 +369,10 @@ def build_base_document_to_save(row_prov, row_cust):
 
 
 if __name__ == '__main__':
-    _main()
+    # Parse command-line arguments clearly here
+    parser = argparse.ArgumentParser(description="Generate Offer Documents with optional verbose logging.")
+    parser.add_argument('-v','--verbose', '-v', action='store_true', help='Enable clear verbose debug-level logs.')
+    args = parser.parse_args()
+
+    _main(verbose=args.verbose)
+
