@@ -3,7 +3,7 @@ name: Send Email on Update
 on:
   push:
     paths:
-      - '/res/OffersCustomers.xlsx'  # Trigger workflow on specific file update
+      - '**/OffersCustomer.xlsx'  # Trigger workflow on specific file update
 
 jobs:
   send_email_job:
