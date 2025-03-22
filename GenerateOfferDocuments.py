@@ -129,15 +129,14 @@ def send_email(generated_files, email_address):
     email_message.set_content(email_body)
 
     for filepath in generated_files:
+        abs_full_path = os.path.abspath(filepath)
         if os.path.exists(filepath):
-            abs_full_path = os.path.abspath(filepath)
             logging.info(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
         else:
-            abs_full_path = os.path.abspath(filepath)
-            raise ValueError(f"❌File at location '{filepath}' not found, at absolute path {abs_full_path}!")
+            logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
         file_basename = os.path.basename(filepath)
-        with open(filepath, 'rb') as file:
+        with open(abs_full_path, 'rb') as file:
             file_data = file.read()
 
             # Choosing the right MIME type explicitly for each file
