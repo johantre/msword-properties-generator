@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '**/OffersCustomer.xlsx'  # Trigger workflow on specific file update
+  workflow_dispatch:
 
 jobs:
   send_email_job:
