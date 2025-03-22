@@ -133,7 +133,8 @@ def send_email(generated_files, email_address):
             abs_full_path = os.path.abspath(filepath)
             logging.info(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
         else:
-            raise ValueError(f"❌File at location '{filepath}' not found!")
+            abs_full_path = os.path.abspath(filepath)
+            raise ValueError(f"❌File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
         file_basename = os.path.basename(filepath)
         with open(filepath, 'rb') as file:
