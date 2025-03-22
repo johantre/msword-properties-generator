@@ -105,7 +105,7 @@ def _main(verbose=False):
         customers_data_frame.drop(labels=[index_cust], axis='index', inplace=True)
 
         recipient_email = 'johan_tre@hotmail.com'
-        generated_files = [base_document_to_save + ".docx"]
+        generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
 
         send_email(generated_files, recipient_email)
 
@@ -317,6 +317,10 @@ def convert_to_pdf(base_document):
 
     if not os.path.exists(output_path):
         os.makedirs(output_path)
+    abs_full_path_convert_from_docx = os.path.abspath(convert_from_docx)
+    abs_full_path_save_as_pdf = os.path.abspath(save_as_pdf)
+    abs_output_path = os.path.abspath(output_path)
+
     try:
         subprocess.run([
             'soffice',
@@ -327,10 +331,17 @@ def convert_to_pdf(base_document):
             output_path,
             convert_from_docx
         ], check=True)
-        abs_full_path_convert_from_docx = os.path.abspath(convert_from_docx)
-        abs_full_path_save_as_pdf = os.path.abspath(save_as_pdf)
         logging.info("ℹ️Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
         logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
+        files = os.listdir(abs_output_path)
+        logging.info(f"📂 Explicitly listing files from '{abs_output_path}':")
+        if files:
+            for file in files:
+                logging.info(f"    - {file}")
+        else:
+            logging.warning(f"📭 Directory '{abs_output_path}' explicitly exists but is empty!")
+    except FileNotFoundError:
+        logging.error(f"🚨 Directory '{abs_output_path}' not found!")
     except subprocess.CalledProcessError as e:
         logging.error(f"❌Could not convert PDF: {e}")
 
