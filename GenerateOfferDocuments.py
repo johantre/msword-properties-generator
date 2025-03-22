@@ -59,17 +59,7 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 
-# Now all logging calls explicitly will appear clearly:
-logging.debug("🐞 Explicit debug from root setup. Explicitly visible now?")
-logging.info("✅ Explicit info from root setup explicitly clearly visible now.")
-
-
 def _main(verbose=False):
-    logging.debug("🐞 Explicit debug logging clearly enabled.")
-    logging.info("ℹ️ Explicit info logging clearly visible.")
-    logging.warning("⚠️ Explicit warning logging clearly shown.")
-    logging.error("❌ Explicit error logging clearly available.")
-    logging.critical("🔥 Explicit critical logging clearly activated.")
     logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
 
     # Read the Excel files into a DataFrames
