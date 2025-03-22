@@ -1,7 +1,10 @@
-jproperties~=2.1.2
-docxcompose~=1.4.0
-docx2pdf~=0.1.8
-pandas~=2.2.3
-docx~=0.2.4
-python-docx~=1.1.2
-lxml~=5.3.1
+pandas
+openpyxl
+numpy
+lxml
+pillow
+pytz
+six
+jproperties
+docx2pdf
+python-docx
