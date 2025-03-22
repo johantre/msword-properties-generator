@@ -28,10 +28,14 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-          
+
       - name: Print Java installation directory
         run: |
           echo "Java installation directory: $JAVA_HOME"
+
+      - name: Verify Java installation
+        run: |
+          java -version
         
       # 🔥 NEW STEP: Explicitly install LibreOffice clearly
       - name: Install LibreOffice Dependency (soffice)
@@ -46,6 +50,11 @@ jobs:
         run: |
           which soffice
           soffice --version
+
+      - name: Print LibreOffice Java configuration
+        run: |
+          libreoffice --env:JAVA_HOME=$JAVA_HOME --version
+
       - name: Enable Debugging
         run: |
           echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
