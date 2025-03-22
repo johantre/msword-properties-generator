@@ -30,7 +30,8 @@ jobs:
           java-version: '11'
           
       - name: Print Java installation directory
-        run: echo "Java installation directory: $JAVA_HOME"
+        run: |
+          echo "Java installation directory: $JAVA_HOME"
         
       # 🔥 NEW STEP: Explicitly install LibreOffice clearly
       - name: Install LibreOffice Dependency (soffice)
