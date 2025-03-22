@@ -129,6 +129,12 @@ def send_email(generated_files, email_address):
     email_message.set_content(email_body)
 
     for filepath in generated_files:
+        if os.path.exists(filepath):
+            abs_full_path = os.path.abspath(filepath)
+            logging.info(f"ℹ️File at location {filepath} found, at absolute path {abs_full_path}")
+        else:
+            raise ValueError(f"❌File at location {filepath} not found!")
+
         file_basename = os.path.basename(filepath)
         with open(filepath, 'rb') as file:
             file_data = file.read()
@@ -163,7 +169,7 @@ def send_email(generated_files, email_address):
 def set_custom_properties(extracted_dir, provider_data_frame, row_cust):
     # First validate correct provider row count
     if len(provider_data_frame) != 1:
-        raise ValueError(f"Provider count in {xls_offers_provider} must be exactly 1, got {len(provider_data_frame)}")
+        raise ValueError(f"❌Provider count in {xls_offers_provider} must be exactly 1, got {len(provider_data_frame)}")
     # Now iterate once explicitly since validated
     row_prov = provider_data_frame.iloc[0]
     for column_name_prov in provider_data_frame.columns:
@@ -321,8 +327,10 @@ def convert_to_pdf(base_document):
             output_path,
             convert_from_docx
         ], check=True)
-        logging.info("ℹ️Word file: " + convert_from_docx)
-        logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf)
+        abs_full_path_convert_from_docx = os.path.abspath(convert_from_docx)
+        abs_full_path_save_as_pdf = os.path.abspath(save_as_pdf)
+        logging.info("ℹ️Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
+        logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
     except subprocess.CalledProcessError as e:
         logging.error(f"❌Could not convert PDF: {e}")
 
