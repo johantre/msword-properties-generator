@@ -51,9 +51,10 @@ jobs:
           which soffice
           soffice --version
 
-      - name: Print LibreOffice Java configuration
+      - name: Check LibreOffice Java configuration
         run: |
-          libreoffice --env:JAVA_HOME=$JAVA_HOME --version
+          export JAVA_HOME=$JAVA_HOME
+          libreoffice --version
 
       - name: Enable Debugging
         run: |
