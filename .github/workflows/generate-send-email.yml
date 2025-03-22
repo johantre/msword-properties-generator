@@ -55,5 +55,4 @@ jobs:
         env:
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
         run: |
-          python GenerateOfferDocuments.py
-
+          python GenerateOfferDocuments.py --verbose
