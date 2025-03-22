@@ -1,0 +1,44 @@
+name: Send Email on Update
+
+on:
+  push:
+    paths:
+      - 'OffersCustomers.xlsx'  # Trigger workflow on specific file update
+
+jobs:
+  send_email_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas openpyxl lxml numpy pillow pytz six
+
+      # 🔥 NEW STEP: Explicitly install LibreOffice clearly
+      - name: Install LibreOffice Dependency (soffice)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libreoffice
+          # verify soffice installed & its version for debugging:
+          soffice --version
+
+      # ✅ Confirm clearly that `soffice` is now available on the PATH
+      - name: Verify `soffice` Installation
+        run: |
+          which soffice
+          soffice --version
+
+      - name: Run Python script to send email
+        env:
+          APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
+        run: |
+          python GenerateOfferDocuments.py
+
