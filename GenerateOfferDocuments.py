@@ -1,3 +1,5 @@
+from dropbox.exceptions import ApiError
+from dropbox.files import WriteMode
 from email.message import EmailMessage
 from jproperties import Properties
 from docx2pdf import convert
@@ -7,6 +9,7 @@ import pandas as pd
 import subprocess
 import argparse
 import tempfile
+import dropbox
 import logging
 import smtplib
 import zipfile
@@ -14,6 +17,7 @@ import shutil
 import sys
 import re
 import os
+
 
 # Fetch properties
 try:
@@ -54,10 +58,15 @@ for handler in handlers:
 
 # Explicitly set up root logger clearly once, explicitly:
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stdout)]
 )
+
+# Dropbox API setup explicitly clearly:
+DROPBOX_TOKEN = os.environ.get('DROPBOX_TOKEN')  # explicitly recommended for token securely stored in environment variable explicitly clearly
+DROPBOX_DEST_FOLDER = "/Recht om te vertegenwoordigen"  # clearly explicitly your Dropbox folder explicitly clearly
+
 
 def _main(verbose=False):
     logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
@@ -99,8 +108,37 @@ def _main(verbose=False):
 
         send_email(generated_files, recipient_email)
 
+        dropbox_upload(generated_files)
+
     # Update log sheet w fresh offer
     save_to_excel(customers_data_frame, log_data_frame)
+
+
+def dropbox_upload(generated_files):
+    dbx = dropbox.Dropbox(DROPBOX_TOKEN, scope=["files.content.write"])
+
+    for filepath in generated_files:
+        abs_full_path = os.path.abspath(filepath)
+        if os.path.exists(filepath):
+            logging.info(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
+        else:
+            logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
+
+        dropbox_dest_path = os.path.join(DROPBOX_DEST_FOLDER, os.path.basename(filepath)).replace('\\', '/')
+
+        logging.info(f"📂 Local file to upload: {abs_full_path}")
+        logging.info(f"📌 Dropbox full destination path: {dropbox_dest_path}")
+        with open(abs_full_path, 'rb') as file:
+            try:
+                logging.info(f"📤 Uploading '{filepath}' to '{dropbox_dest_path}' on Dropbox.")
+                response = dbx.files_upload(
+                    file.read(),
+                    dropbox_dest_path,
+                    mode=WriteMode("overwrite")
+                )
+                logging.info(f"🚀 Successfully uploaded file. Dropbox file details: {response}")
+                print(f"✅ Successfully uploaded file to Dropbox: '{os.path.basename(filepath)}'")
+            except dropbox.exceptions.ApiError as err:logging.error(f"📛 Dropbox API error: {err}")
 
 
 def send_email(generated_files, email_address):
