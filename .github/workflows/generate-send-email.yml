@@ -5,6 +5,19 @@ on:
     paths:
       - '**/OffersCustomer.xlsx'  # Trigger workflow on specific file update
   workflow_dispatch:
+    inputs:
+      email:
+        description: 'Mail Address'
+        required: true
+      klantNaam:
+        description: 'Klant Naam'
+        required: true
+      klantJobTitle:
+        description: 'Klant JobTitle'
+        required: true
+      klantJobReference:
+        description: 'Klant JobReference'
+        required: true
 
 jobs:
   send_email_job:
@@ -66,4 +79,4 @@ jobs:
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
         run: |
-          python3 GenerateOfferDocuments.py --verbose
+          python3 GenerateOfferDocuments.py --verbose --email ${{ github.event.inputs.email }} --klantNaam ${{ github.event.inputs.klantNaam }} --klantJobTitle ${{ github.event.inputs.klantJobTitle }} --klantJobReference ${{ github.event.inputs.klantJobReference }}
