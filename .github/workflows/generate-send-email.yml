@@ -64,5 +64,6 @@ jobs:
       - name: Run Python script to send email
         env:
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
+          DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
         run: |
           python3 GenerateOfferDocuments.py --verbose
