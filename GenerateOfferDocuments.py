@@ -68,8 +68,10 @@ DROPBOX_TOKEN = os.environ.get('DROPBOX_TOKEN')  # explicitly recommended for to
 DROPBOX_DEST_FOLDER = "/Recht om te vertegenwoordigen"  # clearly explicitly your Dropbox folder explicitly clearly
 
 
-def _main(verbose=False):
+def _main(verbose=False, optional_args=None):
     logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
+
+
 
     # Read the Excel files into a DataFrames
     log_data_frame = safely_read_excel(xls_offers_log, xls_offers_log_sheetname, "offers log")
@@ -78,7 +80,7 @@ def _main(verbose=False):
     provider_replacements = create_sanitized_replacements(xls_offers_provider, xls_offers_provider_sheetname)
 
     customers_data_frame = safely_read_excel(xls_offers_customer, xls_offers_customer_sheetname, "offers customer")
-    customer_replacements = create_sanitized_replacements(xls_offers_customer, xls_offers_customer_sheetname)
+    customer_replacements = create_sanitized_replacements(xls_offers_customer, xls_offers_customer_sheetname, optional_args)
 
     combined_replacements = {**customer_replacements, **provider_replacements}
 
@@ -258,7 +260,10 @@ def repack_docx(extracted_dir, base_document):
     shutil.rmtree(extracted_dir)
 
 
-def create_sanitized_replacements(excel_filepath, sheet_name):
+def create_sanitized_replacements(excel_filepath, sheet_name, optional_args=None):
+    if optional_args is None:
+        optional_args = {}
+
     df = pd.read_excel(excel_filepath, sheet_name=sheet_name, header=0)
     if df.empty:
         logging.warning(f"⚠️The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data tor process. Please verify the contents.")
@@ -273,6 +278,11 @@ def create_sanitized_replacements(excel_filepath, sheet_name):
             sanitize_spaces_to_variable_name(k): v
             for k, v in excel_dict.items()
         }
+    for k, v in optional_args.items():
+        sanitized_key = sanitize_spaces_to_variable_name(k)
+        if sanitized_key in sanitized_dict:
+            sanitized_dict[sanitized_key] = v
+
     return sanitized_dict
 
 
@@ -417,9 +427,23 @@ def build_base_document_to_save(row_prov, row_cust):
 
 if __name__ == '__main__':
     # Parse command-line arguments clearly here
-    parser = argparse.ArgumentParser(description="Generate Offer Documents with optional verbose logging.")
-    parser.add_argument('-v','--verbose', '-v', action='store_true', help='Enable clear verbose debug-level logs.')
+    parser = argparse.ArgumentParser(description="Generate Offer Documents with optional verbose logging, and possibly customer arguments.")
+    parser.add_argument("--email", help="Mail Address")
+    parser.add_argument("--klantNaam", help="Klant Naam")
+    parser.add_argument("--klantJobTitle", help="Klant JobTitle")
+    parser.add_argument("--klantJobReference", help="Klant JobReference")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
+
     args = parser.parse_args()
 
-    _main(verbose=args.verbose)
+    optional_args = {
+        'Klant Naam': args.klantNaam,
+        'Klant JobTitle': args.klantJobTitle,
+        'Klant JobReference': args.klantJobReference
+    }
+
+    _main(
+        optional_args=optional_args,
+        verbose=args.verbose,
+    )
 
