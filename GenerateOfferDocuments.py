@@ -58,7 +58,7 @@ for handler in handlers:
 
 # Explicitly set up root logger clearly once, explicitly:
 logging.basicConfig(
-    level=logging.ERROR,
+    level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stdout)]
 )
