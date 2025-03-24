@@ -31,10 +31,12 @@ jobs:
           sudo mkdir -p /usr/lib/libreoffice
           sudo mkdir -p ~/.cache/pip
 
-      - name: Set Permissions
+      - name: Set Permissions and Ownership
         run: |
+          sudo chown -R $USER:$USER ~/.cache/pip
+          sudo chown -R $USER:$USER /usr/lib/libreoffice
           sudo chmod -R 777 ~/.cache/pip
-          sudo chmod -R 777 /usr/lib/libreoffice 
+          sudo chmod -R 777 /usr/lib/libreoffice
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
