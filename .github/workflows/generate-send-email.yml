@@ -26,13 +26,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Ensure LibreOffice Directory Exists
+      - name: Ensure Cache Directory Exists
         run: |
           sudo mkdir -p /usr/lib/libreoffice
-
-      - name: Ensure LibreOffice Directory Exists
-        run: |
-          sudo mkdir -p /usr/lib/libreoffice
+          sudo mkdir -p ~/.cache/pip
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
@@ -48,16 +45,17 @@ jobs:
           path: /usr/lib/libreoffice
           key: ${{ runner.os }}-libreoffice
 
-      - name: List Cache Contents
-        run: |
-          ls -alh ~/.cache/pip
-          echo "Listing LibreOffice cache contents"
-          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
-
       - name: Set Permissions
         run: |
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /usr/lib/libreoffice        
+
+      - name: List Cache Contents
+        run: |
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
 
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
