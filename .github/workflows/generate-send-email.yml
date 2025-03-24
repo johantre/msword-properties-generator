@@ -34,6 +34,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      - name: Cache LibreOffice installation
+        uses: actions/cache@v3
+        with:
+          path: /usr/lib/libreoffice
+          key: ${{ runner.os }}-libreoffice
+
+      - name: List Cache Contents
+        run: |
+          ls -alh ~/.cache/pip
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+
+      - name: Set Permissions
+        run: |
+          sudo chmod -R 777 ~/.cache/pip
+          sudo chmod -R 777 /usr/lib/libreoffice        
+
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
         with:
@@ -57,12 +74,6 @@ jobs:
       - name: Verify Java installation
         run: |
           java -version
-
-      - name: Cache LibreOffice installation
-        uses: actions/cache@v3
-        with:
-          path: /usr/lib/libreoffice
-          key: ${{ runner.os }}-libreoffice
 
       # 🔥 NEW STEP: Explicitly install LibreOffice clearly
       - name: Install LibreOffice Dependency (soffice)
