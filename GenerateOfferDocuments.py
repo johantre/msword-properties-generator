@@ -136,7 +136,8 @@ def _main(verbose=False, optional_args=None):
         if base_document_to_save.strip():
             recipient_email = 'johan_tre@hotmail.com'
             generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
-            send_email(generated_files, recipient_email)
+
+            send_email(generated_files, recipient_email, provider_line, customer_line)
             try:
                 dropbox_upload(generated_files)
             except AuthError as ae:
@@ -173,20 +174,25 @@ def dropbox_upload(generated_files):
             except dropbox.exceptions.ApiError as err:logging.error(f"📛 Dropbox API error: {err}")
 
 
-def send_email(generated_files, email_address):
+def send_email(generated_files, email_address, provider_replacements, customer_replacements):
     # Email setup (fill properly!)
     sender_password = os.getenv("APP_PASS_MAIL")
     if sender_password is None:
         raise EnvironmentError("❗ APP_PASS_MAIL environment variable is not set. "
                                "Please set this environment variable locally or via GitHub Secrets, or on your local environment as an environment variable.")
 
-    email_subject = f"Offer documents are ready"
-    email_body = f"Please find attached the offer documents."
+    leverancier_naam = safe_get(provider_replacements, "LeverancierNaam")
+    klant_naam = safe_get(customer_replacements, "KlantNaam")
+    klant_job_title = safe_get(customer_replacements, "KlantJobTitle")
+    klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
+    base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
+
+    email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}' are ready"
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
     email_message['From'] = mail_sender_email
     email_message['To'] = email_address
-    email_message.set_content(email_body)
+    email_message.set_content(return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference), subtype='html')
 
     for filepath in generated_files:
         abs_full_path = os.path.abspath(filepath)
@@ -444,9 +450,10 @@ def sanitize_filename(filename_part):
 def sanitize_spaces_to_variable_name(any_string):
     return any_string.replace(" ", "")
 
+def safe_get(row, column_name, default='unknown'):
+    return sanitize_filename(str(row[column_name]).strip()) if column_name in row else default
+
 def build_base_document_to_save(provider_replacements, customer_replacements):
-    def safe_get(row, column_name, default='unknown'):
-        return sanitize_filename(str(row[column_name]).strip()) if column_name in row else default
     leverancier_naam = safe_get(provider_replacements, "LeverancierNaam")
     klant_naam = safe_get(customer_replacements, "KlantNaam")
     klant_job_title = safe_get(customer_replacements, "KlantJobTitle")
@@ -454,6 +461,36 @@ def build_base_document_to_save(provider_replacements, customer_replacements):
     base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
     return base_document
 
+def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference):
+    return f"""
+    <body>
+        <h2>Recht om te vertegenwoordigen</h2>
+        <table>
+            <tr>
+                <td><b>Leverancier Naam</b></td>
+                <td>'{leverancier_naam}'</td>
+            </tr>
+            <tr>
+                <td><b>Klant Naam</b></td>
+                <td>'{klant_naam}'</td>
+            </tr>
+            <tr>
+                <td><b>Klant JobTitle</b></td>
+                <td>'{klant_job_title}'</td>
+            </tr>
+            <tr>
+                <td><b>Klant JobReference</b></td>
+                <td>'{klant_job_reference}'</td>
+            </tr>
+        </table>
+
+        <h3>Documents Attached:</h3>
+        <ul>
+            <li>MSWord: '{base_document}'.docx</li>
+            <li>Pdf: '{base_document}'.pdf</li>
+        </ul>
+    </body>
+    """
 
 if __name__ == '__main__':
     # Parse command-line arguments clearly here
