@@ -31,6 +31,11 @@ jobs:
           sudo mkdir -p /usr/lib/libreoffice
           sudo mkdir -p ~/.cache/pip
 
+      - name: Set Permissions
+        run: |
+          sudo chmod -R 777 ~/.cache/pip
+          sudo chmod -R 777 /usr/lib/libreoffice 
+
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -45,7 +50,7 @@ jobs:
           path: /usr/lib/libreoffice
           key: ${{ runner.os }}-libreoffice
 
-      - name: Set Permissions
+      - name: Set Permissions again
         run: |
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /usr/lib/libreoffice        
