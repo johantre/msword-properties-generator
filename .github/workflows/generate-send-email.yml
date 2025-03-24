@@ -34,11 +34,6 @@ jobs:
         run: |
           sudo mkdir -p /usr/lib/libreoffice
 
-      - name: Set Permissions
-        run: |
-          sudo chmod -R 777 ~/.cache/pip
-          sudo chmod -R 777 /usr/lib/libreoffice        
-
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -58,6 +53,11 @@ jobs:
           ls -alh ~/.cache/pip
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+
+      - name: Set Permissions
+        run: |
+          sudo chmod -R 777 ~/.cache/pip
+          sudo chmod -R 777 /usr/lib/libreoffice        
 
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
