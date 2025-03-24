@@ -49,6 +49,9 @@ jobs:
         run: |
           echo "Python cache hit: ${{ steps.python-cache.outputs.cache-hit }}"
 
+      - name: List Python cache directory before installation
+        run: ls -la ~/.cache/pip
+
       - name: Debug Python dependencies cache
         run: |
           echo "Cache key used: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
@@ -126,6 +129,12 @@ jobs:
         run: |
           java -version
 
+      - name: Verify Cache Ownership
+        run: |
+          echo "Checking ownership of cache directories"
+          ls -ld /usr/lib/libreoffice
+          ls -ld ~/.cache/pip
+
       # 🔥 NEW STEP: Explicitly install LibreOffice clearly
       - name: Install LibreOffice Dependency (soffice)
         run: |
@@ -133,6 +142,9 @@ jobs:
           sudo apt-get install -y libreoffice
           # verify soffice installed & its version for debugging:
           soffice --version
+
+      - name: List LibreOffice cache directory after installation
+        run: ls -la /usr/lib/libreoffice
 
       # ✅ Confirm clearly that `soffice` is now available on the PATH
       - name: Verify `soffice` Installation
