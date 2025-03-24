@@ -79,4 +79,10 @@ jobs:
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_TOKEN }}
         run: |
-          python3 GenerateOfferDocuments.py --verbose --email ${{ github.event.inputs.email }} --klantNaam ${{ github.event.inputs.klantNaam }} --klantJobTitle ${{ github.event.inputs.klantJobTitle }} --klantJobReference ${{ github.event.inputs.klantJobReference }}
+          if [ -n "${{ github.event.inputs.email }}" ] && [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
+            CMD="python3 GenerateOfferDocuments.py --verbose --email ${{ github.event.inputs.email }} --klantNaam ${{ github.event.inputs.klantNaam }} --klantJobTitle ${{ github.event.inputs.klantJobTitle }} --klantJobReference ${{ github.event.inputs.klantJobReference }}"
+          else
+            CMD="python3 GenerateOfferDocuments.py --verbose"
+          fi
+          echo "Executing command: $CMD"
+          eval $CMD
