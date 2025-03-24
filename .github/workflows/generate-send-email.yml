@@ -45,6 +45,10 @@ jobs:
             ${{ runner.os }}-pip-
         continue-on-error: true
 
+      - name: Check Python dependencies cache hit
+        run: |
+          echo "Python cache hit: ${{ steps.python-cache.outputs.cache-hit }}"
+
       - name: Extract Python dependencies cache (if available)
         if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
@@ -62,6 +66,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-libreoffice-
         continue-on-error: true
+
+      - name: Check LibreOffice cache hit
+        run: | 
+          echo "LibreOffice cache hit: ${{ steps.libreoffice-cache.outputs.cache-hit }}"
 
       - name: Extract LibreOffice cache (if available)
         if: steps.libreoffice-cache.outputs.cache-hit != 'true'
