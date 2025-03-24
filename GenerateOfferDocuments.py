@@ -468,27 +468,33 @@ def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_titl
         <table>
             <tr>
                 <td><b>Leverancier Naam</b></td>
-                <td>'{leverancier_naam}'</td>
+                <td>{leverancier_naam}</td>
             </tr>
             <tr>
                 <td><b>Klant Naam</b></td>
-                <td>'{klant_naam}'</td>
+                <td>{klant_naam}</td>
             </tr>
             <tr>
                 <td><b>Klant JobTitle</b></td>
-                <td>'{klant_job_title}'</td>
+                <td>{klant_job_title}</td>
             </tr>
             <tr>
                 <td><b>Klant JobReference</b></td>
-                <td>'{klant_job_reference}'</td>
+                <td>{klant_job_reference}</td>
             </tr>
         </table>
 
         <h3>Documents Attached:</h3>
-        <ul>
-            <li>MSWord: '{base_document}'.docx</li>
-            <li>Pdf: '{base_document}'.pdf</li>
-        </ul>
+        <table>
+            <tr>
+                <td><b>MSWord</b></td>
+                <td>{base_document}.docx</td>
+            </tr>
+            <tr>
+                <td><b>Pdf</b></td>
+                <td>{base_document}.pdf</td>
+            </tr>
+        </table>
     </body>
     """
 
