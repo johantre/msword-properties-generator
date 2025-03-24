@@ -8,16 +8,16 @@ on:
     inputs:
       email:
         description: 'Mail Address'
-        required: true
+        required: false
       klantNaam:
         description: 'Klant Naam'
-        required: true
+        required: false
       klantJobTitle:
         description: 'Klant JobTitle'
-        required: true
+        required: false
       klantJobReference:
         description: 'Klant JobReference'
-        required: true
+        required: false
 
 jobs:
   send_email_job:
