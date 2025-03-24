@@ -49,6 +49,11 @@ jobs:
         run: |
           echo "Python cache hit: ${{ steps.python-cache.outputs.cache-hit }}"
 
+      - name: Debug Python dependencies cache
+        run: |
+          echo "Cache key used: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
+          ls -la ~/.cache/pip
+
       - name: Extract Python dependencies cache (if available)
         if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
@@ -70,6 +75,11 @@ jobs:
       - name: Check LibreOffice cache hit
         run: | 
           echo "LibreOffice cache hit: ${{ steps.libreoffice-cache.outputs.cache-hit }}"
+
+      - name: Debug LibreOffice cache
+        run: |
+          echo "Cache key used: ${{ runner.os }}-libreoffice"
+          ls -la /usr/lib/libreoffice
 
       - name: Extract LibreOffice cache (if available)
         if: steps.libreoffice-cache.outputs.cache-hit != 'true'
