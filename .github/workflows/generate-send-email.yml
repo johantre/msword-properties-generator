@@ -44,8 +44,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
         continue-on-error: true
-        env:
-          TAR_OPTIONS: "--no-same-owner --no-same-permissions"
+
+      - name: Extract Python dependencies cache (if available)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /home/runner/.cache/pip --use-compress-program unzstd || true
 
       - name: Cache LibreOffice installation
         uses: actions/cache@v3
@@ -55,8 +58,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-libreoffice-
         continue-on-error: true
-        env:
-          TAR_OPTIONS: "--no-same-owner --no-same-permissions"
+
+      - name: Extract LibreOffice cache (if available)
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /usr/lib/libreoffice --use-compress-program unzstd || true
 
       - name: Set Permissions again
         run: |
