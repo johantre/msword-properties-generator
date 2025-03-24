@@ -46,9 +46,13 @@ jobs:
         continue-on-error: true
 
       - name: Extract Python dependencies cache (if available)
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
-          tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /home/runner/.cache/pip --use-compress-program unzstd || true
+          if [ -f /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst ]; then
+            tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /home/runner/.cache/pip --use-compress-program unzstd
+          else
+            echo "Cache file not found."
+          fi
 
       - name: Cache LibreOffice installation
         uses: actions/cache@v3
@@ -60,9 +64,13 @@ jobs:
         continue-on-error: true
 
       - name: Extract LibreOffice cache (if available)
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.libreoffice-cache.outputs.cache-hit != 'true'
         run: |
-          tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /usr/lib/libreoffice --use-compress-program unzstd || true
+          if [ -f /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst ]; then
+            tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /usr/lib/libreoffice --use-compress-program unzstd
+          else
+            echo "Cache file not found."
+          fi
 
       - name: Set Permissions again
         run: |
