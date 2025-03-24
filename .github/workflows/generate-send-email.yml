@@ -41,14 +41,22 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
         continue-on-error: true
+        env:
+          TAR_OPTIONS: "--no-same-owner --no-same-permissions --no-same-time"
 
       - name: Cache LibreOffice installation
         uses: actions/cache@v3
         with:
           path: /usr/lib/libreoffice
           key: ${{ runner.os }}-libreoffice
+          restore-keys: |
+            ${{ runner.os }}-libreoffice-
         continue-on-error: true
+        env:
+          TAR_OPTIONS: "--no-same-owner --no-same-permissions --no-same-time"
 
       - name: Set Permissions again
         run: |
