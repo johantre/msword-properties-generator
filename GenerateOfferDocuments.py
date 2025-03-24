@@ -1,4 +1,4 @@
-from dropbox.exceptions import ApiError
+from dropbox.exceptions import ApiError, AuthError
 from dropbox.files import WriteMode
 from email.message import EmailMessage
 from jproperties import Properties
@@ -71,50 +71,80 @@ DROPBOX_DEST_FOLDER = "/Recht om te vertegenwoordigen"  # clearly explicitly you
 def _main(verbose=False, optional_args=None):
     logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
 
-
+    def merge_replacements(customer_replacements, provider_replacements):
+        combined_replacements = {}
+        for key, value in provider_replacements.items():
+            combined_replacements[f'prov_{key}'] = value
+        for key, value in customer_replacements.items():
+            combined_replacements[f'cust_{key}'] = value
+        return combined_replacements
 
     # Read the Excel files into a DataFrames
-    log_data_frame = safely_read_excel(xls_offers_log, xls_offers_log_sheetname, "offers log")
+    # log_data_frame = safely_read_excel(xls_offers_log, xls_offers_log_sheetname, "offers log")
+    # provider_data_frame = safely_read_excel(xls_offers_provider, xls_offers_provider_sheetname, "offers provider")
+    # customers_data_frame = safely_read_excel(xls_offers_customer, xls_offers_customer_sheetname, "offers customer")
 
-    provider_data_frame = safely_read_excel(xls_offers_provider, xls_offers_provider_sheetname, "offers provider")
-    provider_replacements = create_sanitized_replacements(xls_offers_provider, xls_offers_provider_sheetname)
-
-    customers_data_frame = safely_read_excel(xls_offers_customer, xls_offers_customer_sheetname, "offers customer")
-    customer_replacements = create_sanitized_replacements(xls_offers_customer, xls_offers_customer_sheetname, optional_args)
-
-    combined_replacements = {**customer_replacements, **provider_replacements}
+    provider_replacements = create_sanitized_replacements(xls_offers_provider, xls_offers_provider_sheetname, "prov")
+    customer_replacements = create_sanitized_replacements(xls_offers_customer, xls_offers_customer_sheetname, "cust", optional_args)
+    combined_replacements = merge_replacements(customer_replacements, provider_replacements)
 
     # Each row in offersCustomer = new offer docx + pdf
-    for (index_cust, row_cust) in customers_data_frame.iterrows():
-        # For each customer row ...
-        # In the custom properties xml structure...
-        extracted_dir = extract_docx(word_template_path)
-        row_prov = set_custom_properties(extracted_dir, provider_data_frame, row_cust)
-        base_document_to_save = build_base_document_to_save(row_prov, row_cust)
-        repack_docx(extracted_dir, base_document_to_save)
+    provider_line = None
+    base_document_to_save = None
+    for index, (key, line) in enumerate(combined_replacements.items()):
+        if index == 0:
+            # Special handling for the first item
+            print(f"First item: {key} -> {line}")
+            if isinstance(line, dict):
+                provider_line = line
+                base_document_to_save = ""
+                for key_prov, value_prov in provider_line.items():
+                    print(f'Provider: {key_prov}: {value_prov}')
+            else:
+                print(f'No provider dict found in line: {line[index]}')
+        else:
+            # Handling for all other items
+            print(f"Item {index}: {key} -> {line}")
+            if isinstance(line, dict):
+                customer_line = line
+                # For each customer row ...
+                # In the custom properties xml structure...
+                extracted_dir = extract_docx(word_template_path)
+                set_custom_properties(extracted_dir, provider_line, customer_line)
+                base_document_to_save = build_base_document_to_save(provider_line, customer_line)
+                repack_docx(extracted_dir, base_document_to_save)
 
-        # In the document itself...
-        document = open_document(base_document_to_save)
-        replace_images(document)
-        replace_direct_text(document, combined_replacements)
-        save_document(base_document_to_save, document)
+                # Replace in the document itself...
+                document = open_document(base_document_to_save)
+                replace_images(document)
+                replace_direct_text(document, provider_line, customer_line)
+                save_document(base_document_to_save, document)
 
-        convert_to_pdf(base_document_to_save)
+                convert_to_pdf(base_document_to_save)
 
-        # operation succeeded, append row to 'log' + drop row from 'new'
-        log_data_frame = pd.concat([log_data_frame, row_cust.to_frame().T], axis='index', ignore_index=True)
-        customers_data_frame.drop(labels=[index_cust], axis='index', inplace=True)
+                # operation succeeded, append row to 'log' + drop row from 'new'
+                # log_data_frame = pd.concat([log_data_frame, customer_line[index].to_frame().T], axis='index', ignore_index=True)
+                # customers_data_frame.drop(labels=[index], axis='index', inplace=True)
+                # Update log sheet w fresh offer
+                # save_to_excel(customers_data_frame, log_data_frame)
 
-        recipient_email = 'johan_tre@hotmail.com'
-        generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
+                for key_cust, value_cust in customer_line.items():
+                    print(f'Customer(s): {key_cust}: {value_cust}')
+            else:
+                print(f'No customer dict found in line: {line[index]}')
 
-        send_email(generated_files, recipient_email)
-
-        dropbox_upload(generated_files)
-
-    # Update log sheet w fresh offer
-    save_to_excel(customers_data_frame, log_data_frame)
-
+        if base_document_to_save.strip():
+            recipient_email = 'johan_tre@hotmail.com'
+            generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
+            send_email(generated_files, recipient_email)
+            try:
+                dropbox_upload(generated_files)
+            except AuthError as ae:
+                logging.error(f"Authentication error while uploading dropbox: {ae}")
+                # Handle the authentication error, such as prompting for re-authentication
+            except Exception as ee:
+                # Handle other possible exceptions
+                logging.error(f"An error occurred while uploading dropbox: {ee}")
 
 def dropbox_upload(generated_files):
     dbx = dropbox.Dropbox(DROPBOX_TOKEN, scope=["files.content.write"])
@@ -196,19 +226,13 @@ def send_email(generated_files, email_address):
         print('❗ An error occurred:', e)
 
 
-def set_custom_properties(extracted_dir, provider_data_frame, row_cust):
-    # First validate correct provider row count
-    if len(provider_data_frame) != 1:
-        raise ValueError(f"❌Provider count in {xls_offers_provider} must be exactly 1, got {len(provider_data_frame)}")
+def set_custom_properties(extracted_dir, provider_replacements, customer_replacements):
     # Now iterate once explicitly since validated
-    row_prov = provider_data_frame.iloc[0]
-    for column_name_prov in provider_data_frame.columns:
-        set_custom_property(extracted_dir, column_name_prov, row_prov[column_name_prov])
+    for key_prov, value_prov in provider_replacements.items():
+        set_custom_property(extracted_dir, key_prov, value_prov)
     # Customer replacements (the part you asked about previously)
-    for column_name_cust, column_value_cust in row_cust.items():
-        set_custom_property(extracted_dir, column_name_cust, column_value_cust)
-    return row_prov
-
+    for key_cust, value_cust in customer_replacements.items():
+        set_custom_property(extracted_dir, key_cust, value_cust)
 
 def set_custom_property(extracted_dir, property_name, property_value):
     custom_props_path = os.path.join(extracted_dir, 'docProps', 'custom.xml')
@@ -260,50 +284,56 @@ def repack_docx(extracted_dir, base_document):
     shutil.rmtree(extracted_dir)
 
 
-def create_sanitized_replacements(excel_filepath, sheet_name, optional_args=None):
-    if optional_args is None:
-        optional_args = {}
+def create_sanitized_replacements(excel_filepath, sheet_name, prefix, optionals=None):
+    if optionals :
+        sanitized_dict = {}
+        sanitized_row_dict = {
+            sanitize_spaces_to_variable_name(k): v
+            for k, v in optionals.items()
+        }
+        sanitized_dict[f'{prefix}_0'] = sanitized_row_dict
+        return sanitized_dict
 
     df = pd.read_excel(excel_filepath, sheet_name=sheet_name, header=0)
     if df.empty:
-        logging.warning(f"⚠️The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data tor process. Please verify the contents.")
+        logging.warning(f"⚠️The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data to process. Please verify the contents.")
         sanitized_dict = {
-            sanitize_spaces_to_variable_name(column_name): ''
+            sanitize_spaces_to_variable_name(column_name): 'prov_0'
             for column_name in df.columns
         }
     else:
-        excel_dict = df.iloc[0].to_dict()
-        # Here we sanitize KEYS ONLY exactly as you require
-        sanitized_dict = {
-            sanitize_spaces_to_variable_name(k): v
-            for k, v in excel_dict.items()
-        }
-    for k, v in optional_args.items():
-        sanitized_key = sanitize_spaces_to_variable_name(k)
-        if sanitized_key in sanitized_dict:
-            sanitized_dict[sanitized_key] = v
+        sanitized_dict = {}
+        for index, row in df.iterrows():
+            row_dict = row.to_dict()
+            # Sanitize KEYS ONLY exactly as you require
+            sanitized_row_dict = {
+                sanitize_spaces_to_variable_name(k): v
+                for k, v in row_dict.items()
+            }
+            sanitized_dict[f'{prefix}_{index}'] = sanitized_row_dict
 
     return sanitized_dict
 
 
-def replace_direct_text(document, replacements):
-    def replace_in_paragraph(paragraph, replacements):
-        for run in paragraph.runs:
-            for old, new in replacements.items():
+def replace_direct_text(document, provider_replacements, customer_replacements):
+    def replace_in_paragraph(paragr, replacem):
+        for run in paragr.runs:
+            for old, new in replacem.items():
                 if old in run.text:
                     run.text = run.text.replace(old, new)
                     logging.info(f"ℹ️'{old}' successfully replaced by '{new}' in target file in paragraphs")
 
     # Replace in paragraphs
     for paragraph in document.paragraphs:
-        replace_in_paragraph(paragraph, replacements)
+        replace_in_paragraph(paragraph, provider_replacements)
+        replace_in_paragraph(paragraph, customer_replacements)
     # Replace in tables (cells)
     for table in document.tables:
         for row in table.rows:
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
-                    replace_in_paragraph(paragraph, replacements)
-                    logging.info(f"ℹ️'{replacements}' in target file successfully replaced in tables")
+                    replace_in_paragraph(paragraph, provider_replacements)
+                    replace_in_paragraph(paragraph, customer_replacements)
 
 def replace_images(document):
     replace_images_by_alt_text(document, base_document_image_alt_text_left, image_file_path)
@@ -414,13 +444,13 @@ def sanitize_filename(filename_part):
 def sanitize_spaces_to_variable_name(any_string):
     return any_string.replace(" ", "")
 
-def build_base_document_to_save(row_prov, row_cust):
+def build_base_document_to_save(provider_replacements, customer_replacements):
     def safe_get(row, column_name, default='unknown'):
         return sanitize_filename(str(row[column_name]).strip()) if column_name in row else default
-    leverancier_naam = safe_get(row_prov, "Leverancier Naam")
-    klant_naam = safe_get(row_cust, "Klant Naam")
-    klant_job_title = safe_get(row_cust, "Klant JobTitle")
-    klant_job_reference = safe_get(row_cust, "Klant JobReference")
+    leverancier_naam = safe_get(provider_replacements, "LeverancierNaam")
+    klant_naam = safe_get(customer_replacements, "KlantNaam")
+    klant_job_title = safe_get(customer_replacements, "KlantJobTitle")
+    klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
     base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
     return base_document
 
@@ -436,14 +466,17 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    optional_args = {
-        'Klant Naam': args.klantNaam,
-        'Klant JobTitle': args.klantJobTitle,
-        'Klant JobReference': args.klantJobReference
-    }
-
-    _main(
-        optional_args=optional_args,
-        verbose=args.verbose,
-    )
-
+    if args.klantNaam and args.klantJobTitle and args.klantJobReference:
+        optional_args = {
+            'Klant Naam': args.klantNaam,
+            'Klant JobTitle': args.klantJobTitle,
+            'Klant JobReference': args.klantJobReference
+        }
+        _main(
+            verbose=args.verbose,
+            optional_args=optional_args
+        )
+    else:
+        _main(
+            verbose=args.verbose
+        )
