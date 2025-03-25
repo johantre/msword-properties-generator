@@ -33,27 +33,27 @@ jobs:
 
       - name: Ensure Cache Directory Exists
         run: |
-          sudo mkdir -p /usr/lib/libreoffice
           sudo mkdir -p ~/.cache/pip
           sudo mkdir -p /usr/lib/jvm
+          sudo mkdir -p /usr/lib/libreoffice
 
       - name: Set Permissions and Ownership
         run: |
-          sudo chown -R $USER:$USER /usr/lib/libreoffice
           sudo chown -R $USER:$USER ~/.cache/pip
           sudo chown -R $USER:$USER /usr/lib/jvm
-          sudo chmod -R 777 /usr/lib/libreoffice
+          sudo chown -R $USER:$USER /usr/lib/libreoffice
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /usr/lib/jvm
+          sudo chmod -R 777 /usr/lib/libreoffice
 
-      - name: List Python, LibreOffice, JDK Cache Contents before Cache installation
+      - name: List Python, JDK, LibreOffice Cache Contents before Cache installation
         run: |
-          echo "Listing LibreOffice cache contents"
-          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
-          echo "Listing Python cache contents"
           ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
           echo "Listing JDK cache contents"
           ls -alh /usr/lib/jvm || echo "JDK cache directory does not exist"          
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+          echo "Listing Python cache contents"
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
@@ -62,15 +62,6 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-        continue-on-error: true
-
-      - name: Cache LibreOffice installation
-        uses: actions/cache@v3
-        with:
-          path: /usr/lib/libreoffice
-          key: ${{ runner.os }}-libreoffice
-          restore-keys: |
-            ${{ runner.os }}-libreoffice-
         continue-on-error: true
 
       - name: Cache JDK 11 installation
@@ -82,23 +73,32 @@ jobs:
             ${{ runner.os }}-jdk11-
         continue-on-error: true
 
-      - name: List Python, LibreOffice, JDK Cache Contents after Cache installation
+      - name: Cache LibreOffice installation
+        uses: actions/cache@v3
+        with:
+          path: /usr/lib/libreoffice
+          key: ${{ runner.os }}-libreoffice
+          restore-keys: |
+            ${{ runner.os }}-libreoffice-
+        continue-on-error: true
+
+      - name: List Python, JDK, LibreOffice Cache Contents after Cache installation
         run: |
-          echo "Listing LibreOffice cache contents"
-          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
-          echo "Listing Python cache contents"
           ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
           echo "Listing JDK cache contents"
           ls -alh /usr/lib/jvm || echo "JDK cache directory does not exist"          
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+          echo "Listing Python cache contents"
 
-      - name: Cache keys Python, LibreOffice, JDK used
+      - name: Cache keys Python, JDK, LibreOffice used
         run: |
-          echo "Cache key LibreOffice used: ${{ runner.os }}-libreoffice"
-          ls -la /usr/lib/libreoffice
           echo "Cache key Python used: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}"
           ls -la ~/.cache/pip
           echo "Cache key JDK used: ${{ runner.os }}-jdk11"
           ls -la /usr/lib/jvm
+          echo "Cache key LibreOffice used: ${{ runner.os }}-libreoffice"
+          ls -la /usr/lib/libreoffice
 
       - name: Install dependencies
         run: |
