@@ -1,9 +1,9 @@
-from docx_utils import update_custom_properties_docx_structure
-from xlsx_utils import extract_combined_replacements_from_xls
-from pdf_utils import convert_to_pdf
-from mail_utils import send_email
+from utils_docx import update_custom_properties_docx_structure
+from utils_xlsx import extract_combined_replacements_from_xls
+from utils_pdf import convert_to_pdf
+from utils_mail import send_email
 from dropbox.exceptions import AuthError
-from dropbox_utils import dropbox_upload
+from utils_dropbox import dropbox_upload
 import argparse
 import logging
 import sys
