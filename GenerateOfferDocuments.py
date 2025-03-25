@@ -90,17 +90,17 @@ def _main(verbose=False, optional_args=None):
     for index, (key, line) in enumerate(combined_replacements.items()):
         if index == 0:
             # Special handling for the first item
-            print(f"First item: {key} -> {line}")
+            logging.debug(f"Running over combined_replacements. First item: {key} -> {line}")
             if isinstance(line, dict):
                 provider_line = line
                 base_document_to_save = ""
                 for key_prov, value_prov in provider_line.items():
-                    print(f'Provider: {key_prov}: {value_prov}')
+                    logging.debug(f'Provider: {key_prov}: {value_prov}')
             else:
-                print(f'No provider dict found in line: {line[index]}')
+                logging.warning(f'No provider dict found in line: {line[index]}')
         else:
             # Handling for all other items
-            print(f"Item {index}: {key} -> {line}")
+            logging.debug(f"Running over combined_replacements. Item {index}: {key} -> {line}")
             if isinstance(line, dict):
                 customer_line = line
                 # For each customer row ...
@@ -125,12 +125,15 @@ def _main(verbose=False, optional_args=None):
                 # save_to_excel(customers_data_frame, log_data_frame)
 
                 for key_cust, value_cust in customer_line.items():
-                    print(f'Customer(s): {key_cust}: {value_cust}')
+                    logging.debug(f'Customer(s): {key_cust}: {value_cust}')
             else:
-                print(f'No customer dict found in line: {line[index]}')
+                logging.warning(f'No customer dict found in line: {line[index]}')
 
         if base_document_to_save.strip():
-            recipient_email = 'johan_tre@hotmail.com'
+            if optional_args:
+                recipient_email = optional_args["Email Recipient"]
+            else:
+                recipient_email = 'johan_tre@hotmail.com'
             generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
 
             send_email(generated_files, recipient_email, provider_line, customer_line)
@@ -195,7 +198,7 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
     base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
 
-    email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}'('{klant_job_reference}')"
+    email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}' ({klant_job_reference})"
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
     email_message['From'] = mail_sender_email
@@ -509,10 +512,10 @@ def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_titl
 if __name__ == '__main__':
     # Parse command-line arguments clearly here
     parser = argparse.ArgumentParser(description="Generate Offer Documents with optional verbose logging, and possibly customer arguments.")
-    parser.add_argument("--email", help="Mail Address")
     parser.add_argument("--klantNaam", help="Klant Naam")
     parser.add_argument("--klantJobTitle", help="Klant JobTitle")
     parser.add_argument("--klantJobReference", help="Klant JobReference")
+    parser.add_argument("--emailRecipient", help="Email Recipient")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
@@ -521,7 +524,8 @@ if __name__ == '__main__':
         optional_args = {
             'Klant Naam': args.klantNaam,
             'Klant JobTitle': args.klantJobTitle,
-            'Klant JobReference': args.klantJobReference
+            'Klant JobReference': args.klantJobReference,
+            'Email Recipient': args.emailRecipient
         }
         _main(
             verbose=args.verbose,

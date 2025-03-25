@@ -18,13 +18,40 @@ on:
       klantJobReference:
         description: 'Klant JobReference'
         required: false
+      sendEmail:
+        description: 'Send in Email'
+        required: true
+        default: false
+        type: boolean
+      emailRecipient:
+        description: 'Email recipient'
+        required: false
+      uploadDropbox:
+        description: 'Upload to Dropbox Johan'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   send_email_job:
+    if: github.event.inputs.sendEmail == 'true' || github.event.inputs.uploadDropbox == 'true'
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Trim spaces from email input
+        id: trim_email
+        run: |
+          email="${{ github.event.inputs.emailRecipient }}"
+          trimmed_email=$(echo "$email" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+          echo "::set-output name=email::$trimmed_email"
+
+      - name: Fail if email is not provided when sendEmail is true
+        if: github.event.inputs.sendEmail == 'true' && trimmed_email == ''
+        run: |
+          echo "❌ Error: Email is required when 'Send in Email' is checked. Aborting pipeline."
+          exit 1
 
       - name: Setup Python 3.12
         uses: actions/setup-python@v4
@@ -149,7 +176,7 @@ jobs:
           echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
-      - name: Run Python script to send email
+      - name: Run Python script to send email and upload to Dropbox
         env:
           LOG_LEVEL: ERROR
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
@@ -157,8 +184,8 @@ jobs:
           DROPBOX_APP_SECRET:  ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
         run: |
-          if [ -n "${{ github.event.inputs.email }}" ] && [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
-            CMD="python3 GenerateOfferDocuments.py --verbose --email '${{ github.event.inputs.email }}' --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}'"
+          if [ -n "${{ github.event.inputs.emailRecipient }}" ] && [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
+            CMD="python3 GenerateOfferDocuments.py --verbose --emailRecipient '${{ github.event.inputs.emailRecipient }}' --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}'"
           else
             CMD="python3 GenerateOfferDocuments.py --verbose"
           fi
