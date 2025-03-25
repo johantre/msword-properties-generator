@@ -42,11 +42,12 @@ jobs:
         run: |
           email="${{ github.event.inputs.emailRecipient }}"
           trimmed_email=$(echo "$email" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          echo "::set-output name=email::$trimmed_email"
+          echo "name=trimmed_email::$trimmed_email" >> $GITHUB_OUTPUT
 
       - name: Fail if email is not provided when sendEmail is true
         if: ${{ github.event.inputs.sendEmail == 'true' && steps.trim_email.outputs.trimmed_email == '' }}
         run: |
+          echo "trimmed mail should not be empty, right? *${{steps.trim_email.outputs.trimmed_email}}*"
           echo "❌ Error: Email is required when 'Send in Email' is checked. Aborting pipeline."
           exit 1
 
