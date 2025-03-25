@@ -188,9 +188,6 @@ jobs:
           # verify soffice installed & its version for debugging:
           soffice --version
 
-      - name: List LibreOffice cache directory after installation
-        run: ls -la /usr/lib/libreoffice
-
       # ✅ Confirm clearly that `soffice` is now available on the PATH
       - name: Verify `soffice` Installation
         run: |
@@ -206,6 +203,15 @@ jobs:
         run: |
           echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+
+      - name: List Python, LibreOffice, JDK Cache Contents after LibreOffice installation
+        run: |
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
+          echo "Listing JDK cache contents"
+          ls -alh /usr/lib/jvm || echo "JDK cache directory does not exist"          
 
       - name: Run Python script to send email
         env:
