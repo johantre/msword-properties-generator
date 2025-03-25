@@ -45,7 +45,7 @@ jobs:
           echo "::set-output name=email::$trimmed_email"
 
       - name: Fail if email is not provided when sendEmail is true
-        if: github.event.inputs.sendEmail == 'true' && $trimmed_email == ''
+        if: github.event.inputs.sendEmail == 'true' steps.trim_email.outputs.email == ''
         run: |
           echo "❌ Error: Email is required when 'Send in Email' is checked. Aborting pipeline."
           exit 1
