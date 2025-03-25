@@ -18,6 +18,7 @@ import sys
 import re
 import os
 
+from stone.backends.python_rsrc.stone_validators import Boolean
 
 # Fetch properties
 try:
@@ -131,20 +132,31 @@ def _main(verbose=False, optional_args=None):
 
         if base_document_to_save.strip():
             if optional_args:
-                recipient_email = optional_args["Email Recipient"]
+                recipient_email = optional_args["EmailRecipient"]
             else:
                 recipient_email = 'johan_tre@hotmail.com'
             generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
 
             send_email(generated_files, recipient_email, provider_line, customer_line)
-            try:
-                dropbox_upload(generated_files)
-            except AuthError as ae:
-                logging.error(f"Authentication error while uploading dropbox: {ae}")
-                # Handle the authentication error, such as prompting for re-authentication
-            except Exception as ee:
-                # Handle other possible exceptions
-                logging.error(f"An error occurred while uploading dropbox: {ee}")
+
+            upload_dropbox = True
+            if optional_args:
+                if not optional_args["UploadDropbox"]:
+                    upload_dropbox = False
+                    logging.info(f"ℹ️Not uploaded to Dropbox, as requested by user. Value option_args['UploadDropbox'] is: {optional_args["UploadDropbox"]}.")
+            if upload_dropbox:
+                try:
+                    dropbox_upload(generated_files)
+                except AuthError as ae:
+                    logging.error(f"Authentication error while uploading dropbox: {ae}")
+                    # Handle the authentication error, such as prompting for re-authentication
+                except Exception as ee:
+                    # Handle other possible exceptions
+                    logging.error(f"An error occurred while uploading dropbox: {ee}")
+            else:
+                logging.info(f"ℹ️Not uploaded to Dropbox Johan!")
+
+
 
 # Dropbox API setup:
 def get_dbx_client():
@@ -516,16 +528,18 @@ if __name__ == '__main__':
     parser.add_argument("--klantJobTitle", help="Klant JobTitle")
     parser.add_argument("--klantJobReference", help="Klant JobReference")
     parser.add_argument("--emailRecipient", help="Email Recipient")
+    parser.add_argument("--uploadDropbox", help="Upload Dropbox")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
 
     if args.klantNaam and args.klantJobTitle and args.klantJobReference:
         optional_args = {
-            'Klant Naam': args.klantNaam,
-            'Klant JobTitle': args.klantJobTitle,
-            'Klant JobReference': args.klantJobReference,
-            'Email Recipient': args.emailRecipient
+            'KlantNaam': args.klantNaam,
+            'KlantJobTitle': args.klantJobTitle,
+            'KlantJobReference': args.klantJobReference,
+            'EmailRecipient': args.emailRecipient,
+            'UploadDropbox': args.uploadDropbox
         }
         _main(
             verbose=args.verbose,
