@@ -42,7 +42,7 @@ jobs:
         run: |
           email="${{ github.event.inputs.emailRecipient }}"
           trimmed_email=$(echo "$email" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          echo "name=email::$trimmed_email" >> $GITHUB_OUTPUT
+          echo "::set-output name=email::$trimmed_email"
 
       - name: Fail if email is not provided when sendEmail is true
         if: ${{ github.event.inputs.sendEmail == 'true' && steps.trim_email.outputs.trimmed_email == '' }}
