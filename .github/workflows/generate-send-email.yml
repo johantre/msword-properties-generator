@@ -43,6 +43,13 @@ jobs:
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /usr/lib/libreoffice
 
+      - name: List Python en LibreOffice Cache Contents before Cache installation
+        run: |
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -60,6 +67,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-libreoffice-
         continue-on-error: true
+
+      - name: List Python en LibreOffice Cache Contents after Cache installation
+        run: |
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
+          echo "Listing LibreOffice cache contents"
+          ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
 
       - name: Check Python dependencies cache hit
         run: |
@@ -116,10 +130,10 @@ jobs:
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /usr/lib/libreoffice        
 
-      - name: List Cache Contents
+      - name: List Python en LibreOffice Cache Contents after extraction
         run: |
           echo "Listing Python cache contents"
-          ls -alh ~/.cache/pip
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
 
