@@ -6,9 +6,6 @@ on:
       - '**/OffersCustomer.xlsx'  # Trigger workflow on specific file update
   workflow_dispatch:
     inputs:
-      email:
-        description: 'Mail Address'
-        required: false
       klantNaam:
         description: 'Klant Naam'
         required: false
@@ -178,14 +175,14 @@ jobs:
 
       - name: Run Python script to send email and upload to Dropbox
         env:
-          LOG_LEVEL: ERROR
+          LOG_LEVEL: INFO
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
           DROPBOX_APP_KEY:  ${{ secrets.DROPBOX_APP_KEY }}
           DROPBOX_APP_SECRET:  ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
         run: |
           if [ -n "${{ github.event.inputs.emailRecipient }}" ] && [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
-            CMD="python3 GenerateOfferDocuments.py --verbose --emailRecipient '${{ github.event.inputs.emailRecipient }}' --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}'"
+            CMD="python3 GenerateOfferDocuments.py --verbose --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --emailRecipient '${{ github.event.inputs.emailRecipient }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
           else
             CMD="python3 GenerateOfferDocuments.py --verbose"
           fi
