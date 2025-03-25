@@ -36,6 +36,7 @@ mail_sender_email = configs.get("mail.sender_email").data
 resource_path = configs.get("path.resource").data
 output_path = configs.get("path.output").data
 image_file_path = os.path.join(resource_path, configs.get("path.resource.image_signature").data)
+dropbox_destination_folder = configs.get("path.dropbox.destination.folder").data
 xls_offers_log = os.path.join(resource_path, configs.get("base.excel.offers.log").data)
 xls_offers_log_sheetname = configs.get("base.excel.offers.log.sheetname").data
 xls_offers_provider = os.path.join(resource_path, configs.get("base.excel.offers.provider").data)
@@ -62,10 +63,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stdout)]
 )
-
-# Dropbox API setup explicitly clearly:
-DROPBOX_TOKEN = os.environ.get('DROPBOX_TOKEN')  # explicitly recommended for token securely stored in environment variable explicitly clearly
-DROPBOX_DEST_FOLDER = "/Recht om te vertegenwoordigen"  # clearly explicitly your Dropbox folder explicitly clearly
 
 
 def _main(verbose=False, optional_args=None):
@@ -147,8 +144,20 @@ def _main(verbose=False, optional_args=None):
                 # Handle other possible exceptions
                 logging.error(f"An error occurred while uploading dropbox: {ee}")
 
+# Dropbox API setup:
+def get_dbx_client():
+    APP_KEY = os.environ.get('DROPBOX_APP_KEY')
+    APP_SECRET = os.environ.get('DROPBOX_APP_SECRET')
+    REFRESH_TOKEN = os.environ.get('DROPBOX_REFRESH_TOKEN')
+
+    return dropbox.Dropbox(
+        oauth2_refresh_token=REFRESH_TOKEN,
+        app_key=APP_KEY,
+        app_secret=APP_SECRET
+    )
+
 def dropbox_upload(generated_files):
-    dbx = dropbox.Dropbox(DROPBOX_TOKEN, scope=["files.content.write"])
+    dbx = get_dbx_client()
 
     for filepath in generated_files:
         abs_full_path = os.path.abspath(filepath)
@@ -157,7 +166,7 @@ def dropbox_upload(generated_files):
         else:
             logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
-        dropbox_dest_path = os.path.join(DROPBOX_DEST_FOLDER, os.path.basename(filepath)).replace('\\', '/')
+        dropbox_dest_path = os.path.join(dropbox_destination_folder, os.path.basename(filepath)).replace('\\', '/')
 
         logging.info(f"📂 Local file to upload: {abs_full_path}")
         logging.info(f"📌 Dropbox full destination path: {dropbox_dest_path}")
