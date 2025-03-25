@@ -1,6 +1,7 @@
 from dropbox.exceptions import ApiError, AuthError
 from dropbox.files import WriteMode
 from email.message import EmailMessage
+from email.utils import formataddr
 from jproperties import Properties
 from docx2pdf import convert
 from docx import Document
@@ -17,8 +18,6 @@ import shutil
 import sys
 import re
 import os
-
-from stone.backends.python_rsrc.stone_validators import Boolean
 
 # Fetch properties
 try:
@@ -217,7 +216,7 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}' ({klant_job_reference})"
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
-    email_message['From'] = mail_sender_email
+    email_message['From'] = formataddr(("GitHub Actions", mail_sender_email))
     email_message['To'] = email_address
     email_message.set_content(return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference), subtype='html')
 
