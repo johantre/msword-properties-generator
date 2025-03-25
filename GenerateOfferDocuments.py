@@ -180,24 +180,24 @@ def dropbox_upload(generated_files):
     for filepath in generated_files:
         abs_full_path = os.path.abspath(filepath)
         if os.path.exists(filepath):
-            logging.info(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
+            logging.debug(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
         else:
             logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
         dropbox_dest_path = os.path.join(dropbox_destination_folder, os.path.basename(filepath)).replace('\\', '/')
 
-        logging.info(f"📂 Local file to upload: {abs_full_path}")
-        logging.info(f"📌 Dropbox full destination path: {dropbox_dest_path}")
+        logging.debug(f"📂 Local file to upload: {abs_full_path}")
+        logging.debug(f"📌 Dropbox full destination path: {dropbox_dest_path}")
         with open(abs_full_path, 'rb') as file:
             try:
-                logging.info(f"📤 Uploading '{filepath}' to '{dropbox_dest_path}' on Dropbox.")
+                logging.debug(f"📤 Uploading '{filepath}' to '{dropbox_dest_path}' on Dropbox.")
                 response = dbx.files_upload(
                     file.read(),
                     dropbox_dest_path,
                     mode=WriteMode("overwrite")
                 )
-                logging.info(f"🚀 Successfully uploaded file. Dropbox file details: {response}")
-                print(f"✅ Successfully uploaded file to Dropbox: '{os.path.basename(filepath)}'")
+                logging.debug(f"🚀 Successfully uploaded file. Dropbox file details: {response}")
+                logging.info(f"✅ Successfully uploaded file to Dropbox: '{os.path.basename(filepath)}'")
             except dropbox.exceptions.ApiError as err:logging.error(f"📛 Dropbox API error: {err}")
 
 
@@ -224,7 +224,7 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     for filepath in generated_files:
         abs_full_path = os.path.abspath(filepath)
         if os.path.exists(filepath):
-            logging.info(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
+            logging.debug(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
         else:
             logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
@@ -254,9 +254,9 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
             smtp.starttls()
             smtp.login(mail_sender_email, sender_password)
             smtp.send_message(email_message)
-        print('✅ Email successfully sent.')
+        logging.info(f'✅ Email successfully sent to {email_message['To']}')
     except Exception as e:
-        print('❗ An error occurred:', e)
+        logging.error('❗ An error occurred:', e)
 
 
 def set_custom_properties(extracted_dir, provider_replacements, customer_replacements):
@@ -354,7 +354,7 @@ def replace_direct_text(document, provider_replacements, customer_replacements):
             for old, new in replacem.items():
                 if old in run.text:
                     run.text = run.text.replace(old, new)
-                    logging.info(f"ℹ️'{old}' successfully replaced by '{new}' in target file in paragraphs")
+                    logging.debug(f"ℹ️'{old}' successfully replaced by '{new}' in target file in paragraphs")
 
     # Replace in paragraphs
     for paragraph in document.paragraphs:
@@ -386,7 +386,7 @@ def replace_images_by_alt_text(doc, alt_text, new_image_path):
     if not replaced:
         logging.warning(f"⚠️No image found with alt_text '{alt_text}'")
     else:
-        logging.info(f"ℹ️Image with alt_text '{alt_text}' in target file successfully replaced")
+        logging.debug(f"ℹ️Image with alt_text '{alt_text}' in target file successfully replaced")
 
 
 def save_to_excel(data_frame, log_data_frame):
@@ -432,13 +432,13 @@ def convert_to_pdf(base_document):
             output_path,
             convert_from_docx
         ], check=True)
-        logging.info("ℹ️Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
-        logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
+        logging.debug("ℹ️Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
+        logging.debug("ℹ️Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
         files = os.listdir(abs_output_path)
-        logging.info(f"📂 Explicitly listing files from '{abs_output_path}':")
+        logging.debug(f"📂 Explicitly listing files from '{abs_output_path}':")
         if files:
             for file in files:
-                logging.info(f"    - {file}")
+                logging.debug(f"    - {file}")
         else:
             logging.warning(f"📭 Directory '{abs_output_path}' explicitly exists but is empty!")
     except FileNotFoundError:
@@ -452,12 +452,12 @@ def convert_to_pdf_traditional(base_document):
     try:
         # Convert the output
         convert(save_as_docx, save_as_pdf)
-        logging.info("ℹ️Word file: " + save_as_docx)
-        logging.info("ℹ️Successfully converted to Pdf file: " + save_as_pdf)
+        logging.debug("ℹ️Word file: " + save_as_docx)
+        logging.debug("ℹ️Successfully converted to Pdf file: " + save_as_pdf)
     except Exception as e:
         logging.error(f"❌Failed to convert {save_as_docx} to PDF: {e}")
         if os.path.exists(save_as_docx):  # to avoid stale files
-            logging.info(f"ℹ️Cleaning up incomplete conversion file {save_as_docx}")
+            logging.debug(f"ℹ️Cleaning up incomplete conversion file {save_as_docx}")
             os.remove(save_as_docx)
         raise
 
