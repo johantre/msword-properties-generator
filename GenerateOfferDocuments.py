@@ -57,9 +57,8 @@ handlers = logging.root.handlers[:]
 for handler in handlers:
     logging.root.removeHandler(handler)
 
-# Explicitly set up root logger clearly once, explicitly:
 logging.basicConfig(
-    level=logging.INFO,
+    level=os.getenv('LOG_LEVEL', 'INFO').upper(),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stdout)]
 )
@@ -196,7 +195,7 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
     base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
 
-    email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}' are ready"
+    email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}'('{klant_job_reference}')"
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
     email_message['From'] = mail_sender_email

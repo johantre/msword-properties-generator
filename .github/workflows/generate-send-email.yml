@@ -151,6 +151,7 @@ jobs:
 
       - name: Run Python script to send email
         env:
+          LOG_LEVEL: ERROR
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
           DROPBOX_APP_KEY:  ${{ secrets.DROPBOX_APP_KEY }}
           DROPBOX_APP_SECRET:  ${{ secrets.DROPBOX_APP_SECRET }}
