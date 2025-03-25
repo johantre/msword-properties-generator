@@ -137,7 +137,10 @@ def _main(verbose=False, optional_args=None):
                 recipient_email = 'johan_tre@hotmail.com'
             generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
 
-            send_email(generated_files, recipient_email, provider_line, customer_line)
+            if recipient_email:
+                send_email(generated_files, recipient_email, provider_line, customer_line)
+            else:
+                logging.info(f"ℹ️Email not sent, as requested by user.")
 
             upload_dropbox = True
             if optional_args:
