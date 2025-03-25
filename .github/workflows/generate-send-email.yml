@@ -26,6 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
       - name: Ensure Cache Directory Exists
         run: |
           sudo mkdir -p /usr/lib/libreoffice
@@ -47,9 +52,22 @@ jobs:
             ${{ runner.os }}-pip-
         continue-on-error: true
 
+      - name: Cache LibreOffice installation
+        uses: actions/cache@v3
+        with:
+          path: /usr/lib/libreoffice
+          key: ${{ runner.os }}-libreoffice
+          restore-keys: |
+            ${{ runner.os }}-libreoffice-
+        continue-on-error: true
+
       - name: Check Python dependencies cache hit
         run: |
           echo "Python cache hit: ${{ steps.python-cache.outputs.cache-hit }}"
+
+      - name: Check LibreOffice cache hit
+        run: | 
+          echo "LibreOffice cache hit: ${{ steps.libreoffice-cache.outputs.cache-hit }}"
 
       - name: List Python cache directory before installation
         run: ls -la ~/.cache/pip
@@ -62,24 +80,19 @@ jobs:
       - name: Extract Python dependencies cache (if available)
         if: steps.python-cache.outputs.cache-hit != 'true'
         run: |
-          if [ -f /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst ]; then
-            tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /home/runner/.cache/pip --use-compress-program unzstd
+          echo "Python runner.temp: ${{ runner.temp }}"
+          echo "Python github.run_id: ${{ github.run_id }}"
+          cache_dir="${{ runner.temp }}/_temp/${{ github.run_id }}/cache.tzst"
+          if [ -f "$cache_dir" ]; then
+            tar --no-same-owner --no-same-permissions -xf "$cache_dir" -P -C ${{ runner.cache }} --use-compress-program unzstd
           else
             echo "Cache file not found."
           fi
 
-      - name: Cache LibreOffice installation
-        uses: actions/cache@v3
-        with:
-          path: /usr/lib/libreoffice
-          key: ${{ runner.os }}-libreoffice
-          restore-keys: |
-            ${{ runner.os }}-libreoffice-
-        continue-on-error: true
-
-      - name: Check LibreOffice cache hit
-        run: | 
-          echo "LibreOffice cache hit: ${{ steps.libreoffice-cache.outputs.cache-hit }}"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Debug LibreOffice cache
         run: |
@@ -89,8 +102,11 @@ jobs:
       - name: Extract LibreOffice cache (if available)
         if: steps.libreoffice-cache.outputs.cache-hit != 'true'
         run: |
-          if [ -f /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst ]; then
-            tar --no-same-owner --no-same-permissions -xf /home/runner/work/_temp/fe702c14-e436-4424-a945-76442111e9e9/cache.tzst -P -C /usr/lib/libreoffice --use-compress-program unzstd
+          echo "LibreOffice runner.temp: ${{ runner.temp }}"
+          echo "LibreOffice github.run_id: ${{ github.run_id }}"
+          cache_dir="${{ runner.temp }}/_temp/${{ github.run_id }}/cache.tzst"
+          if [ -f "$cache_dir" ]; then
+            tar --no-same-owner --no-same-permissions -xf "$cache_dir" -P -C ${{ runner.cache }} --use-compress-program unzstd          
           else
             echo "Cache file not found."
           fi
@@ -106,16 +122,6 @@ jobs:
           ls -alh ~/.cache/pip
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
-
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
 
       - name: Set up JDK 11
         uses: actions/setup-java@v2
