@@ -35,20 +35,25 @@ jobs:
         run: |
           sudo mkdir -p /usr/lib/libreoffice
           sudo mkdir -p ~/.cache/pip
+          sudo mkdir -p /usr/lib/jvm
 
       - name: Set Permissions and Ownership
         run: |
-          sudo chown -R $USER:$USER ~/.cache/pip
           sudo chown -R $USER:$USER /usr/lib/libreoffice
-          sudo chmod -R 777 ~/.cache/pip
+          sudo chown -R $USER:$USER ~/.cache/pip
+          sudo chown -R $USER:$USER /usr/lib/jvm
           sudo chmod -R 777 /usr/lib/libreoffice
+          sudo chmod -R 777 ~/.cache/pip
+          sudo chmod -R 777 /usr/lib/jvm
 
-      - name: List Python en LibreOffice Cache Contents before Cache installation
+      - name: List Python, LibreOffice, JDK Cache Contents before Cache installation
         run: |
-          echo "Listing Python cache contents"
-          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
+          echo "Listing JDK cache contents"
+          ls -alh /usr/lib/jvm || echo "JDK cache directory does not exist"          
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
@@ -68,12 +73,23 @@ jobs:
             ${{ runner.os }}-libreoffice-
         continue-on-error: true
 
-      - name: List Python en LibreOffice Cache Contents after Cache installation
+      - name: Cache JDK 11 installation
+        uses: actions/cache@v3
+        with:
+          path: /usr/lib/jvm
+          key: ${{ runner.os }}-jdk11
+          restore-keys: |
+            ${{ runner.os }}-jdk11-
+        continue-on-error: true
+
+      - name: List Python, LibreOffice, JDK Cache Contents after Cache installation
         run: |
-          echo "Listing Python cache contents"
-          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
+          echo "Listing JDK cache contents"
+          ls -alh /usr/lib/jvm || echo "JDK cache directory does not exist"          
 
       - name: Check Python dependencies cache hit
         run: |
@@ -83,8 +99,9 @@ jobs:
         run: | 
           echo "LibreOffice cache hit: ${{ steps.libreoffice-cache.outputs.cache-hit }}"
 
-      - name: List Python cache directory before installation
-        run: ls -la ~/.cache/pip
+      - name: Check JDK cache hit
+        run: |
+          echo "JDK cache hit: ${{ steps.jdk-cache.outputs.cache-hit }}"
 
       - name: Debug Python dependencies cache
         run: |
@@ -127,15 +144,21 @@ jobs:
 
       - name: Set Permissions again
         run: |
+          sudo chown -R $USER:$USER /usr/lib/libreoffice
+          sudo chown -R $USER:$USER ~/.cache/pip
+          sudo chown -R $USER:$USER /usr/lib/jvm
+          sudo chmod -R 777 /usr/lib/libreoffice
           sudo chmod -R 777 ~/.cache/pip
-          sudo chmod -R 777 /usr/lib/libreoffice        
+          sudo chmod -R 777 /usr/lib/jvm
 
-      - name: List Python en LibreOffice Cache Contents after extraction
+      - name: List Python, LibreOffice, JDK Cache Contents after extraction
         run: |
-          echo "Listing Python cache contents"
-          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
+          echo "Listing Python cache contents"
+          ls -alh ~/.cache/pip || echo "Python cache directory does not exist"
+          echo "Listing JDK cache contents"
+          ls -alh /usr/lib/jvm || echo "JDK cache directory does not exist"          
 
       - name: Set up JDK 11
         uses: actions/setup-java@v2
