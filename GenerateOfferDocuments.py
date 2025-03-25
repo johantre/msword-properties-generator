@@ -144,6 +144,7 @@ def _main(verbose=False, optional_args=None):
                 if not optional_args["UploadDropbox"]:
                     upload_dropbox = False
                     logging.info(f"ℹ️Not uploaded to Dropbox, as requested by user. Value option_args['UploadDropbox'] is: {optional_args["UploadDropbox"]}.")
+
             if upload_dropbox:
                 try:
                     dropbox_upload(generated_files)
