@@ -1,5 +1,5 @@
-from jproperties import Properties
-from mail_utils import safe_get
+from util_config import config  # importing centralized config
+from utils_mail import safe_get
 from lxml import etree as ET
 from docx import Document
 import tempfile
@@ -7,29 +7,6 @@ import logging
 import zipfile
 import shutil
 import os
-
-
-# Fetch properties
-try:
-    configs = Properties()
-    with open('env/prod.properties', 'rb') as read_prop:
-        configs.load(read_prop)
-except (FileNotFoundError, Exception) as e:
-    logging.error(f"❌Error reading properties file: {e}")
-    raise SystemExit(e)
-
-# Path constructions
-output_path = configs.get("path.output").data
-resource_path = configs.get("path.resource").data
-image_file_path = os.path.join(resource_path, configs.get("path.resource.image_signature").data)
-base_document_namespace_cp = configs.get("base.word.namespace.cp").data
-base_document_namespace_vt = configs.get("base.word.namespace.vt").data
-base_document_image_alt_text_left =  configs.get("base.word.template.image_alt_text_left").data
-base_document_image_alt_text_right =  configs.get("base.word.template.image_alt_text_right").data
-base_document_name = configs.get("base.word.template").data
-word_template_path =  os.path.join(resource_path, base_document_name + '.docx')
-base_document_name = configs.get("base.word.template").data
-base_output_document_path = os.path.join(output_path, base_document_name)
 
 
 # Update the custom properties in de docx document structure
@@ -49,8 +26,8 @@ def set_custom_property(extracted_dir, property_name, property_value):
     root = tree.getroot()
 
     namespaces = {
-        'cp': base_document_namespace_cp,
-        'vt': base_document_namespace_vt
+        'cp': config["namespaces"]["cp"],
+        'vt': config["namespaces"]["vt"]
     }
 
     prop = None
@@ -90,11 +67,18 @@ def repack_docx(extracted_dir, base_document):
                 docx_zip.write(abs_name, arc_name)
     shutil.rmtree(extracted_dir)
 
-def update_custom_properties_docx_structure(base_document_to_save, customer_line, provider_line):
+def update_custom_properties_docx_structure(customer_line, provider_line):
     # In the custom properties xml structure...
-    base_document_to_save = set_custom_properties_docx(base_document_to_save, customer_line, provider_line)
+    base_document_to_save = set_custom_properties_docx(customer_line, provider_line)
     # Replace in the document itself...
     update_custom_properties_docx(base_document_to_save, customer_line, provider_line)
+    return base_document_to_save
+
+def set_custom_properties_docx(customer_line, provider_line):
+    extracted_dir = extract_docx(config["paths"]["word_template_path"])
+    set_custom_properties(extracted_dir, provider_line, customer_line)
+    base_document_to_save = build_base_document_to_save(provider_line, customer_line)
+    repack_docx(extracted_dir, base_document_to_save)
     return base_document_to_save
 
 def update_custom_properties_docx(base_document_to_save, customer_line, provider_line):
@@ -102,13 +86,6 @@ def update_custom_properties_docx(base_document_to_save, customer_line, provider
     replace_images(document)
     replace_direct_text(document, provider_line, customer_line)
     save_document(base_document_to_save, document)
-
-def set_custom_properties_docx(base_document_to_save, customer_line, provider_line):
-    extracted_dir = extract_docx(word_template_path)
-    set_custom_properties(extracted_dir, provider_line, customer_line)
-    base_document_to_save = build_base_document_to_save(provider_line, customer_line)
-    repack_docx(extracted_dir, base_document_to_save)
-    return base_document_to_save
 
 
 # Update the custom properties in de docx document itself
@@ -154,12 +131,14 @@ def build_base_document_to_save(provider_replacements, customer_replacements):
     klant_naam = safe_get(customer_replacements, "KlantNaam")
     klant_job_title = safe_get(customer_replacements, "KlantJobTitle")
     klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
-    base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
+    base_document = f"{config["paths"]["base_output_document_path"]} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
+
     return base_document
 
 def replace_images(document):
-    replace_images_by_alt_text(document, base_document_image_alt_text_left, image_file_path)
-    replace_images_by_alt_text(document, base_document_image_alt_text_right, image_file_path)
+    image_path = config["paths"]["image_file_path"]
+    replace_images_by_alt_text(document, config["alt_texts"]["left"], image_path)
+    replace_images_by_alt_text(document, config["alt_texts"]["right"], image_path)
 
 def open_document(base_document):
     save_as_docx = base_document + ".docx"

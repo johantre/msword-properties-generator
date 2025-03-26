@@ -1,4 +1,4 @@
-from jproperties import Properties
+from util_config import config  # importing centralized config
 from docx2pdf import convert
 import subprocess
 import logging
@@ -6,22 +6,8 @@ import os
 
 
 
-
-
-
-# Fetch properties
-try:
-    configs = Properties()
-    with open('env/prod.properties', 'rb') as read_prop:
-        configs.load(read_prop)
-except (FileNotFoundError, Exception) as e:
-    logging.error(f"❌Error reading properties file: {e}")
-    raise SystemExit(e)
-
-output_path = configs.get("path.output").data
-
-
 def convert_to_pdf(base_document):
+    output_path = config["paths"]["output_path"]
     convert_from_docx = base_document + ".docx"
     save_as_pdf = base_document + ".pdf"
 

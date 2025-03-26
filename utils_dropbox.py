@@ -1,25 +1,11 @@
+from util_config import config  # importing centralized config
 from dropbox.exceptions import ApiError
 from dropbox.files import WriteMode
-from jproperties import Properties
 import dropbox
 import logging
 import os
 
 
-
-
-
-# Fetch properties
-try:
-    configs = Properties()
-    with open('env/prod.properties', 'rb') as read_prop:
-        configs.load(read_prop)
-except (FileNotFoundError, Exception) as e:
-    logging.error(f"❌Error reading properties file: {e}")
-    raise SystemExit(e)
-
-# Path constructions
-dropbox_destination_folder = configs.get("path.dropbox.destination.folder").data
 
 # Dropbox API setup:
 def get_dbx_client():
@@ -43,7 +29,7 @@ def dropbox_upload(generated_files):
         else:
             logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
-        dropbox_dest_path = os.path.join(dropbox_destination_folder, os.path.basename(filepath)).replace('\\', '/')
+        dropbox_dest_path = os.path.join(config["dropbox"]["dropbox_destination_folder"], os.path.basename(filepath)).replace('\\', '/')
 
         logging.debug(f"📂 Local file to upload: {abs_full_path}")
         logging.debug(f"📌 Dropbox full destination path: {dropbox_dest_path}")

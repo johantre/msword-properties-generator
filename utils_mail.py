@@ -1,34 +1,12 @@
+from util_config import config  # importing centralized config
 from email.message import EmailMessage
 from email.utils import formataddr
-from jproperties import Properties
 import logging
 import smtplib
 import os
 import re
 
 
-
-
-# Fetch properties
-try:
-    configs = Properties()
-    with open('env/prod.properties', 'rb') as read_prop:
-        configs.load(read_prop)
-except (FileNotFoundError, Exception) as e:
-    logging.error(f"❌Error reading properties file: {e}")
-    raise SystemExit(e)
-
-# Mail constructions
-mail_smtp_port = configs.get("mail.smtp_port").data
-mail_smtp_server = configs.get("mail.smtp_server").data
-mail_sender_email = configs.get("mail.sender_email").data
-# Path constructions
-resource_path = configs.get("path.resource").data
-output_path = configs.get("path.output").data
-base_document_name = configs.get("base.word.template").data
-
-word_template_path =  os.path.join(resource_path, base_document_name + '.docx')
-base_output_document_path = os.path.join(output_path, base_document_name)
 
 def sanitize_filename(filename_part):
     return re.sub(r'[*<>:"/\\|?]', '_', filename_part).strip()
@@ -47,12 +25,12 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     klant_naam = safe_get(customer_replacements, "KlantNaam")
     klant_job_title = safe_get(customer_replacements, "KlantJobTitle")
     klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
-    base_document = f"{base_output_document_path} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
+    base_document = f"{config["paths"]["base_output_document_path"]} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
 
     email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}' ({klant_job_reference})"
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
-    email_message['From'] = formataddr(("Github Actions", mail_sender_email))
+    email_message['From'] = formataddr(("Github Actions", config["mail"]["mail_sender_email"]))
     email_message['To'] = email_address
     email_message.set_content(return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference), subtype='html')
 
@@ -85,9 +63,9 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
             )
     # Send email securely
     try:
-        with smtplib.SMTP(mail_smtp_server, mail_smtp_port) as smtp:
+        with smtplib.SMTP(config["mail"]["mail_smtp_server"], config["mail"]["mail_smtp_port"]) as smtp:
             smtp.starttls()
-            smtp.login(mail_sender_email, sender_password)
+            smtp.login(config["mail"]["mail_sender_email"], sender_password)
             smtp.send_message(email_message)
         logging.info(f'✅ Email successfully sent to {email_message['To']}')
     except Exception as e:
@@ -95,40 +73,85 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
 
 def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference):
     return f"""
-    <body>
-        <h2>Recht om te vertegenwoordigen</h2>
-        <table>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px;">
+
+    <!-- Container aligning content to the left (max-width: 900px, matching tables) -->
+    <div style="max-width:900px; margin:0; padding:0;">
+
+        <!-- Header Image aligned with table & h2 -->
+        <div style="width:100%; margin:0 0 20px 0; text-align:center;">
+            <img src="https://customer.connecting-expertise.com/img/logo2024-2.png"
+                 alt="Company Logo"
+                 style="width:100%; max-width:500px; height:auto; display:block;">
+        </div>
+
+        <!-- Centered H2 within exact table width -->
+        <h2 style="margin:0 0 15px 0; text-align:center;">
+            Recht om te vertegenwoordigen
+        </h2>
+
+        <!-- Left aligned Table -->
+        <table style="border-collapse: collapse; width:100%; margin: 0 0 20px 0;">
             <tr>
-                <td><b>Leverancier Naam</b></td>
-                <td>{leverancier_naam}</td>
+                <td style="border: 1px solid #ccc; padding:8px; width:1%; white-space: nowrap; font-weight:bold;">
+                    Leverancier Naam
+                </td>
+                <td style="border: 1px solid #ccc; padding:8px;">
+                    {leverancier_naam}
+                </td>
             </tr>
             <tr>
-                <td><b>Klant Naam</b></td>
-                <td>{klant_naam}</td>
+                <td style="border: 1px solid #ccc; padding:8px; width:1%; white-space: nowrap; font-weight:bold;">
+                    Klant Naam
+                </td>
+                <td style="border: 1px solid #ccc; padding:8px;">
+                    {klant_naam}
+                </td>
             </tr>
             <tr>
-                <td><b>Klant JobTitle</b></td>
-                <td>{klant_job_title}</td>
+                <td style="border: 1px solid #ccc; padding:8px; width:1%; white-space: nowrap; font-weight:bold;">
+                    Klant JobTitle
+                </td>
+                <td style="border: 1px solid #ccc; padding:8px;">
+                    {klant_job_title}
+                </td>
             </tr>
             <tr>
-                <td><b>Klant JobReference</b></td>
-                <td>{klant_job_reference}</td>
+                <td style="border: 1px solid #ccc; padding:8px; width:1%; white-space: nowrap; font-weight:bold;">
+                    Klant JobReference
+                </td>
+                <td style="border: 1px solid #ccc; padding:8px;">
+                    {klant_job_reference}
+                </td>
             </tr>
         </table>
 
-        <h3>Documents Attached:</h3>
-        <table>
+        <!-- Left aligned H3 -->
+        <h3 style="margin:0 0 10px 0; text-align:left;">
+            Documents Attached:
+        </h3>
+
+        <!-- Left Aligned 2nd Table -->
+        <table style="border-collapse: collapse; width:100%; margin: 0 0 20px 0;">
             <tr>
-                <td><b>MSWord</b></td>
-                <td>{base_document}.docx</td>
+                <td style="border: 1px solid #ccc; padding:8px; width:1%; white-space: nowrap; font-weight:bold;">
+                    MSWord
+                </td>
+                <td style="border: 1px solid #ccc; padding:8px;">
+                    {base_document}.docx
+                </td>
             </tr>
             <tr>
-                <td><b>Pdf</b></td>
-                <td>{base_document}.pdf</td>
+                <td style="border: 1px solid #ccc; padding:8px; width:1%; white-space: nowrap; font-weight:bold;">
+                    Pdf
+                </td>
+                <td style="border: 1px solid #ccc; padding:8px;">
+                    {base_document}.pdf
+                </td>
             </tr>
         </table>
-    </body>
+
+    </div>
+
+</body>
     """
-
-
-
