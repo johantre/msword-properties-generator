@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS offer_providers (
 # Insert encrypted data into table
 cursor.execute('''
 INSERT INTO offer_providers (LeverancierEmail, LeverancierNaam, LeverancierStad, LeverancierStraat, LeverancierPostadres, LeverancierKandidaat, LeverancierOpgemaaktte, LeverancierHoedanigheid)
-VALUES (?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ''', (
     encrypted_inputs['LeverancierEmail'],
     encrypted_inputs['LeverancierNaam'],
