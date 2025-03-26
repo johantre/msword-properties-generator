@@ -37,11 +37,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Enable Debugging
-        run: |
-          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
-          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
-
       - name: Trim spaces from email input
         id: trim_email
         run: |
@@ -173,6 +168,11 @@ jobs:
         run: |
           export JAVA_HOME=$JAVA_HOME
           libreoffice --version
+
+      - name: Enable Debugging
+        run: |
+          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       - name: Run Python script to send email and upload to Dropbox
         env:
