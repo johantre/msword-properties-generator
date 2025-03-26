@@ -1,6 +1,6 @@
+from cryptography.fernet import Fernet
 import sqlite3
 import os
-from cryptography.fernet import Fernet
 
 # Load the encryption key from environment variables
 key = os.getenv('ENCRYPTION_KEY')
@@ -18,8 +18,16 @@ inputs = {
     "LeverancierHoedanigheid": os.getenv('INPUT_LEVERANCIERHOEDANIGHEID')
 }
 
+print(f"Print inputs to debug")
+for key, value in inputs.items():
+    print(f"{key}: {value}")
+
 # Sanitize inputs (remove leading/trailing spaces)
 sanitized_inputs = {k: v.strip() for k, v in inputs.items()}
+
+print(f"Print sanitized inputs to debug")
+for key, value in sanitized_inputs.items():
+    print(f"{key}: {value}")
 
 # Encrypt inputs
 encrypted_inputs = {k: cipher_suite.encrypt(v.encode()).decode() for k, v in sanitized_inputs.items()}
