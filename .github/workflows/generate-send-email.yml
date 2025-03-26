@@ -30,8 +30,8 @@ on:
         type: boolean
 
 jobs:
-  send_email_job:
-    if: github.event.inputs.sendEmail == 'true' || github.event.inputs.uploadDropbox == 'true'
+  send_email_upload_dropbox_job:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.sendEmail == 'true' || github.event.inputs.uploadDropbox == 'true'
     runs-on: ubuntu-latest
 
     steps:
