@@ -1,27 +1,7 @@
-from jproperties import Properties
+from util_config import config  # importing centralized config
 import pandas as pd
 import logging
-import os
 
-
-# Fetch properties
-try:
-    configs = Properties()
-    with open('env/prod.properties', 'rb') as read_prop:
-        configs.load(read_prop)
-except (FileNotFoundError, Exception) as e:
-    logging.error(f"❌Error reading properties file: {e}")
-    raise SystemExit(e)
-
-# Path constructions
-resource_path = configs.get("path.resource").data
-xls_offers_log = os.path.join(resource_path, configs.get("base.excel.offers.log").data)
-xls_offers_log_sheetname = configs.get("base.excel.offers.log.sheetname").data
-xls_offers_provider = os.path.join(resource_path, configs.get("base.excel.offers.provider").data)
-xls_offers_provider_sheetname = configs.get("base.excel.offers.provider.sheetname").data
-xls_offers_customer = os.path.join(resource_path, configs.get("base.excel.offers.customer").data)
-xls_offers_customer_sheetname = configs.get("base.excel.offers.customer.sheetname").data
-base_document_name = configs.get("base.word.template").data
 
 
 def extract_combined_replacements_from_xls(optional_args):
@@ -33,9 +13,8 @@ def extract_combined_replacements_from_xls(optional_args):
             combined_replacements[f'cust_{key}'] = value
         return combined_replacements
 
-    provider_replacements = create_sanitized_replacements(xls_offers_provider, xls_offers_provider_sheetname, "prov")
-    customer_replacements = create_sanitized_replacements(xls_offers_customer, xls_offers_customer_sheetname, "cust",
-                                                          optional_args)
+    provider_replacements = create_sanitized_replacements(config["paths"]["xls_offers_provider"], config["paths"]["xls_offers_provider_sheetname"], "prov")
+    customer_replacements = create_sanitized_replacements(config["paths"]["xls_offers_customer"], config["paths"]["xls_offers_customer_sheetname"], "cust", optional_args)
     combined_replacements = merge_replacements(customer_replacements, provider_replacements)
     return combined_replacements
 
@@ -72,10 +51,10 @@ def create_sanitized_replacements(excel_filepath, sheet_name, prefix, optionals=
 
 
 def save_to_excel(data_frame, log_data_frame):
-    with pd.ExcelWriter(xls_offers_log, mode='w', engine='openpyxl') as log_writer:
-        log_data_frame.to_excel(log_writer, sheet_name=xls_offers_log_sheetname, index=False)
-    with pd.ExcelWriter(xls_offers_customer, mode='w', engine='openpyxl') as cust_writer:
-        data_frame.to_excel(cust_writer, sheet_name=xls_offers_customer_sheetname, index=False)
+    with pd.ExcelWriter(config["paths"]["xls_offers_log"], mode='w', engine='openpyxl') as log_writer:
+        log_data_frame.to_excel(log_writer, sheet_name=config["paths"]["xls_offers_log_sheetname"], index=False)
+    with pd.ExcelWriter(config["paths"]["xls_offers_customer"], mode='w', engine='openpyxl') as cust_writer:
+        data_frame.to_excel(cust_writer, sheet_name=config["paths"]["xls_offers_customer_sheetname"], index=False)
     return log_data_frame
 
 def safely_read_excel(excel_file, sheet_name, description):

@@ -47,7 +47,7 @@ def _main(verbose=False, optional_args=None):
             if isinstance(line, dict):
                 customer_line = line
                 # For each customer row ...
-                base_document_to_save = update_custom_properties_docx_structure(base_document_to_save, customer_line, provider_line)
+                base_document_to_save = update_custom_properties_docx_structure(customer_line, provider_line)
 
                 convert_to_pdf(base_document_to_save)
 
