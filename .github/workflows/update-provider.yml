@@ -40,6 +40,9 @@ jobs:
   encrypt_and_populate:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
