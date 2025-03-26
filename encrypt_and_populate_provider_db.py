@@ -1,0 +1,62 @@
+import sqlite3
+import os
+from cryptography.fernet import Fernet
+
+# Load the encryption key from environment variables
+key = os.getenv('ENCRYPTION_KEY')
+cipher_suite = Fernet(key)
+
+# Get inputs from environment variables with sanitized keys
+inputs = {
+    "LeverancierNaam": os.getenv('INPUT_LEVERANCIERNAAM'),
+    "LeverancierStad": os.getenv('INPUT_LEVERANCIERSTAD'),
+    "LeverancierStraat": os.getenv('INPUT_LEVERANCIERSTRAAT'),
+    "LeverancierPostadres": os.getenv('INPUT_LEVERANCIERPOSTADRES'),
+    "LeverancierKandidaat": os.getenv('INPUT_LEVERANCIERKANDIDAAT'),
+    "LeverancierOpgemaaktte": os.getenv('INPUT_LEVERANCIEROPGEMAAKTTE'),
+    "LeverancierHoedanigheid": os.getenv('INPUT_LEVERANCIERHOEDANIGHEID')
+}
+
+# Sanitize inputs (remove leading/trailing spaces)
+sanitized_inputs = {k: v.strip() for k, v in inputs.items()}
+
+# Encrypt inputs
+encrypted_inputs = {k: cipher_suite.encrypt(v.encode()).decode() for k, v in sanitized_inputs.items()}
+
+# Connect to SQLite database (or create it if it doesn't exist)
+conn = sqlite3.connect('personal_data.db')
+cursor = conn.cursor()
+
+# Create table if it doesn't exist
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS offer_providers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    LeverancierNaam TEXT NOT NULL,
+    LeverancierStad TEXT NOT NULL,
+    LeverancierStraat TEXT NOT NULL,
+    LeverancierPostadres TEXT NOT NULL,
+    LeverancierKandidaat TEXT NOT NULL,
+    LeverancierOpgemaaktte TEXT NOT NULL,
+    LeverancierHoedanigheid TEXT NOT NULL
+)
+''')
+
+# Insert encrypted data into table
+cursor.execute('''
+INSERT INTO offer_providers (LeverancierNaam, LeverancierStad, LeverancierStraat, LeverancierPostadres, LeverancierKandidaat, LeverancierOpgemaaktte, LeverancierHoedanigheid)
+VALUES (?, ?, ?, ?, ?, ?, ?)
+''', (
+    encrypted_inputs['LeverancierNaam'],
+    encrypted_inputs['LeverancierStad'],
+    encrypted_inputs['LeverancierStraat'],
+    encrypted_inputs['LeverancierPostadres'],
+    encrypted_inputs['LeverancierKandidaat'],
+    encrypted_inputs['LeverancierOpgemaaktte'],
+    encrypted_inputs['LeverancierHoedanigheid']
+))
+
+# Commit and close
+conn.commit()
+conn.close()
+
+print("Data encrypted and inserted successfully")
