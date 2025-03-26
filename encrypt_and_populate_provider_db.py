@@ -8,6 +8,7 @@ cipher_suite = Fernet(key)
 
 # Get inputs from environment variables with sanitized keys
 inputs = {
+    "LeverancierEmail": os.getenv('INPUT_LEVERANCIEREMAIL'),
     "LeverancierNaam": os.getenv('INPUT_LEVERANCIERNAAM'),
     "LeverancierStad": os.getenv('INPUT_LEVERANCIERSTAD'),
     "LeverancierStraat": os.getenv('INPUT_LEVERANCIERSTRAAT'),
@@ -24,13 +25,14 @@ sanitized_inputs = {k: v.strip() for k, v in inputs.items()}
 encrypted_inputs = {k: cipher_suite.encrypt(v.encode()).decode() for k, v in sanitized_inputs.items()}
 
 # Connect to SQLite database (or create it if it doesn't exist)
-conn = sqlite3.connect('personal_data.db')
+conn = sqlite3.connect('offers_provider.db')
 cursor = conn.cursor()
 
 # Create table if it doesn't exist
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS offer_providers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    LeverancierEmail TEXT NOT NULL,
     LeverancierNaam TEXT NOT NULL,
     LeverancierStad TEXT NOT NULL,
     LeverancierStraat TEXT NOT NULL,
@@ -43,9 +45,10 @@ CREATE TABLE IF NOT EXISTS offer_providers (
 
 # Insert encrypted data into table
 cursor.execute('''
-INSERT INTO offer_providers (LeverancierNaam, LeverancierStad, LeverancierStraat, LeverancierPostadres, LeverancierKandidaat, LeverancierOpgemaaktte, LeverancierHoedanigheid)
+INSERT INTO offer_providers (LeverancierEmail, LeverancierNaam, LeverancierStad, LeverancierStraat, LeverancierPostadres, LeverancierKandidaat, LeverancierOpgemaaktte, LeverancierHoedanigheid)
 VALUES (?, ?, ?, ?, ?, ?, ?)
 ''', (
+    encrypted_inputs['LeverancierEmail'],
     encrypted_inputs['LeverancierNaam'],
     encrypted_inputs['LeverancierStad'],
     encrypted_inputs['LeverancierStraat'],
