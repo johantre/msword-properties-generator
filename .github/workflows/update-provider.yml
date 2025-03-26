@@ -57,9 +57,6 @@ jobs:
       - name: Encrypt and Populate SQLite Database
         env:
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-        run: |
-          python encrypt_and_populate_provider_db.py
-        with:
           LeverancierEmail: ${{ github.event.inputs.LeverancierEmail }}
           LeverancierNaam: ${{ github.event.inputs.LeverancierNaam }}
           LeverancierStad: ${{ github.event.inputs.LeverancierStad }}
@@ -68,6 +65,8 @@ jobs:
           LeverancierKandidaat: ${{ github.event.inputs.LeverancierKandidaat }}
           LeverancierOpgemaaktte: ${{ github.event.inputs.LeverancierOpgemaaktte }}
           LeverancierHoedanigheid: ${{ github.event.inputs.LeverancierHoedanigheid }}
+        run: |
+          python encrypt_and_populate_provider_db.py
 
       - name: Commit and Push Changes
         env:
