@@ -1,0 +1,73 @@
+name: Populate SQLite Database with Encrypted Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      LeverancierNaam:
+        description: 'Leverancier Naam'
+        required: true
+        type: string
+      LeverancierStad:
+        description: 'Leverancier Stad'
+        required: true
+        type: string
+      LeverancierStraat:
+        description: 'Leverancier Straat'
+        required: true
+        type: string
+      LeverancierPostadres:
+        description: 'Leverancier Postadres'
+        required: true
+        type: string
+      LeverancierKandidaat:
+        description: 'Leverancier Kandidaat'
+        required: true
+        type: string
+      LeverancierOpgemaaktte:
+        description: 'Leverancier Opgemaakt te'
+        required: true
+        type: string
+      LeverancierHoedanigheid:
+        description: 'Leverancier Hoedanigheid'
+        required: true
+        type: string
+
+jobs:
+  encrypt_and_populate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sqlite3 cryptography
+
+      - name: Encrypt and Populate SQLite Database
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+        run: |
+          python encrypt_and_populate_provider_db.py
+        with:
+          LeverancierNaam: ${{ github.event.inputs.LeverancierNaam }}
+          LeverancierStad: ${{ github.event.inputs.LeverancierStad }}
+          LeverancierStraat: ${{ github.event.inputs.LeverancierStraat }}
+          LeverancierPostadres: ${{ github.event.inputs.LeverancierPostadres }}
+          LeverancierKandidaat: ${{ github.event.inputs.LeverancierKandidaat }}
+          LeverancierOpgemaaktte: ${{ github.event.inputs.LeverancierOpgemaaktte }}
+          LeverancierHoedanigheid: ${{ github.event.inputs.LeverancierHoedanigheid }}
+
+      - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add offer_provider.db
+          git commit -m "Add encrypted personal data to SQLite database"
+          git push
