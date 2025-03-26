@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
 import sqlite3
+import re
 import os
 
 # Load the encryption key from environment variables
@@ -17,6 +18,11 @@ inputs = {
     "LeverancierOpgemaaktte": os.getenv('INPUT_LEVERANCIEROPGEMAAKTTE'),
     "LeverancierHoedanigheid": os.getenv('INPUT_LEVERANCIERHOEDANIGHEID')
 }
+
+# Validate email format
+email = inputs.get("LeverancierEmail")
+if email is None or not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+    raise ValueError(f"Invalid email address: {email}")
 
 print(f"Print inputs to debug")
 for key, value in inputs.items():

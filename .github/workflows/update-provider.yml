@@ -57,14 +57,14 @@ jobs:
       - name: Encrypt and Populate SQLite Database
         env:
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          LeverancierEmail: ${{ github.event.inputs.LeverancierEmail }}
-          LeverancierNaam: ${{ github.event.inputs.LeverancierNaam }}
-          LeverancierStad: ${{ github.event.inputs.LeverancierStad }}
-          LeverancierStraat: ${{ github.event.inputs.LeverancierStraat }}
-          LeverancierPostadres: ${{ github.event.inputs.LeverancierPostadres }}
-          LeverancierKandidaat: ${{ github.event.inputs.LeverancierKandidaat }}
-          LeverancierOpgemaaktte: ${{ github.event.inputs.LeverancierOpgemaaktte }}
-          LeverancierHoedanigheid: ${{ github.event.inputs.LeverancierHoedanigheid }}
+          INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
+          INPUT_LEVERANCIERNAAM: ${{ github.event.inputs.LeverancierNaam }}
+          INPUT_LEVERANCIERSTAD: ${{ github.event.inputs.LeverancierStad }}
+          INPUT_LEVERANCIERSTRAAT: ${{ github.event.inputs.LeverancierStraat }}
+          INPUT_LEVERANCIERPOSTADRES: ${{ github.event.inputs.LeverancierPostadres }}
+          INPUT_LEVERANCIERKANDIDAAT: ${{ github.event.inputs.LeverancierKandidaat }}
+          INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte }}
+          INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
         run: |
           python encrypt_and_populate_provider_db.py
 
