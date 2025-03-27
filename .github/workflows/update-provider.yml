@@ -59,6 +59,7 @@ jobs:
 
       - name: Encrypt and Populate SQLite Database
         env:
+          HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
           INPUT_LEVERANCIERNAAM: ${{ github.event.inputs.LeverancierNaam }}
