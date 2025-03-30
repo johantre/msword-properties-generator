@@ -37,9 +37,11 @@ def convert_to_pdf(base_document):
         else:
             logging.warning(f"📭 Directory '{abs_output_path}' explicitly exists but is empty!")
     except FileNotFoundError:
-        logging.error(f"🚨 Directory '{abs_output_path}' not found!")
+        logging.error(f"🚨 LibreOffice not found!")
     except subprocess.CalledProcessError as e:
         logging.error(f"❌Could not convert PDF: {e}")
+    else:
+        logging.info(f"✅ LibreOffice executable ('soffice') IS found!")
 
 def convert_to_pdf_traditional(base_document):
     save_as_docx = base_document + ".docx"

@@ -1,0 +1,175 @@
+from util_config import config  # importing centralized config
+from utils_hash_encrypt import encrypt, decrypt, hash
+import logging
+import sqlite3
+import os
+import re
+
+def get_db_path():
+    return config["paths"]["db_path"]
+
+def init_db():
+    # Connect to SQLite database
+    conn = sqlite3.connect(get_db_path())
+    return conn
+
+def close_db(connection):
+    connection.close()
+
+def get_column_names(connection, table_name):
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM {table_name} LIMIT 1;")
+
+    # Get column names starting from the third column; 1st=id, 2nd=hashed_key
+    columns = [desc[0] for desc in cursor.description][2:]
+    return columns
+
+def get_leverancierEmail_from_env():
+    return os.getenv('INPUT_LEVERANCIEREMAIL')
+
+def check_leverancier_count(connection, leverancier_email):
+    count = connection.execute("SELECT COUNT(*) FROM offer_providers WHERE HashedLeverancierEmail = ?", (hash(leverancier_email),)).fetchone()[0]
+    return count
+
+def get_inputs_and_encrypt():
+    # Get inputs from environment variables
+    inputs = {
+        "LeverancierEmail": os.getenv('INPUT_LEVERANCIEREMAIL'),
+        "LeverancierNaam": os.getenv('INPUT_LEVERANCIERNAAM'),
+        "LeverancierStad": os.getenv('INPUT_LEVERANCIERSTAD'),
+        "LeverancierStraat": os.getenv('INPUT_LEVERANCIERSTRAAT'),
+        "LeverancierPostadres": os.getenv('INPUT_LEVERANCIERPOSTADRES'),
+        "LeverancierKandidaat": os.getenv('INPUT_LEVERANCIERKANDIDAAT'),
+        "LeverancierOpgemaaktte": os.getenv('INPUT_LEVERANCIEROPGEMAAKTTE'),
+        "LeverancierHoedanigheid": os.getenv('INPUT_LEVERANCIERHOEDANIGHEID')
+    }
+    # Validate email format
+    leverancier_email = get_leverancierEmail_from_env()
+    if leverancier_email is None or not re.match(r"[^@]+@[^@]+\.[^@]+", leverancier_email):
+        raise ValueError(f"Invalid email address: {leverancier_email}")
+    # Sanitize inputs (remove leading/trailing spaces)
+    sanitized_inputs = {k: v.strip() for k, v in inputs.items()}
+    # Encrypt inputs
+    encrypted_inputs = {k: encrypt(v) for k, v in sanitized_inputs.items()}
+
+    return encrypted_inputs
+
+def get_leverancier_dict(connection, leverancier_email):
+    prefix = 'prov'
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM offer_providers where HashedLeverancierEmail = ?", (hash(leverancier_email),))
+    rows = cursor.fetchall()
+
+    if not rows:
+        logging.warning(f"⚠️The provided table 'offer_providers' in database '{get_db_path()}' has no row for key {leverancier_email}. Please verify the contents, or add one if necessary.")
+        replacements_dict = {}
+    else:
+        # Get column names starting from the third column
+        columns = get_column_names(connection, 'offer_providers')
+
+        replacements_dict = {}
+        for index, row in enumerate(rows):
+             decrypted_row = {
+                 columns[i]: decrypt(value)
+                 for i, value in enumerate(row[2:])
+             }
+             replacements_dict[f'{prefix}_{index}'] = decrypted_row
+    return replacements_dict
+
+# All DB manipulations below
+def create_table_if_not_exist(connection):
+    cursor = connection.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS offer_providers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            HashedLeverancierEmail TEXT NOT NULL,
+            LeverancierEmail TEXT NOT NULL,
+            LeverancierNaam TEXT NOT NULL,
+            LeverancierStad TEXT NOT NULL,
+            LeverancierStraat TEXT NOT NULL,
+            LeverancierPostadres TEXT NOT NULL,
+            LeverancierKandidaat TEXT NOT NULL,
+            LeverancierOpgemaaktte TEXT NOT NULL,
+            LeverancierHoedanigheid TEXT NOT NULL
+        )
+    ''')
+    connection.commit()
+
+def insert_into_db(connection, leverancier_email, encrypted_inputs):
+    cursor = connection.cursor()
+
+    # Compute deterministic HMAC hash (hex encoded)
+    hashed_leverancier_email_key = hash(leverancier_email)
+
+    # Insert encrypted data into table
+    cursor.execute('''
+        INSERT INTO offer_providers (
+            HashedLeverancierEmail, 
+            LeverancierEmail, 
+            LeverancierNaam, 
+            LeverancierStad, 
+            LeverancierStraat, 
+            LeverancierPostadres, 
+            LeverancierKandidaat, 
+            LeverancierOpgemaaktte, 
+            LeverancierHoedanigheid
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        hashed_leverancier_email_key,
+        encrypted_inputs['LeverancierEmail'],
+        encrypted_inputs['LeverancierNaam'],
+        encrypted_inputs['LeverancierStad'],
+        encrypted_inputs['LeverancierStraat'],
+        encrypted_inputs['LeverancierPostadres'],
+        encrypted_inputs['LeverancierKandidaat'],
+        encrypted_inputs['LeverancierOpgemaaktte'],
+        encrypted_inputs['LeverancierHoedanigheid']
+    ))
+    logging.info(f"️Data encrypted and inserted successfully with hashed key")
+    connection.commit()
+    cursor.close()
+
+def update_into_db(connection, leverancier_email, encrypted_inputs):
+    cursor = connection.cursor()
+
+    fields = ", ".join([f"{key} = ?" for key in encrypted_inputs.keys()])
+    params = list(encrypted_inputs.values()) + [hash(leverancier_email)]
+    update_query = f"""
+        UPDATE offer_providers 
+        SET {fields}
+        WHERE HashedLeverancierEmail = ?
+    """
+    # Execute update
+    cursor.execute(update_query, params)
+    logging.info(f"️Data encrypted and updated successfully with hashed key")
+    connection.commit()
+    cursor.close()
+
+def insert_or_update_into_db(connection, encrypted_inputs):
+    cursor = connection.cursor()
+
+    leverancier_email = get_leverancierEmail_from_env()
+    record_count = check_leverancier_count(connection, leverancier_email)
+
+    if record_count > 1:
+        cursor.close()
+        raise ValueError("Multiple records found; update must target exactly one record.")
+    elif record_count == 0:
+        insert_into_db(connection, leverancier_email, encrypted_inputs)
+    elif record_count == 1:
+        update_into_db(connection, leverancier_email, encrypted_inputs)
+
+    connection.commit()
+    cursor.close()
+
+def create_replacements_from_db(optionals=None):
+    conn = init_db()
+
+    leverancier_email = optionals['EmailRecipient']
+    replacements_dict = get_leverancier_dict(conn, leverancier_email)
+
+    close_db(conn)
+    return replacements_dict
+

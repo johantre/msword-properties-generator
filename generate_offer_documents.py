@@ -1,5 +1,7 @@
+from util_config import config  # importing centralized config
+from utils_db import create_replacements_from_db
 from utils_docx import update_custom_properties_docx_structure
-from utils_xlsx import extract_combined_replacements_from_xls
+from utils_xlsx import create_replacements_from_xls
 from utils_pdf import convert_to_pdf
 from utils_mail import send_email
 from dropbox.exceptions import AuthError
@@ -25,7 +27,7 @@ logging.basicConfig(
 def _main(verbose=False, optional_args=None):
     logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
 
-    combined_replacements = extract_combined_replacements_from_xls(optional_args)
+    combined_replacements = extract_combined_replacements(optional_args)
 
     # Each row in offersCustomer = new offer docx + pdf
     provider_line = None
@@ -85,6 +87,20 @@ def _main(verbose=False, optional_args=None):
                     logging.error(f"An error occurred while uploading dropbox: {ee}")
             else:
                 logging.info(f"ℹ️Not uploaded to Dropbox Johan!")
+
+def extract_combined_replacements(optional_args):
+    def merge_replacements(customer_replacements, provider_replacements):
+        combined_replacements = {}
+        for key, value in provider_replacements.items():
+            combined_replacements[f'prov_{key}'] = value
+        for key, value in customer_replacements.items():
+            combined_replacements[f'cust_{key}'] = value
+        return combined_replacements
+
+    provider_replacements = create_replacements_from_db(optional_args)
+    customer_replacements = create_replacements_from_xls(config["paths"]["xls_offers_customer"], config["paths"]["xls_offers_customer_sheetname"], optional_args)
+    combined_replacements = merge_replacements(customer_replacements, provider_replacements)
+    return combined_replacements
 
 
 if __name__ == '__main__':
