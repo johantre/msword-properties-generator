@@ -10,20 +10,7 @@ from datetime import datetime, timezone
 import argparse
 import logging
 import pytz
-import sys
 import os
-
-
-# Remove any existing handlers explicitly:
-handlers = logging.root.handlers[:]
-for handler in handlers:
-    logging.root.removeHandler(handler)
-
-logging.basicConfig(
-    level=os.getenv('LOG_LEVEL', 'INFO').upper(),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
 
 
 class LocalTimezoneFormatter(logging.Formatter):
@@ -35,14 +22,24 @@ class LocalTimezoneFormatter(logging.Formatter):
         local_dt = utc_dt.astimezone(self.local_timezone)
         return local_dt.strftime(datefmt or self.default_time_format)
 
-def _main(verbose=False, optional_args=None):
-    logger = logging.getLogger()  # explicitly flush the output
-    logger.handlers[0].flush()
+def setup_logging():
+    LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 
-    myhandler = logging.StreamHandler()
+    handler = logging.StreamHandler()
     formatter = LocalTimezoneFormatter(fmt="%(asctime)s [%(levelname)s] %(message)s")
-    myhandler.setFormatter(formatter)
-    logger.addHandler(myhandler)
+    handler.setFormatter(formatter)
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(getattr(logging, LEVEL.upper(), "INFO"))
+
+    # Important: clear existing handlers to avoid duplication
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+
+    root_logger.addHandler(handler)
+
+def _main(verbose=False, optional_args=None):
+    setup_logging()
 
     combined_replacements = extract_combined_replacements(optional_args)
 
