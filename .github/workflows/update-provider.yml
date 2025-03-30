@@ -1,4 +1,4 @@
-name: Populate SQLite with Providers encrypted
+name: Subscribe provider
 
 on:
   workflow_dispatch:

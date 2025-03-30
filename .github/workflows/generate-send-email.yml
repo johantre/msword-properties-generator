@@ -1,4 +1,4 @@
-name: Generate on Push Customers.xlsx
+name: Generate, Send, add to Dropbox.xlsx
 
 on:
   push:
