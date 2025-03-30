@@ -1,4 +1,4 @@
-name: Populate SQLite Database with Encrypted Data
+name: Populate SQLite with Providers encrypted
 
 on:
   workflow_dispatch:
