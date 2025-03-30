@@ -4,10 +4,12 @@ from utils_docx import update_custom_properties_docx_structure
 from utils_xlsx import create_replacements_from_xls
 from utils_pdf import convert_to_pdf
 from utils_mail import send_email
-from dropbox.exceptions import AuthError
 from utils_dropbox import dropbox_upload
+from dropbox.exceptions import AuthError
+from datetime import datetime, timezone
 import argparse
 import logging
+import pytz
 import sys
 import os
 
@@ -24,8 +26,23 @@ logging.basicConfig(
 )
 
 
+class LocalTimezoneFormatter(logging.Formatter):
+    default_time_format = "%Y-%m-%d %H:%M:%S %Z%z"
+    local_timezone = pytz.timezone('Europe/Amsterdam')
+
+    def formatTime(self, record, datefmt=None):
+        utc_dt = datetime.fromtimestamp(record.created, timezone.utc)
+        local_dt = utc_dt.astimezone(self.local_timezone)
+        return local_dt.strftime(datefmt or self.default_time_format)
+
 def _main(verbose=False, optional_args=None):
-    logging.getLogger().handlers[0].flush()  # explicitly flush the output clearly
+    logger = logging.getLogger()  # explicitly flush the output
+    logger.handlers[0].flush()
+
+    myhandler = logging.StreamHandler()
+    formatter = LocalTimezoneFormatter(fmt="%(asctime)s [%(levelname)s] %(message)s")
+    myhandler.setFormatter(formatter)
+    logger.addHandler(myhandler)
 
     combined_replacements = extract_combined_replacements(optional_args)
 
