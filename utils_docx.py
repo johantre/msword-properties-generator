@@ -88,8 +88,8 @@ def update_custom_properties_docx(base_document_to_save, customer_line, provider
     save_document(base_document_to_save, document)
 
 
-# Update the custom properties in de docx document itself
-# =======================================================
+# Update the custom properties, images etc in de docx document itself
+# ===================================================================
 def replace_direct_text(document, provider_replacements, customer_replacements):
     def replace_in_paragraph(paragr, replacem):
         for run in paragr.runs:

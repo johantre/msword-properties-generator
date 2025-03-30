@@ -19,6 +19,7 @@ def load_config_values(properties_path="env/prod.properties"):
 
     return {
         "paths": {
+            "db_path": os.path.join(resource_path, configs.get("db.file").data),
             "resource_path": resource_path,
             "output_path": output_path,
             "image_file_path": os.path.join(resource_path, configs.get("path.resource.image_signature").data),
