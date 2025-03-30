@@ -1,4 +1,4 @@
-name: Generate, Send, add to Dropbox.xlsx
+name: Generate, Send & add to Dropbox
 
 on:
   push:
