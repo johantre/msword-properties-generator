@@ -174,7 +174,7 @@ jobs:
           echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
-      - name: Run Python script to send email and upload to Dropbox
+      - name: Run Python script to generated, send email and upload to Dropbox
         env:
           LOG_LEVEL: INFO
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
@@ -187,10 +187,10 @@ jobs:
           echo "Display args: ${{ github.event.inputs.klantNaam }}, ${{ github.event.inputs.klantJobTitle }}, ${{ github.event.inputs.klantJobReference }}, ${{ github.event.inputs.emailRecipient }}, ${{ github.event.inputs.uploadDropbox }}"
           if [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
             echo "Optional args detected, manually call with args."
-            CMD="python3 generate_offer_documents.py --verbose --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --emailRecipient '${{ github.event.inputs.emailRecipient }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
+            CMD="python3 src/generate_offer_documents.py --verbose --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --emailRecipient '${{ github.event.inputs.emailRecipient }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
           else
             echo "No optional args detected, standard flow followed."
-            CMD="python3 generate_offer_documents.py --verbose"
+            CMD="python3 src/generate_offer_documents.py --verbose"
           fi
           echo "Executing command: $CMD"
           eval $CMD

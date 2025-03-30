@@ -71,7 +71,7 @@ jobs:
           INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte }}
           INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
         run: |
-          python encrypt_and_populate_provider_db.py
+          python src/encrypt_and_populate_provider_db.py
 
       - name: Commit and Push Changes
         env:

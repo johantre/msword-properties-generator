@@ -1,10 +1,15 @@
 from jproperties import Properties
+from pathlib import Path
 import logging
 import os
 
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROD_PROPERTIES_FILE = PROJECT_ROOT / "env" / "prod.properties"
+
+
 # Fetch properties
-def load_config_values(properties_path="env/prod.properties"):
+def load_config_values(properties_path=PROD_PROPERTIES_FILE):
     configs = Properties()
     try:
         with open(properties_path, 'rb') as read_prop:
@@ -19,17 +24,17 @@ def load_config_values(properties_path="env/prod.properties"):
 
     return {
         "paths": {
-            "db_path": os.path.join(resource_path, configs.get("db.file").data),
+            "db_path": PROJECT_ROOT / resource_path / configs.get("db.file").data,
             "resource_path": resource_path,
             "output_path": output_path,
-            "image_file_path": os.path.join(resource_path, configs.get("path.resource.image_signature").data),
-            "word_template_path": os.path.join(resource_path, f"{template_name}.docx"),
-            "base_output_document_path": os.path.join(output_path, template_name),
-            "xls_offers_log": os.path.join(resource_path, configs.get("base.excel.offers.log").data),
+            "image_file_path": PROJECT_ROOT / resource_path / configs.get("path.resource.image_signature").data,
+            "word_template_path": PROJECT_ROOT / resource_path / f"{template_name}.docx",
+            "base_output_document_path": PROJECT_ROOT / output_path / template_name,
+            "xls_offers_log": PROJECT_ROOT / resource_path / configs.get("base.excel.offers.log").data,
             "xls_offers_log_sheetname": configs.get("base.excel.offers.log.sheetname").data,
-            "xls_offers_provider": os.path.join(resource_path, configs.get("base.excel.offers.provider").data),
+            "xls_offers_provider": PROJECT_ROOT / resource_path / configs.get("base.excel.offers.provider").data,
             "xls_offers_provider_sheetname": configs.get("base.excel.offers.provider.sheetname").data,
-            "xls_offers_customer": os.path.join(resource_path, configs.get("base.excel.offers.customer").data),
+            "xls_offers_customer": PROJECT_ROOT / resource_path / configs.get("base.excel.offers.customer").data,
             "xls_offers_customer_sheetname": configs.get("base.excel.offers.customer.sheetname").data,
             "base_document_name": configs.get("base.word.template").data
     },
