@@ -1,4 +1,4 @@
-name: Send Email on Update
+name: Generate on Push Customers.xlsx
 
 on:
   push:
