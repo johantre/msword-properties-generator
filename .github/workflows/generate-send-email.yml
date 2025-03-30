@@ -185,10 +185,10 @@ jobs:
           echo "Display args: ${{ github.event.inputs.klantNaam }}, ${{ github.event.inputs.klantJobTitle }}, ${{ github.event.inputs.klantJobReference }}, ${{ github.event.inputs.emailRecipient }}, ${{ github.event.inputs.uploadDropbox }}"
           if [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
             echo "Optional args detected, manually call with args."
-            CMD="python3 GenerateOfferDocuments.py --verbose --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --emailRecipient '${{ github.event.inputs.emailRecipient }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
+            CMD="python3 generate_offer_documents.py --verbose --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --emailRecipient '${{ github.event.inputs.emailRecipient }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
           else
             echo "No optional args detected, standard flow followed."
-            CMD="python3 GenerateOfferDocuments.py --verbose"
+            CMD="python3 generate_offer_documents.py --verbose"
           fi
           echo "Executing command: $CMD"
           eval $CMD
