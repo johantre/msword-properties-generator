@@ -62,7 +62,6 @@ jobs:
           sudo mkdir -p /var/cache/apt
           sudo mkdir -p /usr/lib/jvm
           sudo mkdir -p /usr/lib/libreoffice
-          sudo mkdir -p /usr/bin/
 
       - name: Set Permissions and Ownership
         run: |
@@ -74,7 +73,6 @@ jobs:
           sudo chmod -R 777 /var/cache/apt
           sudo chmod -R 777 /usr/lib/jvm
           sudo chmod -R 777 /usr/lib/libreoffice
-          sudo chmod -R 777 /usr/bin/
 
       - name: List Python, JDK, LibreOffice Cache Contents before Cache installation
         run: |
