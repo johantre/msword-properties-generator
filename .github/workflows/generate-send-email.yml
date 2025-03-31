@@ -81,16 +81,23 @@ jobs:
       - name: Change permissions for apt cache
         run: sudo chmod -R a+r /var/cache/apt
 
-      - name: Remove partial directory
-        run: sudo rm -rf /var/cache/apt/archives/partial
+      - name: Create cache tarball
+        run: |
+          sudo tar --exclude='./partial' -czf apt-cache.tar.gz -C /var/cache/apt archives
 
       - name: Cache apt packages
         uses: actions/cache@v3
         with:
-          path: /var/cache/apt
+          path: apt-cache.tar.gz
           key: ${{ runner.os }}-apt-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-apt-
+
+      - name: Extract cache tarball
+        run: sudo tar -xzf apt-cache.tar.gz -C /
+
+      - name: Update apt package list
+        run: sudo apt-get update
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
