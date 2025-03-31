@@ -51,11 +51,6 @@ jobs:
           echo "❌ Error: Email is required when 'Send in Email' is checked. Aborting pipeline."
           exit 1
 
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-
       - name: Ensure Cache Directories Exists
         run: |
           sudo mkdir -p ~/.cache/pip
@@ -82,6 +77,9 @@ jobs:
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
           echo "Listing Python cache contents"
+
+      - name: Change permissions for apt cache
+        run: sudo chmod -R a+r /var/cache/apt
 
       - name: Cache apt packages
         uses: actions/cache@v3
@@ -135,6 +133,11 @@ jobs:
           ls -la /usr/lib/jvm
           echo "Cache key LibreOffice used: ${{ runner.os }}-libreoffice"
           ls -la /usr/lib/libreoffice
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
