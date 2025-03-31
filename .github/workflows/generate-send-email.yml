@@ -84,7 +84,7 @@ jobs:
           echo "Listing Python cache contents"
 
       - name: Cache apt packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /var/cache/apt
           key: ${{ runner.os }}-apt-${{ hashFiles('**/requirements.txt') }}
