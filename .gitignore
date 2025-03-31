@@ -1,3 +1,4 @@
 /.idea/
 /offer_generation.log
 /__pycache__/
+/src/__pycache__/
