@@ -12,12 +12,13 @@ import os
 # Update the custom properties in de docx document structure
 # ==========================================================
 def set_custom_properties(extracted_dir, provider_replacements, customer_replacements):
+    property_names = load_custom_property_names_map()
     # Iterate once for provider (there should only 1 provider!)
     for key_prov, value_prov in provider_replacements.items():
-        set_custom_property(extracted_dir, key_prov, value_prov)
+        set_custom_property(extracted_dir, property_names[key_prov], value_prov)
     # Customer replacements (the part you asked about previously)
     for key_cust, value_cust in customer_replacements.items():
-        set_custom_property(extracted_dir, key_cust, value_cust)
+        set_custom_property(extracted_dir, property_names[key_cust], value_cust)
 
 def set_custom_property(extracted_dir, property_name, property_value):
     custom_props_path = os.path.join(extracted_dir, 'docProps', 'custom.xml')
@@ -148,10 +149,19 @@ def save_document(base_document, document):
     save_as_docx = base_document + ".docx"
     document.save(save_as_docx)
 
-
-
-
-
-
-
-
+def load_custom_property_names_map():
+    return{
+        "KlantNaam": "Klant Naam",
+        "KlantJobTitle": "Klant JobTitle",
+        "KlantJobReference": "Klant JobReference",
+        "LeverancierEmail": "Leverancier Email",
+        "LeverancierNaam": "Leverancier Naam",
+        "LeverancierStad": "Leverancier Stad",
+        "LeverancierStraat": "Leverancier Straat",
+        "LeverancierPostadres": "Leverancier Postadres",
+        "LeverancierKandidaat": "Leverancier Kandidaat",
+        "LeverancierOpgemaaktte": "Leverancier Opgemaakt te",
+        "LeverancierHoedanigheid": "Leverancier Hoedanigheid",
+        "EmailRecipient": "Leverancier Email",
+        "UploadDropbox": "Upload Dropbox"
+    }

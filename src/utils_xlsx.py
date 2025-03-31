@@ -4,8 +4,6 @@ import logging
 
 
 def save_to_excel(data_frame, log_data_frame):
-    with pd.ExcelWriter(config["paths"]["xls_offers_log"], mode='w', engine='openpyxl') as log_writer:
-        log_data_frame.to_excel(log_writer, sheet_name=config["paths"]["xls_offers_log_sheetname"], index=False)
     with pd.ExcelWriter(config["paths"]["xls_offers_customer"], mode='w', engine='openpyxl') as cust_writer:
         data_frame.to_excel(cust_writer, sheet_name=config["paths"]["xls_offers_customer_sheetname"], index=False)
     return log_data_frame
