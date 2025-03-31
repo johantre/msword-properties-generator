@@ -62,7 +62,7 @@ jobs:
           sudo mkdir -p /var/cache/apt
           sudo mkdir -p /usr/lib/jvm
           sudo mkdir -p /usr/lib/libreoffice
-          sudo mkdir -p /usr/bin/tar
+          sudo mkdir -p /usr/bin
 
       - name: Set Permissions and Ownership
         run: |
@@ -70,12 +70,12 @@ jobs:
           sudo chown -R $USER:$USER /var/cache/apt
           sudo chown -R $USER:$USER /usr/lib/jvm
           sudo chown -R $USER:$USER /usr/lib/libreoffice
-          sudo chown -R $USER:$USER /usr/bin/tar
+          sudo chown -R $USER:$USER /usr/bin
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /var/cache/apt
           sudo chmod -R 777 /usr/lib/jvm
           sudo chmod -R 777 /usr/lib/libreoffice
-          sudo chmod -R 777 /usr/bin/tar
+          sudo chmod -R 777 /usr/bin
 
       - name: List Python, JDK, LibreOffice Cache Contents before Cache installation
         run: |
