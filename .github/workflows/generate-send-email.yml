@@ -59,15 +59,18 @@ jobs:
       - name: Ensure Cache Directory Exists
         run: |
           sudo mkdir -p ~/.cache/pip
+          sudo mkdir -p /var/cache/apt
           sudo mkdir -p /usr/lib/jvm
           sudo mkdir -p /usr/lib/libreoffice
 
       - name: Set Permissions and Ownership
         run: |
           sudo chown -R $USER:$USER ~/.cache/pip
+          sudo chown -R $USER:$USER /var/cache/apt
           sudo chown -R $USER:$USER /usr/lib/jvm
           sudo chown -R $USER:$USER /usr/lib/libreoffice
           sudo chmod -R 777 ~/.cache/pip
+          sudo chmod -R 777 /var/cache/apt
           sudo chmod -R 777 /usr/lib/jvm
           sudo chmod -R 777 /usr/lib/libreoffice
 
@@ -79,6 +82,14 @@ jobs:
           echo "Listing LibreOffice cache contents"
           ls -alh /usr/lib/libreoffice || echo "LibreOffice cache directory does not exist"
           echo "Listing Python cache contents"
+
+      - name: Cache apt packages
+        uses: actions/cache@v2
+        with:
+          path: /var/cache/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
