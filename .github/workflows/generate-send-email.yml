@@ -56,12 +56,13 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Ensure Cache Directory Exists
+      - name: Ensure Cache Directories Exists
         run: |
           sudo mkdir -p ~/.cache/pip
           sudo mkdir -p /var/cache/apt
           sudo mkdir -p /usr/lib/jvm
           sudo mkdir -p /usr/lib/libreoffice
+          sudo mkdir -p /usr/bin/tar
 
       - name: Set Permissions and Ownership
         run: |
@@ -69,10 +70,12 @@ jobs:
           sudo chown -R $USER:$USER /var/cache/apt
           sudo chown -R $USER:$USER /usr/lib/jvm
           sudo chown -R $USER:$USER /usr/lib/libreoffice
+          sudo chown -R $USER:$USER /usr/bin/tar
           sudo chmod -R 777 ~/.cache/pip
           sudo chmod -R 777 /var/cache/apt
           sudo chmod -R 777 /usr/lib/jvm
           sudo chmod -R 777 /usr/lib/libreoffice
+          sudo chmod -R 777 /usr/bin/tar
 
       - name: List Python, JDK, LibreOffice Cache Contents before Cache installation
         run: |
