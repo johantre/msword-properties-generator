@@ -35,6 +35,10 @@ on:
         description: 'Leverancier Hoedanigheid'
         required: true
         type: string
+      LeverancierURLSignatureImage:
+        description: 'Leverancier URL Signature image'
+        required: true
+        type: string
 
 jobs:
   encrypt_and_populate:
@@ -70,6 +74,7 @@ jobs:
           INPUT_LEVERANCIERKANDIDAAT: ${{ github.event.inputs.LeverancierKandidaat }}
           INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte }}
           INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
+          INPUT_LEVERANCIERSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierSignatureImage }}
         run: |
           python src/encrypt_and_populate_provider_db.py
 
