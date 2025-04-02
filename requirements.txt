@@ -1,6 +1,7 @@
 cryptography==44.0.2
 python-docx==1.1.2
 jproperties==2.1.2
+gitpython==3.1.44
 docx2pdf==0.1.8
 openpyxl==3.2.0b1
 requests~=2.32.3
