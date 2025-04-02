@@ -35,6 +35,6 @@ At the moment of writing, depending of your choice, the above actions will resul
 - Commit & Push a changed OffersCustomers.xlsx.
 - GitHub Actions  
   - Providing 1 customer information: Select "Generate, Send and add to Dropbox" workflow > "Run workflow"<br>to generate the documents and have them send to you.<br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
-  - Providing provider information: Select "Subscribe provide" workflow > "Run workflow" <br>to add yourself to the offers_provider.db. The content won't be readable to assure privacy. 
+  - Providing provider information: Select "Subscribe provide" workflow > "Run workflow" <br>to add yourself to the offers_provider.db. Your data is encrypted to protect your privacy. 
   <br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a>
 
