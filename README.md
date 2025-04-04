@@ -1,5 +1,4 @@
 # msword-properties-generator
-
 This repo will facilitate in generating a MSWord document and update its Custom properties and generate an accompanying .pdf.
 The user can provide a Dropbox, Google Drive or MS OneDrive link to a signature image to include in the document. 
 
@@ -13,7 +12,7 @@ The user can provide a Dropbox, Google Drive or MS OneDrive link to a signature 
     - Filling out a GitHub Actions form.<br>This will be the form that triggers the generation of the document pairs. (.docx and .pdf) 
 
 At the moment of writing, depending of your choice, after the above actions this will result in:
-- Sending a mail to the provided mail of the provider with the generated documents 
+- Sending a mail to the given mail of the Provider with the generated documents 
 - Uploading the documents to the Dropbox of the owner of this repository.
 - Customer data will not be stored. 
 - Provider data *will* be stored in this Repo, encrypted to protect your privacy.
@@ -30,10 +29,10 @@ At the moment of writing, depending of your choice, after the above actions this
 - Some code cleanup 
 
 ## Usage
-In order to have a proper generated documents we need our Provider and Customer data. Below how to do that.
+In order to have proper generated documents we need Provider and Customer data. Below how to do that.
 
 ### Provider data
-Provider data doesn't change that much over time. Hence, since it's about quite some fields, that data is stored in this repo.<br> 
+Provider data doesn't change that much over time. Hence, since it's about quite some fields.<br>That data is stored in this repo.<br> 
 How to provide? 
 - GitHub Actions > Select "Subscribe provider" workflow > "Run workflow" to add yourself as a Provider to the [offers_provider.db](res/offers_provider.db).<br>
 Your data will be encrypted to protect your privacy.<br>
@@ -46,10 +45,10 @@ The image will be encrypted and stored in this repo under a hashed name to prote
 
 
 ### Customer data
-Customer data changes frequently. Every time you need documents to be generated these parameters are different, and are only a few fields. 
+Customer data changes frequently. Every time you need documents to be generated these parameters are different, and are only a few fields.<br> 
 How to provide? 2 options: 
 - Update the [OffersCustomer.xlsx](res/OffersCustomer.xlsx) locally, Git commit & Push it back to this Repo. (Requires some Git knowledge) 
-- GitHub Actions > Select "Generate, Send and add to Dropbox" workflow > "Run workflow"<br>to generate the documents and have them send to you.<br>
+- GitHub Actions > Select "Generate, Send and add to Dropbox" workflow > "Run workflow"<br>to generate the documents and have them send to the given mail.<br>
 Behind the scenes the Provider data will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
 So be aware that you'll need to have your Provider data in there as well for this to work.
 <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
@@ -57,8 +56,8 @@ So be aware that you'll need to have your Provider data in there as well for thi
 ## ⚠️Attention⚠️ 
 - The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.
 So the mail address provided for the Customer and Provider information screen must be equal.
-Check out the 2 screenshots in this article: 
+Check out the 2 screenshots in this article; they *must be the same* in order for this to work! 
   - "Leverancier Mail" 
   - "Email recipient"\
-*must be the same* in order for this to work!
-- The GitHub Actions screen for Provider data can be used to not only *insert* but also to *update* the Provider data in [offers_provider.db](res/offers_provider.db)
+- The GitHub Actions screen for Provider data can be used to not only *insert* but also to *update* the Provider data in [offers_provider.db](res/offers_provider.db)<br>
+A 'remove me' feature is on the way, see [Future enhancements](#Future-enhancements)
