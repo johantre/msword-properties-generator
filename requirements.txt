@@ -13,3 +13,7 @@ pytz==2025.2
 lxml==5.3.1
 six==1.17.0
 docx~=0.2.4
+google-auth==2.38.0
+google-auth-oauthlib==1.2.1
+google-auth-httplib2==0.2.0
+google-api-python-client==2.166.0
