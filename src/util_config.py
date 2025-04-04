@@ -26,7 +26,6 @@ def load_config_values(properties_path=PROD_PROPERTIES_FILE):
             "db_path": PROJECT_ROOT / resource_path / configs.get("db.file").data,
             "resource_path": resource_path,
             "output_path": output_path,
-            "image_file_path": PROJECT_ROOT / resource_path / configs.get("path.resource.image_signature").data,
             "image_signature_folder": PROJECT_ROOT / resource_path / configs.get("path.resource.image_signature_folder").data,
             "word_template_path": PROJECT_ROOT / resource_path / f"{template_name}.docx",
             "base_output_document_path": PROJECT_ROOT / output_path / template_name,

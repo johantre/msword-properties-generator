@@ -1,10 +1,9 @@
 from util_config import config  # importing centralized config
-from utils_hash_encrypt import hash, encrypt_image
+from utils_hash_encrypt import hash, encrypt_image, decrypt_image
 from utils_download import download_image
 from git import Repo, Actor, exc
 from typing import cast
 import tempfile
-import requests
 import os
 
 def get_image_and_encrypt_to_image_folder():
@@ -13,13 +12,25 @@ def get_image_and_encrypt_to_image_folder():
         "LeverancierURLSignatureImage": os.getenv('INPUT_LEVERANCIERURLSIGNATUREIMAGE')
     }
     temp_download_dir = tempfile.mkdtemp()
-    temp_download_image_path = os.path.join(temp_download_dir, "image.png")
+    temp_download_image_path = os.path.join(temp_download_dir, "decrypted_image.png")
     download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
 
     target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(inputs["LeverancierEmail"]))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
     git_add_commit_and_push(cast(str, target_hashed_image_path))
+
+def get_image_and_decrypt_from_image_folder(leverancier_email: str):
+    # first construct encrypted path
+    image_encryption_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
+
+    # decrypt to temp folder
+    temp_decrypted_dir = tempfile.mkdtemp()
+    temp_decrypted_path = os.path.join(temp_decrypted_dir, "decrypted_image.png")
+
+    decrypt_image(image_encryption_path, temp_decrypted_path)
+    return temp_decrypted_path
+
 
 def git_add_commit_and_push(file_path: str, commit_message: str = "Automated commit of encrypted image"):
     try:
