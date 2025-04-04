@@ -4,13 +4,13 @@ This repo will facilitate in generating a MSWord document and update its Custom 
 The user can provide a Dropbox, Google Drive or MS OneDrive link to a signature image to include in the document. 
 
 2 types of information needed to insert in the template document;   
-  - Customer information in either two ways: 
-    - MSExcel workbook containing the Customer Custom Properties ([OffersCustomer.xlsx](res%2FOffersCustomer.xlsx)).  
-     Multiple Customers are possible. For each Customer an MSWord and pdf pair will be generated and send to you. 
-    - Filling out a GitHub Actions form.
   - Provider information:
     - Filling out a GitHub Actions form.<br>
     That information will be encrypted and stored in this repo for you to later use again.<br>
+  - Customer information in either two ways: 
+    - MSExcel workbook containing the Customer Custom Properties ([OffersCustomer.xlsx](res%2FOffersCustomer.xlsx)).  
+     Multiple Customers are possible. For each Customer an MSWord and pdf pair will be generated and send to the given mail address. 
+    - Filling out a GitHub Actions form.<br>This will be the form that triggers the generation of the document pairs. (.docx and .pdf) 
 
 At the moment of writing, depending of your choice, after the above actions this will result in:
 - Sending a mail to the provided mail of the provider with the generated documents 
@@ -19,7 +19,7 @@ At the moment of writing, depending of your choice, after the above actions this
 - Provider data *will* be stored in this Repo, encrypted to protect your privacy.
 
 ## Resources 
-[offers_provider.db](res/offers_provider.db) All Providers are stored and encrypted in here with their hashed mail as key. \
+[offers_provider.db](res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key. \
 [Recht om te vertegenwoordigen.docx](res/Recht%20om%20te%20vertegenwoordigen.docx) MSWord template containing the Custom properties.\
 [OffersCustomer.xlsx](res/OffersCustomer.xlsx) Main xlsx to use as a vehicle to provide single or multiple Customer data to set into the .docx file above.\
 [prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations.
@@ -30,7 +30,7 @@ At the moment of writing, depending of your choice, after the above actions this
 - Some code cleanup 
 
 ## Usage
-In order to have a proper generated documents we need our Customer and Provider data. Below how to do that.  
+In order to have a proper generated documents we need our Provider and Customer data. Below how to do that.
 
 ### Provider data
 Provider data doesn't change that much over time. Hence, since it's about quite some fields, that data is stored in this repo.<br> 
