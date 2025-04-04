@@ -1,5 +1,7 @@
 from util_config import config  # importing centralized config
+from utils_hash_encrypt import encrypt, decrypt, hash
 from utils_mail import safe_get
+from utils_image import get_image_and_decrypt_from_image_folder
 from lxml import etree as ET
 from docx import Document
 import tempfile
@@ -84,7 +86,7 @@ def set_custom_properties_docx(customer_line, provider_line):
 
 def update_custom_properties_docx(base_document_to_save, customer_line, provider_line):
     document = open_document(base_document_to_save)
-    replace_images(document)
+    replace_images(document, customer_line['EmailRecipient'])
     replace_direct_text(document, provider_line, customer_line)
     save_document(base_document_to_save, document)
 
@@ -136,10 +138,10 @@ def build_base_document_to_save(provider_replacements, customer_replacements):
 
     return base_document
 
-def replace_images(document):
-    image_path = config["paths"]["image_file_path"]
-    replace_images_by_alt_text(document, config["alt_texts"]["left"], image_path)
-    replace_images_by_alt_text(document, config["alt_texts"]["right"], image_path)
+def replace_images(document, leverancier_email):
+    decrypted_image_path = get_image_and_decrypt_from_image_folder(leverancier_email)
+    replace_images_by_alt_text(document, config["alt_texts"]["left"], decrypted_image_path)
+    replace_images_by_alt_text(document, config["alt_texts"]["right"], decrypted_image_path)
 
 def open_document(base_document):
     save_as_docx = base_document + ".docx"
