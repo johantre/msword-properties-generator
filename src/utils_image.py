@@ -1,15 +1,11 @@
 from util_config import config  # importing centralized config
 from utils_hash_encrypt import hash, encrypt_image
+from utils_download import download_image
 from git import Repo, Actor, exc
 from typing import cast
 import tempfile
 import requests
 import os
-
-def download_image(url, local_path):
-    response = requests.get(url)
-    with open(local_path, 'wb') as f:
-        f.write(response.content)
 
 def get_image_and_encrypt_to_image_folder():
     inputs = {
@@ -20,7 +16,7 @@ def get_image_and_encrypt_to_image_folder():
     temp_download_image_path = os.path.join(temp_download_dir, "image.png")
     download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
 
-    target_hashed_image_path = os.path.join(config["path"]["image_signature_folder"], hash(inputs["LeverancierEmail"]))
+    target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(inputs["LeverancierEmail"]))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
     git_add_commit_and_push(cast(str, target_hashed_image_path))
