@@ -2,23 +2,21 @@
 
 This repo will facilitate in generating a MSWord document and update its Custom properties and generate an accompanying .pdf.
 The user can provide a Dropbox, Google Drive or MS OneDrive link to a signature image to include in the document. 
-- MSWord template document (containing Custom properties).
-- Link to signature image
 
-Either 2 types of information that will be consumed to insert in the document;   
-  - Customer information in two ways: 
-    - By means of an MSExcel workbook containing the Customer Custom Properties ([OffersCustomer.xlsx](res%2FOffersCustomer.xlsx)).  
+2 types of information needed to insert in the template document;   
+  - Customer information in either two ways: 
+    - MSExcel workbook containing the Customer Custom Properties ([OffersCustomer.xlsx](res%2FOffersCustomer.xlsx)).  
      Multiple Customers are possible. For each Customer an MSWord and pdf pair will be generated and send to you. 
-    - By means of filling out a GitHub Actions form.<br>
-  - Provider information:  
-    - By means of filling out a GitHub Actions form.<br>
+    - Filling out a GitHub Actions form.
+  - Provider information:
+    - Filling out a GitHub Actions form.<br>
     That information will be encrypted and stored in this repo for you to later use again.<br>
 
-At the moment of writing, depending of your choice, the above actions will result in:
+At the moment of writing, depending of your choice, after the above actions this will result in:
 - Sending a mail to the provided mail of the provider with the generated documents 
 - Uploading the documents to the Dropbox of the owner of this repository.
 - Customer data will not be stored. 
-- Provider data will be stored in this Repo, encrypted to protect your privacy.
+- Provider data *will* be stored in this Repo, encrypted to protect your privacy.
 
 ## Resources 
 [offers_provider.db](res/offers_provider.db) All Providers are stored and encrypted in here with their hashed mail as key. \
@@ -35,7 +33,7 @@ At the moment of writing, depending of your choice, the above actions will resul
 In order to have a proper generated documents we need our Customer and Provider data. Below how to do that.  
 
 ### Provider data
-Provider data doesn't change that much over time. Hence, since it's about quite some fields, that data is stored in this repo. 
+Provider data doesn't change that much over time. Hence, since it's about quite some fields, that data is stored in this repo.<br> 
 How to provide? 
 - GitHub Actions > Select "Subscribe provider" workflow > "Run workflow" to add yourself as a Provider to the [offers_provider.db](res/offers_provider.db).<br>
 Your data will be encrypted to protect your privacy.<br>
@@ -57,10 +55,10 @@ So be aware that you'll need to have your Provider data in there as well for thi
 <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
 ## ⚠️Attention⚠️ 
-The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.
+- The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.
 So the mail address provided for the Customer and Provider information screen must be equal.
 Check out the 2 screenshots in this article: 
-- "Leverancier Mail" 
-- "Email recipient"
-
+  - "Leverancier Mail" 
+  - "Email recipient"\
 *must be the same* in order for this to work!
+- The GitHub Actions screen for Provider data can be used to not only *insert* but also to *update* the Provider data in [offers_provider.db](res/offers_provider.db)
