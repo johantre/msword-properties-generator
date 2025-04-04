@@ -45,11 +45,11 @@ The image will be encrypted and stored in this repo under a hashed name to prote
 
 
 ### Customer data
-Customer data changes frequently. Every time you need documents to be generated these parameters are different, and are only a few fields.<br> 
+Customer data changes frequently.<br>Every time you need documents to be generated these parameters are different, and are only a few fields.<br> 
 How to provide? 2 options: 
 - Update the [OffersCustomer.xlsx](res/OffersCustomer.xlsx) locally, Git commit & Push it back to this Repo. (Requires some Git knowledge) 
 - GitHub Actions > Select "Generate, Send and add to Dropbox" workflow > "Run workflow"<br>to generate the documents and have them send to the given mail.<br>
-Behind the scenes the Provider data will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
+Behind the scenes [Provider data](#Provider data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
 So be aware that you'll need to have your Provider data in there as well for this to work.
 <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
@@ -58,6 +58,6 @@ So be aware that you'll need to have your Provider data in there as well for thi
 So the mail address provided for the Customer and Provider information screen must be equal.
 Check out the 2 screenshots in this article; they *must be the same* in order for this to work! 
   - "Leverancier Mail" 
-  - "Email recipient"\
+  - "Email recipient"
 - The GitHub Actions screen for Provider data can be used to not only *insert* but also to *update* the Provider data in [offers_provider.db](res/offers_provider.db)<br>
 A 'remove me' feature is on the way, see [Future enhancements](#Future-enhancements)
