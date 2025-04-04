@@ -66,6 +66,9 @@ jobs:
           LOG_LEVEL: DEBUG
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
+          DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
+          DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
           INPUT_LEVERANCIERNAAM: ${{ github.event.inputs.LeverancierNaam }}
           INPUT_LEVERANCIERSTAD: ${{ github.event.inputs.LeverancierStad }}
