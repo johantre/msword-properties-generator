@@ -38,7 +38,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow
 
-      - name: Encrypt and Populate SQLite Database
+      - name: Fetch SQLite Database and remove encrypted image
         env:
           LOG_LEVEL: DEBUG
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
