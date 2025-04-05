@@ -55,10 +55,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-cryptography-jproperties-pytz-gitpython-requests-google-auth-google-auth-oauthlib-google-auth-httplib2-google-api-python-client-dropbox
           restore-keys: |
             ${{ runner.os }}-pip-
         continue-on-error: true
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox        
 
       - name: Set up Python
         uses: actions/setup-python@v4
