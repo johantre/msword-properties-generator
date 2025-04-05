@@ -1,8 +1,10 @@
 from msword_properties_generator.data.utils_db import init_db, create_table_if_not_exist, get_inputs_and_encrypt, insert_or_update_into_db
 from msword_properties_generator.utils.utils_image import get_image_and_encrypt_to_image_folder
+from msword_properties_generator.utils.utils_logging import setup_logging
 
 
-# Connect to SQLite database (or create it if it doesn't exist)
+
+setup_logging()
 conn = init_db()
 create_table_if_not_exist(conn)
 
