@@ -208,6 +208,7 @@ jobs:
           DROPBOX_APP_SECRET:  ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
         run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           echo "Display args: ${{ github.event.inputs.klantNaam }}, ${{ github.event.inputs.klantJobTitle }}, ${{ github.event.inputs.klantJobReference }}, ${{ github.event.inputs.emailRecipient }}, ${{ github.event.inputs.uploadDropbox }}"
           if [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
             echo "Optional args detected, manually call with args."
