@@ -52,8 +52,8 @@ def remove_from_image_folder(leverancier_email):
 
     if os.path.exists(image_encryption_path):
         os.remove(image_encryption_path)
-        logging.info(f"Image for {leverancier_email} removed successfully from {image_encryption_path}")
-        git_add_commit_and_push(str(image_encryption_path), commit_message=f"Removed image for {leverancier_email}")
+        logging.info(f"Image for {leverancier_email} removed successfully from {image_encrypted_folder}")
+        git_add_commit_and_push(str(image_encrypted_folder), commit_message=f"Removed image for {leverancier_email}")
     else:
         logging.warning(f"No image found for {leverancier_email} to remove")
     return image_encrypted_folder
