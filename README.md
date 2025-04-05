@@ -1,5 +1,5 @@
 # msword-properties-generator
-This repo will facilitate in generating an MSWord document and update its Custom properties and generate an accompanying .pdf. <br>All based on an MSWord template with some parameters to provide.<br> 
+This repo will facilitate in generating a documents pair (MSWord and .pdf). based on an MSWord template with some parameters to provide.<br> 
 The user can provide a Dropbox, Google Drive or MS OneDrive link to a signature image to include in the document. 
 
 2 types of information needed to insert in the template document;   

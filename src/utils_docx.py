@@ -1,5 +1,4 @@
 from util_config import config  # importing centralized config
-from utils_hash_encrypt import encrypt, decrypt, hash
 from utils_mail import safe_get
 from utils_image import get_image_and_decrypt_from_image_folder
 from lxml import etree as ET

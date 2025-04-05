@@ -7,7 +7,7 @@ import os
 
 
 
-# Dropbox API setup:
+# Dropbox API setup for uploading to Dropbox Johan:
 def get_dbx_client():
     APP_KEY = os.environ.get('DROPBOX_APP_KEY')
     APP_SECRET = os.environ.get('DROPBOX_APP_SECRET')

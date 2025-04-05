@@ -36,7 +36,7 @@ def load_config_values(properties_path=PROD_PROPERTIES_FILE):
             "xls_offers_customer": PROJECT_ROOT / resource_path / configs.get("base.excel.offers.customer").data,
             "xls_offers_customer_sheetname": configs.get("base.excel.offers.customer.sheetname").data,
             "base_document_name": configs.get("base.word.template").data
-    },
+        },
         "namespaces": {
             'cp': configs.get("base.word.namespace.cp").data,
             'vt': configs.get("base.word.namespace.vt").data,
