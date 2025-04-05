@@ -42,9 +42,7 @@ def get_image_and_decrypt_from_image_folder(leverancier_email: str):
 
 def remove_from_image_folder_git_commit_push():
     leverancier_email = os.getenv('INPUT_LEVERANCIEREMAIL')
-    image_encryption_folder = remove_from_image_folder(leverancier_email)
-    git_add_commit_and_push(cast(str, image_encryption_folder), f"Automated commit of removed image from folder: {image_encryption_folder}")
-
+    remove_from_image_folder(leverancier_email)
 
 def remove_from_image_folder(leverancier_email):
     # Construct the path to the encrypted image
