@@ -2,3 +2,4 @@
 /offer_generation.log
 __pycache__/
 **/__pycache__/
+*.egg-info/
