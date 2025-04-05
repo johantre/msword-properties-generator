@@ -6,6 +6,7 @@ from typing import cast
 from PIL import Image
 import tempfile
 import logging
+import git
 import os
 
 def get_image_and_encrypt_to_image_folder():
@@ -61,7 +62,7 @@ def remove_from_image_folder(leverancier_email):
 def git_add_commit_and_push(file_path: str, commit_message: str = "Automated commit and push"):
     try:
         # Get repository from current directory
-        repo_path = os.getcwd()
+        repo_path = get_repo_root()
         repo = Repo(repo_path)
         bot_author = Actor("github-actions[bot]", "github-actions[bot]@users.noreply.github.com")
 
@@ -98,6 +99,11 @@ def is_image_properly_decrypted(image_path):
         msg = f"❌ The image at {image_path} is not properly decrypted: {e}"
         logging.error(msg)
         raise ImageDecryptionError(msg)
+
+def get_repo_root():
+    repo = git.Repo('.', search_parent_directories=True)
+    repo_root = repo.git.rev_parse("--show-toplevel")
+    return repo_root
 
 class ImageDecryptionError(Exception):
     def __init__(self, message="Image isn't properly decrypted"):
