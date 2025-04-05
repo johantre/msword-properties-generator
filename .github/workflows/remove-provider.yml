@@ -7,38 +7,6 @@ on:
         description: 'Leverancier Email'
         required: true
         type: string
-      LeverancierNaam:
-        description: 'Leverancier Naam'
-        required: true
-        type: string
-      LeverancierStad:
-        description: 'Leverancier Stad'
-        required: true
-        type: string
-      LeverancierStraat:
-        description: 'Leverancier Straat'
-        required: true
-        type: string
-      LeverancierPostadres:
-        description: 'Leverancier Postadres'
-        required: true
-        type: string
-      LeverancierKandidaat:
-        description: 'Leverancier Kandidaat'
-        required: true
-        type: string
-      LeverancierOpgemaaktte:
-        description: 'Leverancier Opgemaakt te'
-        required: true
-        type: string
-      LeverancierHoedanigheid:
-        description: 'Leverancier Hoedanigheid'
-        required: true
-        type: string
-      LeverancierURLSignatureImage:
-        description: 'Leverancier URL Signature image (Dropbox, GoogleDrive, OneDrive)'
-        required: true
-        type: string
 
 jobs:
   encrypt_and_populate:
@@ -60,11 +28,6 @@ jobs:
             ${{ runner.os }}-pip-
         continue-on-error: true
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -79,22 +42,10 @@ jobs:
         env:
           LOG_LEVEL: DEBUG
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
-          DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
-          DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
-          INPUT_LEVERANCIERNAAM: ${{ github.event.inputs.LeverancierNaam }}
-          INPUT_LEVERANCIERSTAD: ${{ github.event.inputs.LeverancierStad }}
-          INPUT_LEVERANCIERSTRAAT: ${{ github.event.inputs.LeverancierStraat }}
-          INPUT_LEVERANCIERPOSTADRES: ${{ github.event.inputs.LeverancierPostadres }}
-          INPUT_LEVERANCIERKANDIDAAT: ${{ github.event.inputs.LeverancierKandidaat }}
-          INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte }}
-          INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
-          INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
+          python src/msword_properties_generator/main/remove_provider.py
 
       - name: Commit and Push Changes
         env:
