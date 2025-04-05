@@ -22,7 +22,7 @@ def get_image_and_encrypt_to_image_folder():
     target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(inputs["LeverancierEmail"]))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
-    git_add_commit_and_push(cast(str, target_hashed_image_path))
+    git_add_commit_and_push(cast(str, target_hashed_image_path), "Automated commit of encrypted image")
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
@@ -39,10 +39,16 @@ def get_image_and_decrypt_from_image_folder(leverancier_email: str):
         temp_decrypted_path = ""
     return temp_decrypted_path
 
-def remove_from_image_folder():
+def remove_from_image_folder_git_commit_push():
     leverancier_email = os.getenv('INPUT_LEVERANCIEREMAIL')
+    image_encryption_folder = remove_from_image_folder(leverancier_email)
+    git_add_commit_and_push(cast(str, image_encryption_folder), f"Automated commit of removed image from folder: {image_encryption_folder}")
+
+
+def remove_from_image_folder(leverancier_email):
     # Construct the path to the encrypted image
-    image_encryption_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
+    image_encrypted_folder = config["paths"]["image_signature_folder"]
+    image_encryption_path = os.path.join(image_encrypted_folder, hash(leverancier_email))
 
     if os.path.exists(image_encryption_path):
         os.remove(image_encryption_path)
@@ -50,8 +56,9 @@ def remove_from_image_folder():
         git_add_commit_and_push(str(image_encryption_path), commit_message=f"Removed image for {leverancier_email}")
     else:
         logging.warning(f"No image found for {leverancier_email} to remove")
+    return image_encrypted_folder
 
-def git_add_commit_and_push(file_path: str, commit_message: str = "Automated commit of encrypted image"):
+def git_add_commit_and_push(file_path: str, commit_message: str = "Automated commit and push"):
     try:
         # Get repository from current directory
         repo_path = os.getcwd()
