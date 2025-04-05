@@ -64,6 +64,9 @@ def git_add_commit_and_push(file_path: str, commit_message: str = "Automated com
         repo = Repo(repo_path)
         bot_author = Actor("github-actions[bot]", "github-actions[bot]@users.noreply.github.com")
 
+        logging.info(f"Repo path: {repo_path}")
+        logging.info(f"File path to add: {file_path}")
+
         if repo.is_dirty(untracked_files=True):
             # Add file to Git index (stage file)
             repo.index.add([file_path])
