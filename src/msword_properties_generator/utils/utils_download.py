@@ -3,12 +3,14 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload
 from dropbox.files import SharedLink
+from bs4 import BeautifulSoup
 import dropbox
 import requests
 import logging
 import io
 import os
 import re
+
 
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
@@ -58,30 +60,35 @@ def download_image(url: str, destination: str):
             logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
-            # Attempt to modify the URL to force download
-            if "?" in url:
-                url += "&download=1"
-            else:
-                url += "?download=1"
-
             session = requests.Session()
             response = session.get(url, allow_redirects=True)
             response.raise_for_status()
 
-            # Check if we need to follow any redirects manually
-            if response.history:
-                logging.info(f"Redirected to {response.url}")
-
+            logging.info(f"Redirected to {response.url}")
             logging.info(f"Response Headers: {response.headers}")
             logging.info(f"Content-Type: {response.headers.get('Content-Type')}")
 
-            if response.headers.get('Content-Type') == 'text/html; charset=utf-8':
-                raise ValueError("🔴 Unexpected content type, likely not an image")
+            # If the response is HTML, parse it to find the actual download link
+            if 'text/html' in response.headers.get('Content-Type', ''):
+                soup = BeautifulSoup(response.content, 'html.parser')
+                download_link = None
 
-            with open(destination, 'wb') as file:
-                file.write(response.content)
+                # Example of how to find the download link, adjust based on actual HTML structure
+                for link in soup.find_all('a', href=True):
+                    if 'download' in link.text.lower():
+                        download_link = link['href']
+                        break
 
-            logging.info(f"✅ OneDrive '{url}' to '{destination}' 'download Complete")
+                if download_link:
+                    response = session.get(download_link, allow_redirects=True)
+                    response.raise_for_status()
+
+            if response.headers.get('Content-Type').startswith('image/'):
+                with open(destination, 'wb') as file:
+                    file.write(response.content)
+                logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
+            else:
+                raise ValueError("Failed to download image from OneDrive. Unexpected content type.")
         else:
             msg = f"🔴 Unsupported host/type for URL provided: {url}"
             logging.error(msg)
