@@ -24,7 +24,7 @@ def get_image_and_encrypt_to_image_folder():
     target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
-    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {leverancier_email})
+    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {leverancier_email}")
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
