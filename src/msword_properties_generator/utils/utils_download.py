@@ -61,15 +61,22 @@ def download_image(url: str, destination: str):
             response = requests.get(url, allow_redirects=True)
             response.raise_for_status()
 
+            # Check if we need to follow any redirects manually
+            if response.history:
+                logging.info(f"Redirected to {response.url}")
+
             logging.info(f"Response Headers: {response.headers}")
             logging.info(f"Content-Type: {response.headers.get('Content-Type')}")
+
+            if response.headers.get('Content-Type') == 'text/html; charset=utf-8':
+                raise ValueError("🔴 Unexpected content type, likely not an image")
 
             with open(destination, 'wb') as file:
                 file.write(response.content)
 
             logging.info(f"✅ OneDrive '{url}' to '{destination}' 'download Complete")
         else:
-            msg = f"✅ Unsupported host/type for URL provided: {url}"
+            msg = f"🔴 Unsupported host/type for URL provided: {url}"
             logging.error(msg)
             raise ValueError(msg)
     except Exception as e:
