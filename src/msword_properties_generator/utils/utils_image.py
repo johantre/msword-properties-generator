@@ -14,14 +14,15 @@ def get_image_and_encrypt_to_image_folder():
         "LeverancierEmail": os.getenv('INPUT_LEVERANCIEREMAIL'),
         "LeverancierURLSignatureImage": os.getenv('INPUT_LEVERANCIERURLSIGNATUREIMAGE')
     }
-    leverancier_email = inputs["LeverancierEmail"]
+    hashed_leverancier_email = hash(inputs["LeverancierEmail"])
+
     # first construct decrypt temp folder
     temp_download_dir = tempfile.mkdtemp()
     temp_download_image_path = os.path.join(temp_download_dir, "decrypted_image.png")
     download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
 
     # construct encrypted path
-    target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
+    target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hashed_leverancier_email)
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
     # Convert absolute path to relative path
@@ -29,7 +30,7 @@ def get_image_and_encrypt_to_image_folder():
     if os.path.isabs(target_hashed_image_path):
         target_hashed_image_path = os.path.relpath(target_hashed_image_path, repo_path)    
 
-    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {leverancier_email}")
+    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {hashed_leverancier_email}")
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
@@ -47,19 +48,16 @@ def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     return temp_decrypted_path
 
 def remove_from_image_folder_git_commit_push():
-    leverancier_email = os.getenv('INPUT_LEVERANCIEREMAIL')
-    remove_from_image_folder(leverancier_email)
-
-def remove_from_image_folder(leverancier_email):
     # Construct the path to the encrypted image
+    hashed_leverancier_email = hash(os.getenv('INPUT_LEVERANCIEREMAIL'))
     image_encrypted_folder = config["paths"]["image_signature_folder"]
-    image_encryption_path = os.path.join(image_encrypted_folder, hash(leverancier_email))
+    image_encryption_path = os.path.join(image_encrypted_folder, hashed_leverancier_email)
 
     if os.path.exists(image_encryption_path):
         logging.info(f"Repo status before removal: {Repo(get_repo_root()).git.status()}")
 
         os.remove(image_encryption_path)
-        logging.info(f"Image for {leverancier_email} removed successfully from {image_encrypted_folder}")
+        logging.info(f"Image for {hashed_leverancier_email} removed successfully from {image_encrypted_folder}")
 
         # Convert absolute path to relative path
         repo_path = get_repo_root()
@@ -73,10 +71,10 @@ def remove_from_image_folder(leverancier_email):
 
         logging.info(f"Repo status after removal: {Repo(get_repo_root()).git.status()}")
         
-        git_add_commit_and_push(str(image_encrypted_folder), commit_message=f"Removed image for {leverancier_email}")
+        git_add_commit_and_push(str(image_encrypted_folder), commit_message=f"Removed image for {hashed_leverancier_email}")
         
     else:
-        logging.warning(f"No image found for {leverancier_email} to remove")
+        logging.warning(f"No image found for {hashed_leverancier_email} to remove")
     return image_encrypted_folder
 
 def git_add_commit_and_push(file_path: str, commit_message: str = "Automated commit and push"):
