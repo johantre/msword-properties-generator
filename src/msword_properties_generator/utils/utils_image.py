@@ -74,21 +74,18 @@ def git_add_commit_and_push(file_path: str, commit_message: str = "Automated com
         logging.info(f"File path to add: {file_path}")
 
         if file_path.startswith("res/images/"):
-            if repo.is_dirty(untracked_files=True):
-                # Add file to Git index (stage file)
-                repo.index.add([file_path])
-                logging.info(f"File added to Git index: {file_path}")
-    
-                # Commit changes
-                repo.index.commit(commit_message, author=bot_author, committer=bot_author)
-                logging.info(f"Committed to Git: '{commit_message}'")
-    
-                # Push changes to remote repository
-                origin = repo.remote(name='origin')
-                origin.push()
-                logging.info("Push successful.")
-            else:
-                logging.debug("No changes to commit.")
+            # Add file to Git index (stage file)
+            repo.index.add([file_path])
+            logging.info(f"File added to Git index: {file_path}")
+
+            # Commit changes
+            repo.index.commit(commit_message, author=bot_author, committer=bot_author)
+            logging.info(f"Committed to Git: '{commit_message}'")
+
+            # Push changes to remote repository
+            origin = repo.remote(name='origin')
+            origin.push()
+            logging.info("Push successful.")
         else:
             logging.debug(f"Skipping non-image file: {file_path}")
             
