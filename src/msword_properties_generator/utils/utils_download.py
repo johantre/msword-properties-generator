@@ -58,7 +58,14 @@ def download_image(url: str, destination: str):
             logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
-            response = requests.get(url, allow_redirects=True)
+            # Attempt to modify the URL to force download
+            if "?" in url:
+                url += "&download=1"
+            else:
+                url += "?download=1"
+
+            session = requests.Session()
+            response = session.get(url, allow_redirects=True)
             response.raise_for_status()
 
             # Check if we need to follow any redirects manually
