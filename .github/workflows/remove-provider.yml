@@ -54,5 +54,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add res/offers_provider.db
-          git commit -m "Add encrypted personal data to SQLite database"
+          git commit -m "Remove encrypted personal data from SQLite database"
           git push
