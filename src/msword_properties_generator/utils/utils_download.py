@@ -70,6 +70,7 @@ def download_image(url: str, destination: str):
 
             # If the response is HTML, parse it to find the actual download link
             if 'text/html' in response.headers.get('Content-Type', ''):
+                logging.info("'text/html' found on page")
                 soup = BeautifulSoup(response.content, 'html.parser')
                 download_link = None
 
@@ -82,7 +83,7 @@ def download_image(url: str, destination: str):
 
                 if not download_link:
                     for button in soup.find_all('button'):
-                        logging.info("'button' found on page")
+                        logging.info("no 'a' found, but 'button' found on page")
                         if 'download' in button.get('onclick', ''):
                             logging.info("'onclick' found for button")
                             download_link = button['onclick'].split("'")[1]
