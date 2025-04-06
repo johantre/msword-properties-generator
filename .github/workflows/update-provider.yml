@@ -70,13 +70,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium
 
-      - name: Install Chrome
+      - name: Add Google Chrome repository
+        run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+
+      - name: Update package list and install Google Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n1)
-          MAJOR_CHROME_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f 1)
-          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$MAJOR_CHROME_VERSION)
+
+      - name: Get latest stable ChromeDriver version
+        run: |
+          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          echo "ChromeDriver version: $CHROME_DRIVER_VERSION" > chromedriver_version.txt
+
+      - name: Install ChromeDriver
+        run: |
+          CHROME_DRIVER_VERSION=$(cat chromedriver_version.txt)
           wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
           unzip ~/chromedriver_linux64.zip -d ~/
           sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
@@ -86,6 +97,7 @@ jobs:
         run: |
           which chromedriver
           chromedriver --version
+
 
       - name: Encrypt and Populate SQLite Database
         env:
