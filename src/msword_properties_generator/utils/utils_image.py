@@ -24,6 +24,11 @@ def get_image_and_encrypt_to_image_folder():
     target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
+    # Convert absolute path to relative path
+    repo_path = get_repo_root()
+    if os.path.isabs(target_hashed_image_path):
+        target_hashed_image_path = os.path.relpath(target_hashed_image_path, repo_path)    
+
     git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {leverancier_email}")
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
@@ -89,9 +94,15 @@ def git_add_commit_and_push(file_path: str, commit_message: str = "Automated com
         logging.info(f"File path to add: {file_path}")
 
         if file_path.startswith("res/images/"):
-            # Stage the directory containing the deleted file
-            repo.git.add(update=True)
-            logging.info(f"Directory added to Git index: {file_path}")
+            # Determine if the file exists to decide between add and remove
+            if os.path.exists(os.path.join(repo_path, file_path)):
+                # File exists: stage for addition or update
+                repo.index.add([file_path])
+                logging.info(f"File added to Git index: {file_path}")
+            else:
+                # File does not exist: stage for removal
+                repo.index.remove([file_path])
+                logging.info(f"File removed from Git index: {file_path}")
 
             # Commit changes
             repo.index.commit(commit_message, author=bot_author, committer=bot_author)
