@@ -70,6 +70,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium
 
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y chromedriver
+          chmod +x /usr/local/bin/chromedriver
+
+      - name: Verify ChromeDriver installation
+        run: |
+          which chromedriver
+          chromedriver --version
+
       - name: Encrypt and Populate SQLite Database
         env:
           LOG_LEVEL: DEBUG
