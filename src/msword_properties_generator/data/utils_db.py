@@ -167,17 +167,17 @@ def insert_or_update_into_db(connection, encrypted_inputs):
 def remove_provider(connection):
     cursor = connection.cursor()
     leverancier_email = get_leverancierEmail_from_env()
-    hashed_leverancier_email_key = hash(leverancier_email)
+    hashed_leverancier_email = hash(leverancier_email)
 
     # Check if provider exists
     count = check_leverancier_count(connection, leverancier_email)
     if count == 0:
-        logging.warning(f"No provider found with email: {leverancier_email}")
+        logging.warning(f"No provider found with email: {hashed_leverancier_email}")
         return False
 
     # Delete the provider from the table
-    cursor.execute("DELETE FROM offer_providers WHERE HashedLeverancierEmail = ?", (hashed_leverancier_email_key,))
-    logging.info(f"Provider with email {leverancier_email} removed successfully")
+    cursor.execute("DELETE FROM offer_providers WHERE HashedLeverancierEmail = ?", (hashed_leverancier_email,))
+    logging.info(f"Provider with email {hashed_leverancier_email} removed successfully")
     connection.commit()
     cursor.close()
     return True
