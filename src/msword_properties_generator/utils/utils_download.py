@@ -3,8 +3,11 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload
 from dropbox.files import SharedLink
-from selenium.webdriver.common.by import By
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 import dropbox
 import requests
@@ -62,49 +65,44 @@ def download_image(url: str, destination: str):
             logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
+            # Set up the Selenium WebDriver (e.g., for Chrome)
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')  # Run in headless mode (without browser UI)
-            driver = webdriver.Chrome(options=options)  # Ensure chromedriver is in your PATH or provide the executable path
+            service = ChromeService(executable_path='/path/to/chromedriver')  # Update with your path to chromedriver
+            driver = webdriver.Chrome(service=service, options=options)
             driver.get(url)
 
             try:
-                # Wait for the button to appear (adjust time as necessary)
-                time.sleep(3)
-
-                # Find the download button
-                button = driver.find_element(By.CSS_SELECTOR, 'button[aria-label="Download"]')
+                # Wait for the download button to appear (adjust time as necessary)
+                wait = WebDriverWait(driver, 10)
+                button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
                 if button:
-                    logging.debug(f"✅ button found")
                     # Click the button to trigger the download
                     button.click()
                     time.sleep(3)  # Wait for the download to start, adjust as necessary
 
-                    # Check for the download link, assuming it appears in the page
+                    # Check the current URL for the download link or handle the response
                     download_link = driver.current_url
-                    logging.debug(f"✅ Found download link: {download_link}")
+                    logging.info(f"Found download link: {download_link}")
 
                     # Use requests to download the file
                     response = requests.get(download_link, allow_redirects=True)
                     response.raise_for_status()
-                    logging.debug(f"✅ response found")
-
 
                     if response.headers.get('Content-Type').startswith('image/'):
                         with open(destination, 'wb') as file:
                             file.write(response.content)
                         logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
                     else:
-                        msg = "🔴 Failed to download image from OneDrive. Unexpected content type."
-                        logging.error(msg)
-                        raise ValueError(msg)
+                        logging.error("🔴 Failed to download image from OneDrive. Unexpected content type.")
+                        raise ValueError("Failed to download image from OneDrive. Unexpected content type.")
                 else:
-                    msg = f"🔴 Download button not found"
-                    logging.error(msg)
-                    raise ValueError(msg)
+                    logging.error("🔴 Download button not found")
+                    raise ValueError("Download button not found")
             except Exception as e:
-                logging.error(f"Error: {str(e)}")
-                raise e
+                logging.error(f"🔴 Error: {str(e)}")
+                raise e  # Re-raise the exception to ensure the workflow step fails
             finally:
                 driver.quit()
         else:
