@@ -14,16 +14,17 @@ def get_image_and_encrypt_to_image_folder():
         "LeverancierEmail": os.getenv('INPUT_LEVERANCIEREMAIL'),
         "LeverancierURLSignatureImage": os.getenv('INPUT_LEVERANCIERURLSIGNATUREIMAGE')
     }
+    leverancier_email = inputs["LeverancierEmail"]
     # first construct decrypt temp folder
     temp_download_dir = tempfile.mkdtemp()
     temp_download_image_path = os.path.join(temp_download_dir, "decrypted_image.png")
     download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
 
     # construct encrypted path
-    target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(inputs["LeverancierEmail"]))
+    target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
-    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {inputs["LeverancierEmail"]})
+    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {leverancier_email})
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
