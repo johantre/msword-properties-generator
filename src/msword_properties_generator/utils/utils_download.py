@@ -75,17 +75,20 @@ def download_image(url: str, destination: str):
                 button = driver.find_element(By.CSS_SELECTOR, 'button[aria-label="Download"]')
 
                 if button:
+                    logging.debug(f"✅ button found")
                     # Click the button to trigger the download
                     button.click()
                     time.sleep(3)  # Wait for the download to start, adjust as necessary
 
                     # Check for the download link, assuming it appears in the page
                     download_link = driver.current_url
-                    logging.info(f"Found download link: {download_link}")
+                    logging.debug(f"✅ Found download link: {download_link}")
 
                     # Use requests to download the file
                     response = requests.get(download_link, allow_redirects=True)
                     response.raise_for_status()
+                    logging.debug(f"✅ response found")
+
 
                     if response.headers.get('Content-Type').startswith('image/'):
                         with open(destination, 'wb') as file:
