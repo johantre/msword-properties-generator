@@ -55,6 +55,9 @@ def remove_from_image_folder(leverancier_email):
         os.remove(image_encryption_path)
         logging.info(f"Image for {leverancier_email} removed successfully from {image_encrypted_folder}")
 
+        # Stage the deletion of the file
+        repo = Repo(get_repo_root())
+        repo.git.rm(image_encryption_path)        
         logging.info(f"Repo status after removal: {Repo(get_repo_root()).git.status()}")
         
         git_add_commit_and_push(str(image_encrypted_folder), commit_message=f"Removed image for {leverancier_email}")
@@ -74,9 +77,9 @@ def git_add_commit_and_push(file_path: str, commit_message: str = "Automated com
         logging.info(f"File path to add: {file_path}")
 
         if file_path.startswith("res/images/"):
-            # Add file to Git index (stage file)
-            repo.index.add([file_path])
-            logging.info(f"File added to Git index: {file_path}")
+            # Stage the directory containing the deleted file
+            repo.git.add(update=True)
+            logging.info(f"Directory added to Git index: {file_path}")
 
             # Commit changes
             repo.index.commit(commit_message, author=bot_author, committer=bot_author)
