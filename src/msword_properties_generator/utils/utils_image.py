@@ -21,6 +21,15 @@ def get_image_and_encrypt_to_image_folder():
     temp_download_image_path = os.path.join(temp_download_dir, "decrypted_image.png")
     download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
 
+    # Check if the image is a properly decrypted image to encrypt
+    try:
+        if not is_image_properly_decrypted(temp_download_image_path):
+            raise ImageDecryptionError("Image is not properly decrypted.")
+    except ImageDecryptionError as e:
+        logging.error(f"The file at {temp_download_image_path} is not a proper image. Most probably the download failed. "
+                      f"Please check if the image is shared with read permission 'for anyone with the link'. Error: {e}")
+        exit(1)  # Exit with non-zero status code to indicate failure
+
     # construct encrypted path
     target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hashed_leverancier_email)
     encrypt_image(temp_download_image_path, target_hashed_image_path)
