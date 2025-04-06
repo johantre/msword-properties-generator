@@ -1,4 +1,4 @@
-name: Subscribe provider
+name: Subscribe or Update provider
 
 on:
   workflow_dispatch:
