@@ -3,7 +3,9 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload
 from dropbox.files import SharedLink
-from bs4 import BeautifulSoup
+from selenium.webdriver.common.by import By
+from selenium import webdriver
+import time
 import dropbox
 import requests
 import logging
@@ -60,48 +62,48 @@ def download_image(url: str, destination: str):
             logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
-            session = requests.Session()
-            response = session.get(url, allow_redirects=True)
-            response.raise_for_status()
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')  # Run in headless mode (without browser UI)
+            driver = webdriver.Chrome(options=options)  # Ensure chromedriver is in your PATH or provide the executable path
+            driver.get(url)
 
-            logging.info(f"Redirected to {response.url}")
-            logging.info(f"Response Headers: {response.headers}")
-            logging.info(f"Content-Type: {response.headers.get('Content-Type')}")
+            try:
+                # Wait for the button to appear (adjust time as necessary)
+                time.sleep(3)
 
-            # If the response is HTML, parse it to find the actual download link
-            if 'text/html' in response.headers.get('Content-Type', ''):
-                logging.info("'text/html' found on page")
-                soup = BeautifulSoup(response.content, 'html.parser')
-                download_link = None
+                # Find the download button
+                button = driver.find_element(By.CSS_SELECTOR, 'button[aria-label="Download"]')
 
-                # Look for a link or button with download attributes
-                for link in soup.find_all('a', href=True):
-                    logging.info("'a' found on page")
-                    if 'download' in link.get('href'):
-                        download_link = link['href']
-                        break
+                if button:
+                    # Click the button to trigger the download
+                    button.click()
+                    time.sleep(3)  # Wait for the download to start, adjust as necessary
 
-                if not download_link:
-                    for button in soup.find_all('button'):
-                        logging.info("no 'a' found, but 'button' found on page")
-                        if 'download' in button.get('onclick', ''):
-                            logging.info("'onclick' found for button")
-                            download_link = button['onclick'].split("'")[1]
-                            break
+                    # Check for the download link, assuming it appears in the page
+                    download_link = driver.current_url
+                    logging.info(f"Found download link: {download_link}")
 
-                if not download_link:
-                    msg = "🔴 Download link not found in the HTML content"
+                    # Use requests to download the file
+                    response = requests.get(download_link, allow_redirects=True)
+                    response.raise_for_status()
+
+                    if response.headers.get('Content-Type').startswith('image/'):
+                        with open(destination, 'wb') as file:
+                            file.write(response.content)
+                        logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
+                    else:
+                        msg = "🔴 Failed to download image from OneDrive. Unexpected content type."
+                        logging.error(msg)
+                        raise ValueError(msg)
+                else:
+                    msg = f"🔴 Download button not found"
                     logging.error(msg)
                     raise ValueError(msg)
-
-            if response.headers.get('Content-Type').startswith('image/'):
-                with open(destination, 'wb') as file:
-                    file.write(response.content)
-                logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
-            else:
-                msg = "🔴 Failed to download image from OneDrive. Unexpected content type."
-                logging.error(msg)
-                raise ValueError(msg)
+            except Exception as e:
+                logging.error(f"Error: {str(e)}")
+                raise e
+            finally:
+                driver.quit()
         else:
             msg = f"🔴 Unsupported host/type for URL provided: {url}"
             logging.error(msg)
