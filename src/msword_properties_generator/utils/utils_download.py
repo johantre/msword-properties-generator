@@ -98,13 +98,16 @@ def download_image(url: str, destination: str):
                     file.write(response.content)
                 logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
             else:
-                raise ValueError("Failed to download image from OneDrive. Unexpected content type.")
+                msg = "🔴 Failed to download image from OneDrive. Unexpected content type."
+                logging.error(msg)
+                raise ValueError(msg)
         else:
             msg = f"🔴 Unsupported host/type for URL provided: {url}"
             logging.error(msg)
             raise ValueError(msg)
     except Exception as e:
         logging.error(f"Error: {str(e)}")
+        raise e
 
 def get_google_drive_service():
     # Build credential explicitly from provided refresh token and client details
