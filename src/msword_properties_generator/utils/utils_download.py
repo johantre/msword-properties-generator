@@ -89,7 +89,9 @@ def download_image(url: str, destination: str):
                             break
 
                 if not download_link:
-                    raise ValueError("Download link not found in the HTML content")
+                    msg = "🔴 Download link not found in the HTML content"
+                    logging.error(msg)
+                    raise ValueError(msg)
 
             if response.headers.get('Content-Type').startswith('image/'):
                 with open(destination, 'wb') as file:
