@@ -73,15 +73,23 @@ def download_image(url: str, destination: str):
                 soup = BeautifulSoup(response.content, 'html.parser')
                 download_link = None
 
-                # Example of how to find the download link, adjust based on actual HTML structure
+                # Look for a link or button with download attributes
                 for link in soup.find_all('a', href=True):
-                    if 'download' in link.text.lower():
+                    logging.info("'a' found on page")
+                    if 'download' in link.get('href'):
                         download_link = link['href']
                         break
 
-                if download_link:
-                    response = session.get(download_link, allow_redirects=True)
-                    response.raise_for_status()
+                if not download_link:
+                    for button in soup.find_all('button'):
+                        logging.info("'button' found on page")
+                        if 'download' in button.get('onclick', ''):
+                            logging.info("'onclick' found for button")
+                            download_link = button['onclick'].split("'")[1]
+                            break
+
+                if not download_link:
+                    raise ValueError("Download link not found in the HTML content")
 
             if response.headers.get('Content-Type').startswith('image/'):
                 with open(destination, 'wb') as file:
