@@ -23,7 +23,7 @@ def get_image_and_encrypt_to_image_folder():
     target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hash(inputs["LeverancierEmail"]))
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
-    git_add_commit_and_push(cast(str, target_hashed_image_path), "Automated commit of encrypted image")
+    git_add_commit_and_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {inputs["LeverancierEmail"]})
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
@@ -55,9 +55,16 @@ def remove_from_image_folder(leverancier_email):
         os.remove(image_encryption_path)
         logging.info(f"Image for {leverancier_email} removed successfully from {image_encrypted_folder}")
 
+        # Convert absolute path to relative path
+        repo_path = get_repo_root()
+        if os.path.isabs(image_encryption_path):
+            image_encryption_path = os.path.relpath(image_encryption_path, repo_path)
+
         # Stage the deletion of the file
-        repo = Repo(get_repo_root())
+        repo = Repo(repo_path)
         repo.git.rm(image_encryption_path)        
+        logging.info(f"File staged for removal: {image_encryption_path}")
+
         logging.info(f"Repo status after removal: {Repo(get_repo_root()).git.status()}")
         
         git_add_commit_and_push(str(image_encrypted_folder), commit_message=f"Removed image for {leverancier_email}")
@@ -73,6 +80,10 @@ def git_add_commit_and_push(file_path: str, commit_message: str = "Automated com
         repo = Repo(repo_path)
         bot_author = Actor("github-actions[bot]", "github-actions[bot]@users.noreply.github.com")
 
+        # Convert absolute path to relative path
+        if os.path.isabs(file_path):
+            file_path = os.path.relpath(file_path, repo_path)
+        
         logging.info(f"Repo path: {repo_path}")
         logging.info(f"File path to add: {file_path}")
 
