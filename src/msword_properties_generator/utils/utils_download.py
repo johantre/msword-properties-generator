@@ -68,7 +68,7 @@ def download_image(url: str, destination: str):
             # Set up the Selenium WebDriver (e.g., for Chrome)
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')  # Run in headless mode (without browser UI)
-            service = ChromeService(executable_path='/path/to/chromedriver')  # Update with your path to chromedriver
+            service = ChromeService(executable_path='/usr/local/bin/chromedriver')  # Update with your path to chromedriver
             driver = webdriver.Chrome(service=service, options=options)
             driver.get(url)
 
