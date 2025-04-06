@@ -61,6 +61,9 @@ def download_image(url: str, destination: str):
             response = requests.get(url, allow_redirects=True)
             response.raise_for_status()
 
+            logging.info(f"Response Headers: {response.headers}")
+            logging.info(f"Content-Type: {response.headers.get('Content-Type')}")
+
             with open(destination, 'wb') as file:
                 file.write(response.content)
 
