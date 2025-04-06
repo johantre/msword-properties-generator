@@ -9,7 +9,7 @@ on:
         type: string
 
 jobs:
-  encrypt_and_populate:
+  search_and_remove_from_repo_and_db:
     runs-on: ubuntu-latest
 
     permissions:
