@@ -110,8 +110,12 @@ def download_image(url: str, destination: str):
                         logging.debug(f"Page source after clicking download: {page_source}")
 
                         # Search for a direct download link in the page source
-                        if "download_link" in page_source:
-                            direct_download_link = re.search(r'href="([^"]+)"', page_source).group(1)
+                        # Search for a direct download link in the page source
+                        direct_download_link = None
+                        image_pattern = re.compile(r'https://[^"]+\.(jpg|jpeg|png|gif)')
+                        match = image_pattern.search(page_source)
+                        if match:
+                            direct_download_link = match.group(0)
                             logging.info(f"Found direct download link: {direct_download_link}")
 
                         # Check the current URL for the download link or handle the response
