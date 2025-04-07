@@ -64,14 +64,6 @@ def download_image(url: str, destination: str):
             logging.info(f"✅ final_url for '{url}' to '{final_url}'")
             response.raise_for_status()
 
-            # Extract base and convert to download URL
-            if "redir" in final_url:
-                direct_download_url = final_url.replace("redir?", "download?")
-                logging.info(f"✅ redir found in '{final_url}'")
-            else:
-                direct_download_url = final_url + "&download=1"
-                logging.info(f"✅ redir not found, added download at the end instead'{direct_download_url}'")
-
             with open(destination, 'wb') as file:
                 file.write(response.content)
 
