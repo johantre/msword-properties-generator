@@ -98,8 +98,16 @@ def download_image(url: str, destination: str):
                     button_clickable = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
                     if button_clickable:
-                        button_clickable.click()
+                        driver.execute_script("document.querySelector('button[aria-label=\"Download\"]').click();")
                         time.sleep(3)  # Wait for the download to start, adjust as necessary
+
+                        # Check the current URL for the download link or handle the response
+                        download_link = driver.current_url
+                        logging.info(f"Found download link: {download_link}")
+
+                        # Log the page source for debugging
+                        page_source = driver.page_source
+                        logging.debug(f"Page source after clicking download: {page_source}")
 
                         # Check the current URL for the download link or handle the response
                         download_link = driver.current_url
