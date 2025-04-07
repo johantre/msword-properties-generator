@@ -75,24 +75,16 @@ jobs:
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-archive-keyring.gpg
           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-archive-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
 
-      - name: Update package list and install Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Update package list
+        run: sudo apt-get update
 
-      - name: Determine Chrome version
-        run: google-chrome --version
-
-      - name: Extract major version number
-        id: extract_version
+      - name: Install specific Chrome version
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n1)
-          MAJOR_CHROME_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f 1)
-          echo "MAJOR_CHROME_VERSION=$MAJOR_CHROME_VERSION" >> $GITHUB_ENV
+          sudo apt-get install -y google-chrome-stable=114.0.5735.90-1
 
-      - name: Get specific ChromeDriver version
+      - name: Get ChromeDriver version for specific Chrome version
         run: |
-          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$MAJOR_CHROME_VERSION)
+          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_114)
           echo $CHROME_DRIVER_VERSION > chromedriver_version.txt
 
       - name: Verify ChromeDriver version
