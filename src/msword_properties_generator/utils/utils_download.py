@@ -3,7 +3,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload
 from dropbox.files import SharedLink
-from selenium import webdriver
+from seleniumwire import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.ui import WebDriverWait
@@ -65,13 +65,21 @@ def download_image(url: str, destination: str):
             logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
+            # Set up proxy settings within Selenium Wire options
+            seleniumwire_options = {
+                'proxy': {
+                    'http': 'http://localhost:8080',
+                    'https': 'https://localhost:8080',
+                    'no_proxy': 'localhost,127.0.0.1'
+                }
+            }
             # Set up the Selenium WebDriver (e.g., for Chrome)
             options = webdriver.ChromeOptions()
             # options.add_argument('--headless')  # Run in headless mode (without browser UI)
             options.add_argument('--no-sandbox')
             options.add_argument('--disable-dev-shm-usage')
             service = ChromeService(executable_path='/usr/local/bin/chromedriver')  # Update with your path to chromedriver
-            driver = webdriver.Chrome(service=service, options=options)
+            driver = webdriver.Chrome(service=service, options=options, seleniumwire_options=seleniumwire_options)
             driver.get(url)
 
             try:
@@ -90,6 +98,9 @@ def download_image(url: str, destination: str):
                     current_url = new_url
                     redirect_count += 1
 
+                # Ensure the URL has stabilized
+                time.sleep(2)  # Small delay to ensure the final page has loaded
+
                 # Wait for the download button to appear
                 button_visible = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
@@ -101,30 +112,17 @@ def download_image(url: str, destination: str):
                         driver.execute_script("document.querySelector('button[aria-label=\"Download\"]').click();")
                         time.sleep(3)  # Wait for the download to start, adjust as necessary
 
-                        # Check the current URL for the download link or handle the response
-                        download_link = driver.current_url
-                        logging.info(f"Found download link: {download_link}")
+                        # Capture network requests to find the direct download link
+                        download_link = None
+                        for request in driver.requests:
+                            if request.response and 'content-disposition' in request.response.headers:
+                                download_link = request.url
+                                logging.info(f"Found download link: {download_link}")
+                                break
 
-                        # Log the page source for debugging
-                        page_source = driver.page_source
-                        logging.debug(f"Page source after clicking download: {page_source}")
-
-                        # Search for a direct download link in the page source
-                        # Search for a direct download link in the page source
-                        direct_download_link = None
-                        image_pattern = re.compile(r'https://[^"]+\.(jpg|jpeg|png|gif)')
-                        match = image_pattern.search(page_source)
-                        if match:
-                            direct_download_link = match.group(0)
-                            logging.info(f"Found direct download link: {direct_download_link}")
-
-                        # Check the current URL for the download link or handle the response
-                        download_link = driver.current_url
-                        logging.info(f"Found download link: {download_link}")
-
-                        # Use requests to download the file
-                        response = requests.get(download_link, allow_redirects=True)
-                        response.raise_for_status()
+                        if download_link:                        # Use requests to download the file
+                            response = requests.get(download_link, allow_redirects=True)
+                            response.raise_for_status()
 
                         logging.info(f"Logging the response headers: {response.headers}")
 
