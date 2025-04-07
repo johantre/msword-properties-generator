@@ -77,12 +77,13 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire blinker
+          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire blinker mitmproxy
 
       - name: Verify Dependencies
         run: |
           python -c "import blinker; print('Blinker installed successfully')"
           python -c "import seleniumwire; print('Selenium Wire installed successfully')"
+          python -c "import mitmproxy; print('Mitmproxy installed successfully')"
 
       - name: Verify Chrome and ChromeDriver installation
         run: |
