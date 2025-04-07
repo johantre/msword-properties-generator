@@ -81,6 +81,8 @@ jobs:
 
       - name: Verify Dependencies
         run: |
+          pip show blinker
+          pip show mitmproxy
           python -c "import blinker; print('Blinker installed successfully')"
           python -c "import seleniumwire; print('Selenium Wire installed successfully')"
           python -c "import mitmproxy; print('Mitmproxy installed successfully')"
