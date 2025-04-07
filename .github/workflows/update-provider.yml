@@ -78,13 +78,25 @@ jobs:
       - name: Update package list
         run: sudo apt-get update
 
-      - name: Install specific Chrome version
-        run: |
-          sudo apt-get install -y google-chrome-stable=114.0.5735.90-1
+      - name: Install Google Chrome Unstable
+        run: sudo apt-get install -y google-chrome-unstable
 
-      - name: Get ChromeDriver version for specific Chrome version
+      - name: Determine Chrome version
+        run: google-chrome --version
+
+      - name: Extract major version number
+        id: extract_version
         run: |
-          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_114)
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n1)
+          MAJOR_CHROME_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f 1)
+          echo "MAJOR_CHROME_VERSION=$MAJOR_CHROME_VERSION" >> $GITHUB_ENV
+
+      - name: Get specific ChromeDriver version
+        run: |
+          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$MAJOR_CHROME_VERSION)
+          if [ -z "$CHROME_DRIVER_VERSION" ]; then
+            CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          fi
           echo $CHROME_DRIVER_VERSION > chromedriver_version.txt
 
       - name: Verify ChromeDriver version
