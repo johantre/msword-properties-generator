@@ -83,11 +83,10 @@ jobs:
       - name: Get latest stable ChromeDriver version
         run: |
           CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          echo "ChromeDriver version: $CHROME_DRIVER_VERSION" > chromedriver_version.txt
+          echo $CHROME_DRIVER_VERSION > chromedriver_version.txt
 
       - name: Verify ChromeDriver version
-        run: |
-          cat chromedriver_version.txt
+        run: cat chromedriver_version.txt
 
       - name: Install ChromeDriver
         run: |
