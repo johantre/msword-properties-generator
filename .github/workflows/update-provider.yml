@@ -72,8 +72,8 @@ jobs:
 
       - name: Add Google Chrome repository
         run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-archive-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-archive-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
 
       - name: Update package list and install Google Chrome
         run: |
@@ -97,7 +97,6 @@ jobs:
         run: |
           which chromedriver
           chromedriver --version
-
 
       - name: Encrypt and Populate SQLite Database
         env:
