@@ -74,7 +74,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          source venv/bin/activate
+          . venv/bin/activate
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium
 
@@ -142,7 +142,7 @@ jobs:
           INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
           INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
         run: |
-          source venv/bin/activate
+          . venv/bin/activate
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
 
