@@ -81,9 +81,9 @@ jobs:
 
       - name: Start mitmproxy
         run: |
-          nohup mitmproxy --mode regular --listen-port 8080 --set console_eventlog_verbosity=debug &
+          nohup mitmdump --mode regular --listen-port 8080 > mitmproxy.log 2>&1 &
           sleep 10  # Wait for 10 seconds to ensure mitmproxy is fully started
-          ps aux | grep mitmproxy  # Check if mitmproxy is running
+          cat mitmproxy.log  # Log the output of mitmproxy
 
       - name: Verify Dependencies
         run: |
