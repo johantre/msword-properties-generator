@@ -74,6 +74,24 @@ jobs:
           mv chromedriver-linux64/chromedriver /usr/local/bin/
           chmod +x /usr/local/bin/chromedriver
 
+      - name: Find Root Certificates
+        id: find-root-certificates
+        run: |
+          # Find root certificates in the Docker image
+          ROOT_CERT_PATH=$(find /etc/ssl/certs -name "*.crt" | head -n 1)
+          echo "ROOT_CERT_PATH=${ROOT_CERT_PATH}" >> $GITHUB_ENV
+
+      - name: Add Root Certificates to Trusted Store
+        run: |
+          # Create a directory for additional trusted certificates
+          mkdir -p /usr/local/share/ca-certificates/extra
+
+          # Copy the found root certificate to the directory
+          cp ${{ env.ROOT_CERT_PATH }} /usr/local/share/ca-certificates/extra/
+
+          # Update the trusted certificates
+          update-ca-certificates
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
