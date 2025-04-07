@@ -92,31 +92,37 @@ def download_image(url: str, destination: str):
                     redirect_count += 1
 
                 # Wait for the download button to appear
-                button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
+                button_visible = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
-                if button:
+                if button_visible:
                     # Click the button to trigger the download
-                    button.click()
-                    time.sleep(3)  # Wait for the download to start, adjust as necessary
+                    button_clickable = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
-                    # Check the current URL for the download link or handle the response
-                    download_link = driver.current_url
-                    logging.info(f"Found download link: {download_link}")
+                    if button_clickable:
+                        button.click()
+                        time.sleep(3)  # Wait for the download to start, adjust as necessary
 
-                    # Use requests to download the file
-                    response = requests.get(download_link, allow_redirects=True)
-                    response.raise_for_status()
+                        # Check the current URL for the download link or handle the response
+                        download_link = driver.current_url
+                        logging.info(f"Found download link: {download_link}")
 
-                    if response.headers.get('Content-Type').startswith('image/'):
-                        with open(destination, 'wb') as file:
-                            file.write(response.content)
-                        logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
+                        # Use requests to download the file
+                        response = requests.get(download_link, allow_redirects=True)
+                        response.raise_for_status()
+
+                        if response.headers.get('Content-Type').startswith('image/'):
+                            with open(destination, 'wb') as file:
+                                file.write(response.content)
+                            logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
+                        else:
+                            logging.error("🔴 Failed to download image from OneDrive. Unexpected content type.")
+                            raise ValueError("Failed to download image from OneDrive. Unexpected content type.")
                     else:
-                        logging.error("🔴 Failed to download image from OneDrive. Unexpected content type.")
-                        raise ValueError("Failed to download image from OneDrive. Unexpected content type.")
+                        logging.error("🔴 Download button is not clickable")
+                        raise ValueError("Download button is not clickable")
                 else:
-                    logging.error("🔴 Download button not found")
-                    raise ValueError("Download button not found")
+                    logging.error("🔴 Download button is not visible")
+                    raise ValueError("Download button is not visible")
             except Exception as e:
                 logging.error(f"🔴 Error: {str(e)}")
                 raise e  # Re-raise the exception to ensure the workflow step fails
