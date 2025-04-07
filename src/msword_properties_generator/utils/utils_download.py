@@ -137,8 +137,8 @@ def download_image(url: str, destination: str):
                                 file.write(response.content)
                             logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
                         else:
-                            logging.error("🔴 Failed to download image from OneDrive. Unexpected content type.")
-                            raise ValueError("Failed to download image from OneDrive. Unexpected content type.")
+                            logging.error("🔴 Failed to download image from OneDrive. Content type doesn't start with image.")
+                            raise ValueError("Failed to download image from OneDrive. Content type doesn't start with image")
                     else:
                         logging.error("🔴 Download button is not clickable")
                         raise ValueError("Download button is not clickable")
