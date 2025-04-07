@@ -75,11 +75,13 @@ def download_image(url: str, destination: str):
             driver.get(url)
 
             try:
-                # Handle multiple redirects before clicking the button
-                max_redirects = 5
+                # Handle exactly two redirects before clicking the button
+                wait = WebDriverWait(driver, 5)
                 current_url = url
-                for _ in range(max_redirects):
-                    wait = WebDriverWait(driver, 10)
+                redirect_count = 0
+                max_redirects = 2
+
+                while redirect_count < max_redirects:
                     wait.until(lambda driver: driver.current_url != current_url)
                     time.sleep(1)  # Small delay to ensure the URL has changed
                     new_url = driver.current_url
@@ -87,6 +89,7 @@ def download_image(url: str, destination: str):
                     if new_url == current_url:
                         break  # URL has stabilized
                     current_url = new_url
+                    redirect_count += 1
 
                 # Wait for the download button to appear
                 wait = WebDriverWait(driver, 5)
