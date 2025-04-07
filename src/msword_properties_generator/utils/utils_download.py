@@ -3,12 +3,6 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload
 from dropbox.files import SharedLink
-from seleniumwire import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
 import dropbox
 import requests
 import logging
@@ -65,93 +59,25 @@ def download_image(url: str, destination: str):
             logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
-            # Set up proxy settings within Selenium Wire options
-            seleniumwire_options = {
-                'proxy': {
-                    'http': 'http://localhost:8080',
-                    'https': 'https://localhost:8080',
-                    'no_proxy': 'localhost,127.0.0.1'
-                },
-                'verify_ssl': False  # Disable SSL verification (use with caution)
-            }
-            # Set up the Selenium WebDriver (e.g., for Chrome)
-            options = webdriver.ChromeOptions()
-            # options.add_argument('--headless')  # Run in headless mode (without browser UI)
-            options.add_argument('--no-sandbox')
-            options.add_argument('--disable-dev-shm-usage')
-            service = ChromeService(executable_path='/usr/local/bin/chromedriver')  # Update with your path to chromedriver
-            driver = webdriver.Chrome(service=service, options=options, seleniumwire_options=seleniumwire_options)
-            driver.get(url)
+            response = requests.get(url, allow_redirects=True)
+            final_url = response.url
+            logging.info(f"✅ final_url for '{url}' to '{final_url}'")
+            response.raise_for_status()
 
-            try:
-                # Handle exactly two redirects before clicking the button
-                wait = WebDriverWait(driver, 10)
-                current_url = url
-                redirect_count = 0
-                max_redirects = 2
+            # Extract base and convert to download URL
+            if "redir" in final_url:
+                direct_download_url = final_url.replace("redir?", "download?")
+                logging.info(f"✅ redir found in '{final_url}'")
+            else:
+                direct_download_url = final_url + "&download=1"
+                logging.info(f"✅ redir not found, added download at the end instead'{direct_download_url}'")
 
-                while redirect_count < max_redirects:
-                    time.sleep(1)  # Small delay to ensure the URL has changed
-                    new_url = driver.current_url
-                    logging.info(f"Redirected to: {new_url}")
-                    if new_url == current_url:
-                        break  # URL has stabilized
-                    current_url = new_url
-                    redirect_count += 1
+            with open(destination, 'wb') as file:
+                file.write(response.content)
 
-                # Ensure the URL has stabilized
-                time.sleep(2)  # Small delay to ensure the final page has loaded
-
-                # Wait for the download button to appear
-                button_visible = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
-
-                if button_visible:
-                    # Click the button to trigger the download
-                    button_clickable = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
-
-                    if button_clickable:
-                        driver.execute_script("document.querySelector('button[aria-label=\"Download\"]').click();")
-                        time.sleep(5)  # Wait for the download to start, adjust as necessary
-
-                        # Capture network requests to find the direct download link
-                        download_link = None
-                        for request in driver.requests:
-                            if request.response and 'content-disposition' in request.response.headers:
-                                download_link = request.url
-                                logging.info(f"Found download link: {download_link}")
-                                break
-
-                        if download_link:                        # Use requests to download the file
-                            response = requests.get(download_link, allow_redirects=True)
-                            response.raise_for_status()
-
-                        logging.info(f"Logging the response headers: {response.headers}")
-
-                        # Check if the response is redirecting to another URL
-                        if response.history:
-                            logging.info(f"Redirected to final URL: {response.url}")
-                            download_link = response.url
-
-                        if response.headers.get('Content-Type').startswith('image/'):
-                            with open(destination, 'wb') as file:
-                                file.write(response.content)
-                            logging.info(f"✅ OneDrive '{url}' to '{destination}' download Complete")
-                        else:
-                            logging.error("🔴 Failed to download image from OneDrive. Content type doesn't start with image.")
-                            raise ValueError("Failed to download image from OneDrive. Content type doesn't start with image")
-                    else:
-                        logging.error("🔴 Download button is not clickable")
-                        raise ValueError("Download button is not clickable")
-                else:
-                    logging.error("🔴 Download button is not visible")
-                    raise ValueError("Download button is not visible")
-            except Exception as e:
-                logging.error(f"🔴 Error: {str(e)}")
-                raise e  # Re-raise the exception to ensure the workflow step fails
-            finally:
-                driver.quit()
+            logging.info(f"✅ OneDrive '{url}' to '{destination}' 'download Complete??")
         else:
-            msg = f"🔴 Unsupported host/type for URL provided: {url}"
+            msg = f"✅ Unsupported host/type for URL provided: {url}"
             logging.error(msg)
             raise ValueError(msg)
     except Exception as e:
