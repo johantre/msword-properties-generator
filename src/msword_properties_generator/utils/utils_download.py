@@ -82,7 +82,6 @@ def download_image(url: str, destination: str):
                 max_redirects = 2
 
                 while redirect_count < max_redirects:
-                    wait.until(lambda driver: driver.current_url != current_url)
                     time.sleep(1)  # Small delay to ensure the URL has changed
                     new_url = driver.current_url
                     logging.info(f"Redirected to: {new_url}")
@@ -99,7 +98,7 @@ def download_image(url: str, destination: str):
                     button_clickable = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
                     if button_clickable:
-                        button.click()
+                        button_clickable.click()
                         time.sleep(3)  # Wait for the download to start, adjust as necessary
 
                         # Check the current URL for the download link or handle the response
