@@ -88,6 +88,7 @@ jobs:
           python -c "import blinker; print('Blinker installed successfully')"
           python -c "import seleniumwire; print('Selenium Wire installed successfully')"
           python -c "import mitmproxy; print('Mitmproxy installed successfully')"
+          sleep 5  # Wait for 5 seconds to ensure mitmproxy is fully started
 
       - name: Verify Chrome and ChromeDriver installation
         run: |

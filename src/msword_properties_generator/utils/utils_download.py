@@ -110,7 +110,7 @@ def download_image(url: str, destination: str):
 
                     if button_clickable:
                         driver.execute_script("document.querySelector('button[aria-label=\"Download\"]').click();")
-                        time.sleep(3)  # Wait for the download to start, adjust as necessary
+                        time.sleep(5)  # Wait for the download to start, adjust as necessary
 
                         # Capture network requests to find the direct download link
                         download_link = None
