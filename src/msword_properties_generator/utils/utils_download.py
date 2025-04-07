@@ -76,7 +76,7 @@ def download_image(url: str, destination: str):
 
             try:
                 # Handle exactly two redirects before clicking the button
-                wait = WebDriverWait(driver, 5)
+                wait = WebDriverWait(driver, 10)
                 current_url = url
                 redirect_count = 0
                 max_redirects = 2
@@ -92,7 +92,6 @@ def download_image(url: str, destination: str):
                     redirect_count += 1
 
                 # Wait for the download button to appear
-                wait = WebDriverWait(driver, 5)
                 button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
                 if button:
