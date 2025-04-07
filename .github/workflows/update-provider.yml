@@ -79,6 +79,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire blinker==1.4 mitmproxy==7.0.4
 
+      - name: Start mitmproxy
+        run: |
+          nohup mitmproxy --mode regular --listen-port 8080 &
+
       - name: Verify Dependencies
         run: |
           python -c "import blinker; print('Blinker installed successfully')"
