@@ -54,8 +54,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install Git
-        run: apt-get update && apt-get install -y git
+      - name: Install Git and cURL
+        run: apt-get update && apt-get install -y git curl
 
       - name: Install Dependencies
         run: |
