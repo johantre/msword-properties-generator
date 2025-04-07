@@ -58,10 +58,10 @@ jobs:
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-cryptography-jproperties-pytz-gitpython-requests-google-auth-google-auth-oauthlib-google-auth-httplib2-google-api-python-client-dropbox-pillow-selenium
+          path: venv
+          key: ${{ runner.os }}-venv-cryptography-jproperties-pytz-gitpython-requests-google-auth-google-auth-oauthlib-google-auth-httplib2-google-api-python-client-dropbox-pillow-selenium
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-venv-
         continue-on-error: true
 
       - name: Set up Python
@@ -69,8 +69,12 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Create virtual environment
+        run: python -m venv venv
+
       - name: Install Dependencies
         run: |
+          source venv/bin/activate
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium
 
@@ -138,6 +142,7 @@ jobs:
           INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
           INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
         run: |
+          source venv/bin/activate
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
 
