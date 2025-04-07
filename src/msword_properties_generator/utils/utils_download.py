@@ -71,7 +71,8 @@ def download_image(url: str, destination: str):
                     'http': 'http://localhost:8080',
                     'https': 'https://localhost:8080',
                     'no_proxy': 'localhost,127.0.0.1'
-                }
+                },
+                'verify_ssl': False  # Disable SSL verification (use with caution)
             }
             # Set up the Selenium WebDriver (e.g., for Chrome)
             options = webdriver.ChromeOptions()
