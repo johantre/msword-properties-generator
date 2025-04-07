@@ -44,6 +44,9 @@ jobs:
   encrypt_and_populate:
     runs-on: ubuntu-latest
 
+    container:
+      image: selenium/standalone-chrome:latest
+
     permissions:
       contents: write
 
