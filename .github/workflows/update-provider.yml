@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: selenium/standalone-chrome:latest
+      image: mcr.microsoft.com/vscode/devcontainers/python:0-3.9
       options: --user 1001:1001
 
     permissions:
@@ -68,9 +68,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
-      - name: Install Git
-        run: sudo apt-get update && sudo apt-get install -y git
 
       - name: Create virtual environment
         run: python -m venv venv
