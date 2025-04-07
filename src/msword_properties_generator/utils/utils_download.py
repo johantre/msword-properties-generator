@@ -75,8 +75,21 @@ def download_image(url: str, destination: str):
             driver.get(url)
 
             try:
-                # Wait for the download button to appear (adjust time as necessary)
-                wait = WebDriverWait(driver, 10)
+                # Handle multiple redirects before clicking the button
+                max_redirects = 5
+                current_url = url
+                for _ in range(max_redirects):
+                    wait = WebDriverWait(driver, 10)
+                    wait.until(lambda driver: driver.current_url != current_url)
+                    time.sleep(1)  # Small delay to ensure the URL has changed
+                    new_url = driver.current_url
+                    logging.info(f"Redirected to: {new_url}")
+                    if new_url == current_url:
+                        break  # URL has stabilized
+                    current_url = new_url
+
+                # Wait for the download button to appear
+                wait = WebDriverWait(driver, 5)
                 button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[aria-label="Download"]')))
 
                 if button:
