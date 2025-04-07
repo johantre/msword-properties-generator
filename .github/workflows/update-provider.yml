@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Git and cURL
-        run: apt-get update && apt-get install -y git curl unzip
+        run: apt-get update && apt-get install -y git curl unzip xvfb
 
       - name: Install Google Chrome 134.0.6998.165
         run: |
@@ -106,6 +106,8 @@ jobs:
           INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+          Xvfb :99 -ac &
+          export DISPLAY=:99
           python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
 
       - name: Commit and Push Changes
