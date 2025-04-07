@@ -88,7 +88,6 @@ jobs:
           INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
           INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
         run: |
-          . venv/bin/activate
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
 
