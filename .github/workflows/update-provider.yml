@@ -82,13 +82,14 @@ jobs:
       - name: Start mitmproxy
         run: |
           nohup mitmproxy --mode regular --listen-port 8080 &
+          sleep 10  # Wait for 10 seconds to ensure mitmproxy is fully started
+          ps aux | grep mitmproxy  # Check if mitmproxy is running
 
       - name: Verify Dependencies
         run: |
           python -c "import blinker; print('Blinker installed successfully')"
           python -c "import seleniumwire; print('Selenium Wire installed successfully')"
           python -c "import mitmproxy; print('Mitmproxy installed successfully')"
-          sleep 5  # Wait for 5 seconds to ensure mitmproxy is fully started
 
       - name: Verify Chrome and ChromeDriver installation
         run: |
