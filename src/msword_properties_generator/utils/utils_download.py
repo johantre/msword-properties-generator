@@ -117,6 +117,13 @@ def download_image(url: str, destination: str):
                         response = requests.get(download_link, allow_redirects=True)
                         response.raise_for_status()
 
+                        logging.info(f"Logging the response headers: {response.headers}")
+
+                        # Check if the response is redirecting to another URL
+                        if response.history:
+                            logging.info(f"Redirected to final URL: {response.url}")
+                            download_link = response.url
+
                         if response.headers.get('Content-Type').startswith('image/'):
                             with open(destination, 'wb') as file:
                                 file.write(response.content)
