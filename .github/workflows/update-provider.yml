@@ -62,20 +62,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium
 
-      - name: Install Google Chrome
+      - name: Install Google Chrome 134.0.6998.165
         run: |
           apt-get update
           apt-get install -y wget gnupg
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
           apt-get update
-          apt-get install -y google-chrome-stable
+          wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_134.0.6998.165-1_amd64.deb
+          apt-get install -y ./google-chrome-stable_134.0.6998.165-1_amd64.deb
 
-      - name: Install ChromeDriver
+      - name: Install ChromeDriver 134.0.6998.165
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n1)
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -N https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
+          wget -N https://chromedriver.storage.googleapis.com/134.0.6998.165/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           mv chromedriver /usr/local/bin/
           chmod +x /usr/local/bin/chromedriver
