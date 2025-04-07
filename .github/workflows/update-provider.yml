@@ -77,7 +77,12 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire blinker==1.4 mitmproxy==7.0.4
+          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire blinker==1.4
+
+      - name: Install mitmproxy Separately
+        run: |
+          python -m pip install mitmproxy==7.0.4
+          mitmproxy --version
 
       - name: Start mitmproxy
         run: |
