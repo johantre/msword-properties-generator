@@ -80,9 +80,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      - name: Get latest stable ChromeDriver version
+      - name: Determine Chrome version
+        run: google-chrome --version
+
+      - name: Extract major version number
+        id: extract_version
         run: |
-          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -n1)
+          MAJOR_CHROME_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f 1)
+          echo "MAJOR_CHROME_VERSION=$MAJOR_CHROME_VERSION" >> $GITHUB_ENV
+
+      - name: Get specific ChromeDriver version
+        run: |
+          CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$MAJOR_CHROME_VERSION)
           echo $CHROME_DRIVER_VERSION > chromedriver_version.txt
 
       - name: Verify ChromeDriver version
