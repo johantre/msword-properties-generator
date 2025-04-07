@@ -46,7 +46,7 @@ jobs:
 
     container:
       image: selenium/standalone-chrome:latest
-      options: --user $(id -u):$(id -g)
+      options: --user 1001:1001
 
     permissions:
       contents: write
