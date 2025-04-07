@@ -77,7 +77,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire
+          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow selenium selenium-wire blinker
 
       - name: Verify Chrome and ChromeDriver installation
         run: |
