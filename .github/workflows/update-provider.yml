@@ -71,7 +71,7 @@ jobs:
         run: |
           wget -N https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/134.0.6998.165/linux64/chromedriver-linux64.zip
           unzip chromedriver-linux64.zip
-          mv chromedriver /usr/local/bin/
+          mv chromedriver-linux64/chromedriver /usr/local/bin/
           chmod +x /usr/local/bin/chromedriver
 
       - name: Install Dependencies
