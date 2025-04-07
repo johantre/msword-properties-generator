@@ -45,8 +45,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: mcr.microsoft.com/vscode/devcontainers/python:0-3.9
-      options: --user 1001:1001
+      image: python:3.9
 
     permissions:
       contents: write
@@ -59,7 +58,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: venv
-          key: ${{ runner.os }}-venv-cryptography-jproperties-pytz-gitpython-requests-google-auth-google-auth-oauthlib-google-auth-httplib2-google-api-python-client-dropbox-pillow-selenium
+          key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-venv-
         continue-on-error: true
@@ -68,6 +67,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
+      - name: Install Git
+        run: apt-get update && apt-get install -y git
 
       - name: Create virtual environment
         run: python -m venv venv
