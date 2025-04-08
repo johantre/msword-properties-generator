@@ -8,13 +8,13 @@ on:
     inputs:
       klantNaam:
         description: 'Klant Naam'
-        required: false
+        required: true
       klantJobTitle:
         description: 'Klant JobTitle'
-        required: false
+        required: true
       klantJobReference:
         description: 'Klant JobReference'
-        required: false
+        required: true
       sendEmail:
         description: 'Send in Email'
         required: true
@@ -25,7 +25,7 @@ on:
         required: false
       uploadDropbox:
         description: 'Upload to Dropbox Johan'
-        required: true
+        required: false
         default: false
         type: boolean
 
