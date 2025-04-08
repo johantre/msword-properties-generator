@@ -50,7 +50,7 @@ How to provide? 2 options:
 - Update the [OffersCustomer.xlsx](res/OffersCustomer.xlsx) locally, Git commit & Push it back to this Repo. (Requires some Git knowledge) 
 - GitHub Actions > Select **"Generate, Send and add to Dropbox"** workflow > **"Run workflow"**<br>to generate the documents and have them send to the given mail.<br>
 Behind the scenes [Provider data](#Provider data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
-So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account [Attention](##⚠️Attention⚠️) regarding the mail address.
+So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
 <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
 ## ⚠️Attention⚠️ 
