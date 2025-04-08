@@ -34,13 +34,14 @@ In order to have proper generated documents we need Provider and Customer data. 
 Provider data doesn't change that much over time. Hence, since it's about quite some fields.<br>That data is stored in this repo.<br> 
 How to provide and update?
 - GitHub Actions > Select **"Subscribe or Update provider"** workflow > **"Run workflow"** to add or update yourself as a Provider to the [offers_provider.db](res/offers_provider.db).<br>
-The last field you can provide an URL to Dropbox or Google Drive to a signature image.<br>
-Take into account a white background so it matches the background color of the document.
-<br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br> 
-In order for this to work, you'll need to share the image with permissions to **"Anyone that has the link"**.<br>
-Once this process is done, you can remove that permission of your link again.<br>
-All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
+This process takes on average about 20 sec.
+  - The last field you can provide an URL to Dropbox or Google Drive to a signature image.<br>Take into account a white background so it matches the background color of the document.
+  <br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br> 
+  - In order for this to work, you'll need to share the image with permissions to **"Anyone that has the link"**.<br>
+    Once this process is done, you can remove that permission of your link again.<br>
+  - All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
+This process takes on average about 20 sec.
 All your Provider data will be removed, including the encrypted signature image file stored in the repo. 
 <br><a href="assets/img_2.png"><img src="assets/img_2.png" width="200"></a><br>
 
@@ -49,6 +50,7 @@ Customer data changes frequently.<br>Every time you need documents to be generat
 How to provide? 2 options: 
 - Update the [OffersCustomer.xlsx](res/OffersCustomer.xlsx) locally, Git commit & Push it back to this Repo. (Requires some Git knowledge) 
 - GitHub Actions > Select **"Generate, Send and add to Dropbox"** workflow > **"Run workflow"**<br>to generate the documents and have them send to the given mail.<br>
+This process takes on average about 2 min.
 Behind the scenes [Provider data](#Provider data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
 So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
 <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
