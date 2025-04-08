@@ -85,7 +85,7 @@ def set_custom_properties_docx(customer_line, provider_line):
 
 def update_custom_properties_docx(base_document_to_save, customer_line, provider_line):
     document = open_document(base_document_to_save)
-    replace_images(document, customer_line['EmailRecipient'])
+    replace_images(document, customer_line['LeverancierEmail'])
     replace_direct_text(document, provider_line, customer_line)
     save_document(base_document_to_save, document)
 
@@ -171,6 +171,5 @@ def load_custom_property_names_map():
         "LeverancierKandidaat": "Leverancier Kandidaat",
         "LeverancierOpgemaaktte": "Leverancier Opgemaakt te",
         "LeverancierHoedanigheid": "Leverancier Hoedanigheid",
-        "EmailRecipient": "Leverancier Email",
         "UploadDropbox": "Upload Dropbox"
     }

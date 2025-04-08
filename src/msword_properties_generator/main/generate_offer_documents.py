@@ -48,13 +48,13 @@ def _main(verbose=False, optional_args=None):
 
         if base_document_to_save.strip():
             if optional_args:
-                recipient_email = optional_args["EmailRecipient"]
+                leverancier_email = optional_args["LeverancierEmail"]
             else:
-                recipient_email = 'johan_tre@hotmail.com'
+                leverancier_email = 'johan_tre@hotmail.com'
             generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
 
-            if recipient_email:
-                send_email(generated_files, recipient_email, provider_line, customer_line)
+            if leverancier_email:
+                send_email(generated_files, leverancier_email, provider_line, customer_line)
             else:
                 logging.info(f"ℹ️Email not sent, as requested by user.")
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     parser.add_argument("--klantNaam", help="Klant Naam")
     parser.add_argument("--klantJobTitle", help="Klant JobTitle")
     parser.add_argument("--klantJobReference", help="Klant JobReference")
-    parser.add_argument("--emailRecipient", help="Email Recipient")
+    parser.add_argument("--leverancierEmail", help="Leverancier Email")
     parser.add_argument("--uploadDropbox", help="Upload Dropbox")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':
             'KlantNaam': args.klantNaam,
             'KlantJobTitle': args.klantJobTitle,
             'KlantJobReference': args.klantJobReference,
-            'EmailRecipient': args.emailRecipient,
+            'LeverancierEmail': args.leverancierEmail,
             'UploadDropbox': args.uploadDropbox
         }
         _main(
