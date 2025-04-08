@@ -36,9 +36,12 @@ on:
         required: true
         type: string
       LeverancierURLSignatureImage:
-        description: 'Leverancier URL Signature image (Dropbox, GoogleDrive, OneDrive)'
+        description: 'Leverancier URL Signature image (Dropbox, GoogleDrive)'
         required: true
         type: string
+
+  repository_dispatch:
+    types: [run-provider-update]
 
 jobs:
   encrypt_and_populate:
@@ -81,15 +84,15 @@ jobs:
           DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
           DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
-          INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
-          INPUT_LEVERANCIERNAAM: ${{ github.event.inputs.LeverancierNaam }}
-          INPUT_LEVERANCIERSTAD: ${{ github.event.inputs.LeverancierStad }}
-          INPUT_LEVERANCIERSTRAAT: ${{ github.event.inputs.LeverancierStraat }}
-          INPUT_LEVERANCIERPOSTADRES: ${{ github.event.inputs.LeverancierPostadres }}
-          INPUT_LEVERANCIERKANDIDAAT: ${{ github.event.inputs.LeverancierKandidaat }}
-          INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte }}
-          INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
-          INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
+          INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail || github.event.client_payload.LeverancierEmail }}
+          INPUT_LEVERANCIERNAAM: ${{ github.event.inputs.LeverancierNaam || github.event.client_payload.LeverancierNaam }}
+          INPUT_LEVERANCIERSTAD: ${{ github.event.inputs.LeverancierStad || github.event.client_payload.LeverancierStad }}
+          INPUT_LEVERANCIERSTRAAT: ${{ github.event.inputs.LeverancierStraat || github.event.client_payload.LeverancierStraat }}
+          INPUT_LEVERANCIERPOSTADRES: ${{ github.event.inputs.LeverancierPostadres || github.event.client_payload.LeverancierPostadres }}
+          INPUT_LEVERANCIERKANDIDAAT: ${{ github.event.inputs.LeverancierKandidaat || github.event.client_payload.LeverancierKandidaat }}
+          INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte || github.event.client_payload.LeverancierOpgemaaktte }}
+          INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid || github.event.client_payload.LeverancierHoedanigheid }}
+          INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage || github.event.client_payload.LeverancierURLSignatureImage }}
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
