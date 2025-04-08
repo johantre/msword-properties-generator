@@ -36,9 +36,7 @@ on:
         required: true
         type: string
       LeverancierURLSignatureImage:
-        description: |
-          Leverancier URL Signature image
-          (only Dropbox, GoogleDrive supported)
+        description: "Leverancier URL Signature image\n(only Dropbox, GoogleDrive supported)"
         required: true
         type: string
 
