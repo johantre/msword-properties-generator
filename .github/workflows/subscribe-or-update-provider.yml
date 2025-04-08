@@ -32,9 +32,14 @@ on:
         required: true
         type: string
       LeverancierHoedanigheid:
+        type: choice
         description: 'Leverancier Hoedanigheid'
         required: true
-        type: string
+        options:
+          - Directe Freelancer
+          - Eigen werknemer
+          - Freelancer in onderaanneming
+          - Subcontractor
       LeverancierURLSignatureImage:
         description: 'Leverancier URL Signature image (currently supported: Dropbox, GoogleDrive)'
         required: true
