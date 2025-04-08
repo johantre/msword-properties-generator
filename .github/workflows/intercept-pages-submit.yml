@@ -1,7 +1,7 @@
 name: Handle form submission and dispatch main workflow
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
   send-dispatch:
