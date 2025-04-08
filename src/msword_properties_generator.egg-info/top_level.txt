@@ -1,2 +1,0 @@
-msword-properties-generator
-useful

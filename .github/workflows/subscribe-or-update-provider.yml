@@ -92,7 +92,7 @@ jobs:
           INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          python src/msword_properties_generator/main/encrypt_and_populate_provider_db.py
+          python src/msword_properties_generator/main/subscribe_or_update_provider.py
 
       - name: Commit and Push Changes
         env:
