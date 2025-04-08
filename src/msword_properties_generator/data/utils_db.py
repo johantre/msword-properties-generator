@@ -185,7 +185,7 @@ def remove_provider(connection):
 def create_replacements_from_db(optionals=None):
     conn = init_db()
 
-    leverancier_email = optionals['EmailRecipient']
+    leverancier_email = optionals['LeverancierEmail']
     replacements_dict = get_leverancier_dict(conn, leverancier_email)
 
     close_db(conn)

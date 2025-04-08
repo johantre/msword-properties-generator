@@ -60,4 +60,3 @@ This process takes on average about 2 min.
 So the mail address provided for the Customer and Provider information screen must be equal.<br>
 Check out the 3 screenshots in this article; they *must be the same* in order for this to work! 
   - "Leverancier Mail" 
-  - "Email recipient"
