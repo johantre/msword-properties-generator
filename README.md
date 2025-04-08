@@ -12,7 +12,7 @@ The user can provide a Dropbox or Google Drive link to a signature image to incl
     - Filling out a GitHub Actions form.<br>This will be the form that triggers the generation of the document pairs. (.docx and .pdf) 
 
 At the moment of writing, depending of your choice, after the above actions this will result in:
-- Sending a mail to the given mail of the Provider with the generated documents 
+- Sending a mail to the given e-mail address of the Provider with the generated documents. 
 - Uploading the documents to the Dropbox of the owner of this repository.
 - Customer data will not be stored. 
 - Provider data *will* be stored in this Repo, encrypted to protect your privacy.
@@ -33,14 +33,13 @@ In order to have proper generated documents we need Provider and Customer data. 
 ### Provider data
 Provider data doesn't change that much over time. Hence, since it's about quite some fields.<br>That data is stored in this repo.<br> 
 How to provide and update?
-- GitHub Actions > Select **"Subscribe or Update provider"** workflow > **"Run workflow"** to add yourself as a Provider to the [offers_provider.db](res/offers_provider.db).<br>
-Your data will be encrypted to protect your privacy.<br>
+- GitHub Actions > Select **"Subscribe or Update provider"** workflow > **"Run workflow"** to add or update yourself as a Provider to the [offers_provider.db](res/offers_provider.db).<br>
 The last field you can provide an URL to Dropbox or Google Drive to a signature image.
 <br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br>
 Take into account a white background so it matches the background color of the document.  
 In order for this to work, you'll need to share the image with permissions to "everyone that has the link".<br>
 Once this process is done, you can remove that permission of your link again.<br>
-The image will be encrypted and stored in this repo under a hashed name to protect your privacy. 
+All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
 All your Provider data will be removed, including the encrypted signature image file stored in the repo. 
 <br><a href="assets/img_2.png"><img src="assets/img_2.png" width="200"></a><br>
