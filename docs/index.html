@@ -3,94 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parameter Input for Workflow</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Optional for styling -->
+    <title>Subscribe / Update Provider</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left; /* Ensures all text inside the form is aligned left */
+        }
+
+        h1 {
+            text-align: center;
+            color: #5a5a5a;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .conditional-input {
+            display: none;
+        }
+
+        .radio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            margin-top: 12px;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        /* This step explicitly uses a fixed width for consistent alignment */
+        .radio-group input[type="radio"] {
+            margin: 0;
+            margin-right: 8px;
+            padding: 0;
+            width: 16px; /* explicitly defined width */
+            height: 16px; /* explicitly defined height */
+            box-sizing: border-box;
+        }
+
+        /* Removing defaults and ensuring consistent alignment */
+        .radio-group label {
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+        }
+
+        /* Reset form container styles */
+        .form-container form {
+            display: block;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Enter Parameters for Workflow</h1>
-    <form id="workflowForm" method="POST">
-        <!-- Image File or URL Selection -->
-        <fieldset>
-            <legend>Select File or Provide URL</legend>
-            <label>
-                <input type="radio" name="fileChoice" value="upload" checked> Upload Image File
-            </label>
-            <label>
-                <input type="radio" name="fileChoice" value="url"> Provide URL (Dropbox / Google Drive)
-            </label>
-        </fieldset>
+    <div class="form-container">
+        <h1>Subscribe / Update Provider</h1>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <!-- Leverancier Info -->
+            <label for="LeverancierEmail">Leverancier Email</label>
+            <input type="email" id="LeverancierEmail" name="LeverancierEmail" required placeholder="Enter Leverancier Email">
 
-        <!-- Image File Upload -->
-        <div id="fileUploadDiv">
-            <label for="imageFile">Image File:</label>
-            <input type="file" id="imageFile" name="imageFile" accept="image/*" required><br><br>
+            <label for="LeverancierNaam">Leverancier Naam</label>
+            <input type="text" id="LeverancierNaam" name="LeverancierNaam" required placeholder="Enter Leverancier Naam">
+
+            <label for="LeverancierStad">Leverancier Stad</label>
+            <input type="text" id="LeverancierStad" name="LeverancierStad" required placeholder="Enter Leverancier Stad">
+
+            <label for="LeverancierStraat">Leverancier Straat</label>
+            <input type="text" id="LeverancierStraat" name="LeverancierStraat" required placeholder="Enter Leverancier Straat">
+
+            <label for="LeverancierPostadres">Leverancier Postadres</label>
+            <input type="text" id="LeverancierPostadres" name="LeverancierPostadres" required placeholder="Enter Leverancier Postadres">
+
+            <label for="LeverancierKandidaat">Leverancier Kandidaat</label>
+            <input type="text" id="LeverancierKandidaat" name="LeverancierKandidaat" required placeholder="Enter Leverancier Kandidaat">
+
+            <label for="LeverancierOpgemaaktte">Leverancier Opgemaakt te</label>
+            <input type="text" id="LeverancierOpgemaaktte" name="LeverancierOpgemaaktte" required placeholder="Enter Leverancier Opgemaakt te">
+
+            <label for="LeverancierHoedanigheid">Leverancier Hoedanigheid</label>
+            <input type="text" id="LeverancierHoedanigheid" name="LeverancierHoedanigheid" required placeholder="Enter Leverancier Hoedanigheid">
+
+            <!-- Option for Image URL or File Upload -->
+            <label>Choose how to provide the signature image:</label>
+            <div class="radio-container">
+                <div class="radio-group">
+                    <input type="radio" id="imageUrlOption" name="uploadOption" value="url" onclick="toggleImageInput()">
+                    <label for="imageUrlOption">Image URL</label>
+                </div>
+                <div class="radio-group">
+                    <input type="radio" id="imageFileOption" name="uploadOption" value="file" onclick="toggleImageInput()" checked>
+                    <label for="imageFileOption">Upload Image File</label>
+                </div>
+            </div>
+
+            <!-- URL Input (Visible when "Provide Image URL" is selected) -->
+            <div id="urlInput" class="conditional-input">
+                <label for="LeverancierURLSignatureImage">Leverancier URL Signature Image</label>
+                <input type="url" id="LeverancierURLSignatureImage" name="LeverancierURLSignatureImage" placeholder="Enter URL to image from Dropbox or Google Drive">
+            </div>
+
+            <!-- File Upload Input (Visible when "Upload Image File" is selected) -->
+            <div id="fileInput" class="conditional-input">
+                <label for="LeverancierSignatureImage">Upload Signature Image</label>
+                <input type="file" id="LeverancierSignatureImage" name="LeverancierSignatureImage">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="form-footer">
+            <p>Powered by Subscribe / Update Provider</p>
         </div>
-
-        <!-- URL Input (Visible when URL option is selected) -->
-        <div id="urlDiv" style="display: none;">
-            <label for="imageUrl">Image URL (Dropbox or Google Drive):</label>
-            <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com" required><br><br>
-        </div>
-
-        <!-- Workflow Parameters -->
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
-
-        <label for="version">Version:</label>
-        <input type="text" id="version" name="version" required><br><br>
-
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea><br><br>
-
-        <!-- Submit Button -->
-        <button type="submit">Submit</button>
-    </form>
+    </div>
 
     <script>
-        // Toggle between file upload and URL input based on user selection
-        document.querySelectorAll('input[name="fileChoice"]').forEach(function(input) {
-            input.addEventListener('change', function() {
-                if (input.value === 'url') {
-                    document.getElementById('fileUploadDiv').style.display = 'none';
-                    document.getElementById('urlDiv').style.display = 'block';
-                } else {
-                    document.getElementById('fileUploadDiv').style.display = 'block';
-                    document.getElementById('urlDiv').style.display = 'none';
-                }
-            });
-        });
+        // Toggle between the image URL and file upload input fields
+        function toggleImageInput() {
+            var urlInput = document.getElementById("urlInput");
+            var fileInput = document.getElementById("fileInput");
+            var uploadOption = document.querySelector('input[name="uploadOption"]:checked').value;
 
-        // Handle form submission
-        document.getElementById('workflowForm').addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent the form from submitting in the traditional way
-
-            const formData = new FormData(event.target);
-
-            // Collect the file or URL data based on user choice
-            const fileChoice = document.querySelector('input[name="fileChoice"]:checked').value;
-            if (fileChoice === 'upload') {
-                const imageFile = formData.get('imageFile');
-                console.log('File chosen:', imageFile);
-            } else {
-                const imageUrl = formData.get('imageUrl');
-                console.log('URL chosen:', imageUrl);
+            if (uploadOption === "url") {
+                urlInput.style.display = "block";
+                fileInput.style.display = "none";
+            } else if (uploadOption === "file") {
+                urlInput.style.display = "none";
+                fileInput.style.display = "block";
             }
+        }
 
-            // Send the data to the server or GitHub API (update this with your actual endpoint)
-            fetch('https://api.github.com/repos/johantre/msword-properties-generator/actions/workflows/update-provider.yml', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                alert('Workflow triggered successfully!');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error triggering workflow.');
-            });
-        });
+        // Initialize the form to show file input by default
+        window.onload = toggleImageInput;
     </script>
 </body>
 </html>
