@@ -42,8 +42,8 @@ This process takes on average about 20 sec.
   - All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
 This process takes on average about 20 sec.
-All your Provider data will be removed, including the encrypted signature image file stored in the repo. 
-<br><a href="assets/img_2.png"><img src="assets/img_2.png" width="200"></a><br>
+  - All your Provider data will be removed, including the encrypted signature image file stored in the repo. 
+  <br><a href="assets/img_2.png"><img src="assets/img_2.png" width="200"></a><br>
 
 ### Customer data
 Customer data changes frequently.<br>Every time you need documents to be generated these parameters are different, and are only a few fields.<br> 
@@ -51,9 +51,9 @@ How to provide? 2 options:
 - Update the [OffersCustomer.xlsx](res/OffersCustomer.xlsx) locally, Git commit & Push it back to this Repo. (Requires some Git knowledge) 
 - GitHub Actions > Select **"Generate, Send and add to Dropbox"** workflow > **"Run workflow"**<br>to generate the documents and have them send to the given mail.<br>
 This process takes on average about 2 min.
-Behind the scenes [Provider data](#Provider data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
-So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
-<br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
+  - Behind the scenes [Provider data](#Provider data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
+  - So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
+  <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
 ## ⚠️Attention⚠️ 
 - The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.<br>
