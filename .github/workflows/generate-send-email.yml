@@ -37,6 +37,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Mask email input explicitly safe and recommended
+        if: github.event.inputs.leverancierEmail != ''
+        run: |
+          echo "::add-mask::${{ github.event.inputs.leverancierEmail }}"
+
       - name: Trim spaces from email input
         id: trim_email
         run: |
