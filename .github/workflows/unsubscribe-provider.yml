@@ -45,7 +45,7 @@ jobs:
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          python src/msword_properties_generator/main/remove_provider.py
+          python src/msword_properties_generator/main/unsubscribe_provider.py
 
       - name: Commit and Push Changes
         env:
