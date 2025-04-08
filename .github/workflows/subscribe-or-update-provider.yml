@@ -41,7 +41,7 @@ on:
         type: string
 
 jobs:
-  encrypt_and_populate:
+  search_and_update_or_add_to_repo_and_db:
     runs-on: ubuntu-latest
 
     permissions:
