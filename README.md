@@ -34,10 +34,10 @@ In order to have proper generated documents we need Provider and Customer data. 
 Provider data doesn't change that much over time. Hence, since it's about quite some fields.<br>That data is stored in this repo.<br> 
 How to provide and update?
 - GitHub Actions > Select **"Subscribe or Update provider"** workflow > **"Run workflow"** to add or update yourself as a Provider to the [offers_provider.db](res/offers_provider.db).<br>
-The last field you can provide an URL to Dropbox or Google Drive to a signature image.
-<br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br>
-Take into account a white background so it matches the background color of the document.  
-In order for this to work, you'll need to share the image with permissions to "everyone that has the link".<br>
+The last field you can provide an URL to Dropbox or Google Drive to a signature image.<br>
+Take into account a white background so it matches the background color of the document.
+<br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br> 
+In order for this to work, you'll need to share the image with permissions to **"Anyone that has the link"**.<br>
 Once this process is done, you can remove that permission of your link again.<br>
 All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
@@ -54,8 +54,8 @@ So be aware that you'll need to have your Provider data in there as well for thi
 <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
 ## ⚠️Attention⚠️ 
-- The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.
-So the mail address provided for the Customer and Provider information screen must be equal.
+- The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.<br>
+So the mail address provided for the Customer and Provider information screen must be equal.<br>
 Check out the 2 screenshots in this article; they *must be the same* in order for this to work! 
   - "Leverancier Mail" 
   - "Email recipient"
