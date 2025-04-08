@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter Input for Workflow</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional for styling -->
+</head>
+<body>
+    <h1>Enter Parameters for Workflow</h1>
+    <form id="workflowForm" method="POST">
+        <!-- Image File or URL Selection -->
+        <fieldset>
+            <legend>Select File or Provide URL</legend>
+            <label>
+                <input type="radio" name="fileChoice" value="upload" checked> Upload Image File
+            </label>
+            <label>
+                <input type="radio" name="fileChoice" value="url"> Provide URL (Dropbox / Google Drive)
+            </label>
+        </fieldset>
+
+        <!-- Image File Upload -->
+        <div id="fileUploadDiv">
+            <label for="imageFile">Image File:</label>
+            <input type="file" id="imageFile" name="imageFile" accept="image/*" required><br><br>
+        </div>
+
+        <!-- URL Input (Visible when URL option is selected) -->
+        <div id="urlDiv" style="display: none;">
+            <label for="imageUrl">Image URL (Dropbox or Google Drive):</label>
+            <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com" required><br><br>
+        </div>
+
+        <!-- Workflow Parameters -->
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="version">Version:</label>
+        <input type="text" id="version" name="version" required><br><br>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea><br><br>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        // Toggle between file upload and URL input based on user selection
+        document.querySelectorAll('input[name="fileChoice"]').forEach(function(input) {
+            input.addEventListener('change', function() {
+                if (input.value === 'url') {
+                    document.getElementById('fileUploadDiv').style.display = 'none';
+                    document.getElementById('urlDiv').style.display = 'block';
+                } else {
+                    document.getElementById('fileUploadDiv').style.display = 'block';
+                    document.getElementById('urlDiv').style.display = 'none';
+                }
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('workflowForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting in the traditional way
+
+            const formData = new FormData(event.target);
+
+            // Collect the file or URL data based on user choice
+            const fileChoice = document.querySelector('input[name="fileChoice"]:checked').value;
+            if (fileChoice === 'upload') {
+                const imageFile = formData.get('imageFile');
+                console.log('File chosen:', imageFile);
+            } else {
+                const imageUrl = formData.get('imageUrl');
+                console.log('URL chosen:', imageUrl);
+            }
+
+            // Send the data to the server or GitHub API (update this with your actual endpoint)
+            fetch('https://api.github.com/repos/johantre/msword-properties-generator/actions/workflows/update-provider.yml', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('Workflow triggered successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error triggering workflow.');
+            });
+        });
+    </script>
+</body>
+</html>
