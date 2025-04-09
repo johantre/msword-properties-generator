@@ -51,7 +51,10 @@ jobs:
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
-          echo "env.LOG_LEVEL = ${{ env.LOG_LEVEL }}"
+
+      - name: Check LOG_LEVEL in next step
+        run: |
+          echo "env.LOG_LEVEL in next step: ${{ env.LOG_LEVEL }}"
 
       - name: Mask email input explicitly safe and recommended
         if: github.event.inputs.leverancierEmail != ''
