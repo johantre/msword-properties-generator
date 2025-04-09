@@ -48,7 +48,7 @@ def download_image(url: str, destination: str):
             done = False
             while not done:
                 status, done = downloader.next_chunk()
-                logging.info(f'✅ Google Drive: {int(status.progress() * 100)}% to "{destination}"download Complete')
+                logging.info(f'☁️✅ Google Drive: {int(status.progress() * 100)}% to "{destination}"download Complete')
 
         elif host == 'dropbox':
             dropbox_service = get_dropbox_service()
@@ -56,24 +56,24 @@ def download_image(url: str, destination: str):
             metadata, res = dropbox_service.sharing_get_shared_link_file(shared_link.url)
             with open(destination, "wb") as f:
                 f.write(res.content)
-            logging.info(f'✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
+            logging.info(f'☁️✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
 
         elif host == 'onedrive':
             response = requests.get(url, allow_redirects=True)
             final_url = response.url
-            logging.info(f"✅ final_url for '{url}' to '{final_url}'")
+            logging.info(f"☁️✅ final_url for '{url}' to '{final_url}'")
             response.raise_for_status()
 
             with open(destination, 'wb') as file:
                 file.write(response.content)
 
-            logging.info(f"✅ OneDrive '{url}' to '{destination}' 'download Complete??")
+            logging.info(f"☁️✅ OneDrive '{url}' to '{destination}' 'download Complete??")
         else:
-            msg = f"✅ Unsupported host/type for URL provided: {url}"
+            msg = f"☁️❌ Unsupported host/type for URL provided: {url}"
             logging.error(msg)
             raise ValueError(msg)
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        logging.error(f"☁️🛑 Error: {str(e)}")
         raise e
 
 def get_google_drive_service():
@@ -85,15 +85,17 @@ def get_google_drive_service():
         client_id=GOOGLE_CLIENT_ID,
         client_secret=GOOGLE_CLIENT_SECRET
     )
+    logging.debug(f"☁️✅ Google Drive service initialized with refresh token")
     try:
         google_creds.refresh(Request())  # explicitly auto-refresh if access token required
     except Exception as e:
-        logging.error("🔴 Error explicitly when refreshing Google credentials:", e)
+        logging.error("☁️🔴 Error explicitly when refreshing Google credentials:", e)
         exit(1)
 
     return build('drive', 'v3', credentials=google_creds)
 
 def get_dropbox_service():
+    logging.debug(f"☁️✅ Dropbox service initialized with refresh token")
     return dropbox.Dropbox(
         oauth2_refresh_token=DROPBOX_REFRESH_TOKEN,
         app_key=DROPBOX_APP_KEY,

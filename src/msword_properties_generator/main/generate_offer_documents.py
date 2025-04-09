@@ -56,25 +56,25 @@ def _main(verbose=False, optional_args=None):
             if leverancier_email:
                 send_email(generated_files, leverancier_email, provider_line, customer_line)
             else:
-                logging.info(f"ℹ️Email not sent, as requested by user.")
+                logging.info(f"✉️ℹ️Email not sent, as requested by user.")
 
             upload_dropbox = True
             if optional_args:
                 if not optional_args["UploadDropbox"] == 'true':
                     upload_dropbox = False
-                    logging.info(f"ℹ️Not uploaded to Dropbox, as requested by user. Value option_args['UploadDropbox'] is: {optional_args["UploadDropbox"]}.")
+                    logging.info(f"🔄ℹ️Not uploaded to Dropbox, as requested by user. Value option_args['UploadDropbox'] is: {optional_args["UploadDropbox"]}.")
 
             if upload_dropbox:
                 try:
                     dropbox_upload(generated_files)
                 except AuthError as ae:
-                    logging.error(f"Authentication error while uploading dropbox: {ae}")
+                    logging.error(f"☁️❌ Authentication error while uploading dropbox: {ae}")
                     # Handle the authentication error, such as prompting for re-authentication
                 except Exception as ee:
                     # Handle other possible exceptions
-                    logging.error(f"An error occurred while uploading dropbox: {ee}")
+                    logging.error(f"🔄❌ An error occurred while uploading dropbox: {ee}")
             else:
-                logging.info(f"ℹ️Not uploaded to Dropbox Johan!")
+                logging.info(f"🔄ℹ️Not uploaded to Dropbox Johan!")
 
 def extract_combined_replacements(optional_args):
     def merge_replacements(customer_replacements, provider_replacements):

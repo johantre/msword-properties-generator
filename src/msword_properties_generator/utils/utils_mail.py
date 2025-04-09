@@ -36,9 +36,9 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     for filepath in generated_files:
         abs_full_path = os.path.abspath(filepath)
         if os.path.exists(filepath):
-            logging.debug(f"ℹ️File at location '{filepath}' found, at absolute path {abs_full_path}")
+            logging.debug(f"✉️ℹ️ File at location '{filepath}' found, at absolute path {abs_full_path}")
         else:
-            logging.warning(f"⚠️File at location '{filepath}' not found, at absolute path {abs_full_path}!")
+            logging.warning(f"✉️⚠️ File at location '{filepath}' not found, at absolute path {abs_full_path}!")
 
         file_basename = os.path.basename(filepath)
         with open(abs_full_path, 'rb') as file:
@@ -66,9 +66,9 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
             smtp.starttls()
             smtp.login(config["mail"]["mail_sender_email"], sender_password)
             smtp.send_message(email_message)
-        logging.info(f'✅ Email successfully sent to {email_message['To']}')
+        logging.info(f'✉️✅ Email successfully sent to {email_message['To']}')
     except Exception as e:
-        logging.error('❗ An error occurred:', e)
+        logging.error('✉️❌ An error occurred:', e)
 
 def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference):
     return f"""

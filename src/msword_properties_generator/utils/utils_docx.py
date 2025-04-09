@@ -17,6 +17,7 @@ def set_custom_properties(extracted_dir, provider_replacements, customer_replace
     # Iterate once for provider (there should only 1 provider!)
     for key_prov, value_prov in provider_replacements.items():
         set_custom_property(extracted_dir, property_names[key_prov], value_prov)
+
     # Customer replacements (the part you asked about previously)
     for key_cust, value_cust in customer_replacements.items():
         set_custom_property(extracted_dir, property_names[key_cust], value_cust)
@@ -51,12 +52,15 @@ def set_custom_property(extracted_dir, property_name, property_value):
         vt_elem.text = str(property_value)
 
     tree.write(custom_props_path, encoding='UTF-8', xml_declaration=True, standalone=True)
+    logging.debug(f"📝📋🔤 '{property_name}' successfully replaced by '{property_value}' in properties docx structure")
 
 def extract_docx(docx_path):
     extracted_dir = tempfile.mkdtemp()
     with zipfile.ZipFile(docx_path, 'r') as docx_zip:
         docx_zip.extractall(extracted_dir)
+        logging.debug(f"🗜️➡️ docx successfully extracted to '{extracted_dir}' for custom properties replacements docx structure")
     return extracted_dir
+
 
 def repack_docx(extracted_dir, base_document):
     save_as_docx = base_document + ".docx"
@@ -68,6 +72,9 @@ def repack_docx(extracted_dir, base_document):
                 arc_name = os.path.relpath(abs_name, extracted_dir)
                 docx_zip.write(abs_name, arc_name)
     shutil.rmtree(extracted_dir)
+
+    logging.debug(f"🗜️⬅️ docx successfully repacked to '{save_as_docx}' after custom properties replacements docx structure")
+
 
 def update_custom_properties_docx_structure(customer_line, provider_line):
     # In the custom properties xml structure...
@@ -98,7 +105,7 @@ def replace_direct_text(document, provider_replacements, customer_replacements):
             for old, new in replacem.items():
                 if old in run.text:
                     run.text = run.text.replace(old, new)
-                    logging.debug(f"ℹ️'{old}' successfully replaced by '{new}' in target file in paragraphs")
+                    logging.debug(f"📝📋🔤 '{old}' successfully replaced by '{new}' in target file in paragraphs")
 
     # Replace in paragraphs
     for paragraph in document.paragraphs:
@@ -113,7 +120,7 @@ def replace_direct_text(document, provider_replacements, customer_replacements):
                     replace_in_paragraph(paragraph, customer_replacements)
 
 def replace_images_by_alt_text(doc, alt_text, new_image_path):
-    logging.debug(f"ℹ️'Replacing image w alt_text '{alt_text}' by '{new_image_path}' in target file in paragraphs")
+    logging.debug(f"📝📋📷 'Replacing image w alt_text '{alt_text}' by '{new_image_path}' in target file in paragraphs")
 
     if os.path.exists(new_image_path):
         with open(new_image_path, 'rb') as image_file:
@@ -127,11 +134,11 @@ def replace_images_by_alt_text(doc, alt_text, new_image_path):
                 replaced = True
                 pass
         if not replaced:
-            logging.warning(f"⚠️No image found with alt_text '{alt_text}'")
+            logging.warning(f"📝📷⚠️ No image found with alt_text '{alt_text}'")
         else:
-            logging.debug(f"ℹ️Image with alt_text '{alt_text}' in target file successfully replaced")
+            logging.info(f"📝📷✅ Image with alt_text '{alt_text}' in target file successfully replaced")
     else:
-        msg = f"❌ Error reading image file: {new_image_path}. Error: {e}"
+        msg = f"📷❌ Error reading image file: {new_image_path}."
         logging.error(msg)
         raise ValueError(msg)
 

@@ -23,9 +23,9 @@ def get_image_and_encrypt_to_image_folder():
     # Check if the image is a properly decrypted image to encrypt
     try:
         if not is_image_properly_decrypted(temp_download_image_path):
-            raise ImageDecryptionError("Image is not properly decrypted.")
+            raise ImageDecryptionError("📷❌🔒 Image is not properly decrypted.")
     except ImageDecryptionError as e:
-        logging.error(f"The file at {temp_download_image_path} is not a proper image. Most probably the download failed. "
+        logging.error(f"📷🔴 The file at {temp_download_image_path} is not a proper image. Most probably the download failed. "
                       f"Please check if the image is shared with read permission 'for anyone with the link'. Error: {e}")
         exit(1)  # Exit with non-zero status code to indicate failure
 
@@ -64,12 +64,12 @@ def remove_from_image_folder_git_commit_push():
     if os.path.exists(image_encryption_path):
         # Explicitly remove the file from filesystem only (no git here!)
         os.remove(image_encryption_path)
-        logging.info(f"Image removed successfully from filesystem: {image_encryption_path}")
+        logging.info(f"📷✅ Image removed successfully from filesystem: {image_encryption_path}")
 
         # Clearly delegate staging, commit and push to the helper method
         git_stage_commit_push(file_path=cast(str, image_encryption_path), commit_message=f"Removed image {hashed_leverancier_email} from Git repository")
     else:
-        logging.warning(f"No image found to remove: {image_encryption_path}")
+        logging.warning(f"📷🔍❌ No image found to remove: {image_encryption_path}")
 
     return image_encrypted_folder
 
@@ -79,14 +79,14 @@ def is_image_properly_decrypted(image_path):
         with Image.open(image_path) as img:
             img.verify()  # Verify the image integrity
 
-        logging.debug(f"✅ The image at {image_path} is properly decrypted.")
+        logging.debug(f"📷✅🔓 The image at {image_path} is properly decrypted.")
         return True
     except (IOError, SyntaxError) as e:
-        msg = f"❌ The image at {image_path} is not properly decrypted: {e}"
+        msg = f"📷❌🔓 The image at {image_path} is not properly decrypted: {e}"
         logging.error(msg)
         raise ImageDecryptionError(msg)
 
 class ImageDecryptionError(Exception):
-    def __init__(self, message="Image isn't properly decrypted"):
+    def __init__(self, message="📷❌ Image isn't properly decrypted"):
         self.message = message
         super().__init__(self.message)

@@ -27,8 +27,8 @@ def convert_to_pdf(base_document):
             output_path,
             convert_from_docx
         ], check=True)
-        logging.debug("ℹ️Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
-        logging.debug("ℹ️Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
+        logging.debug("📄ℹ️ Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
+        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
         files = os.listdir(abs_output_path)
         logging.debug(f"📂 Explicitly listing files from '{abs_output_path}':")
         if files:
@@ -37,11 +37,11 @@ def convert_to_pdf(base_document):
         else:
             logging.warning(f"📭 Directory '{abs_output_path}' explicitly exists but is empty!")
     except FileNotFoundError:
-        logging.error(f"🚨 LibreOffice not found!")
+        logging.error(f"📄🚨 LibreOffice not found!")
     except subprocess.CalledProcessError as e:
-        logging.error(f"❌Could not convert PDF: {e}")
+        logging.error(f"📄❌ Could not convert PDF: {e}")
     else:
-        logging.info(f"✅ LibreOffice executable ('soffice') IS found!")
+        logging.info(f"📄✅ LibreOffice executable ('soffice') IS found!")
 
 def convert_to_pdf_traditional(base_document):
     save_as_docx = base_document + ".docx"
@@ -49,12 +49,11 @@ def convert_to_pdf_traditional(base_document):
     try:
         # Convert the output
         convert(save_as_docx, save_as_pdf)
-        logging.debug("ℹ️Word file: " + save_as_docx)
-        logging.debug("ℹ️Successfully converted to Pdf file: " + save_as_pdf)
+        logging.debug("📄ℹ️ Word file: " + save_as_docx)
+        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + save_as_pdf)
     except Exception as e:
-        logging.error(f"❌Failed to convert {save_as_docx} to PDF: {e}")
+        logging.error(f"📄❌ Failed to convert {save_as_docx} to PDF: {e}")
         if os.path.exists(save_as_docx):  # to avoid stale files
-            logging.debug(f"ℹ️Cleaning up incomplete conversion file {save_as_docx}")
+            logging.debug(f"📄ℹ️ Cleaning up incomplete conversion file {save_as_docx}")
             os.remove(save_as_docx)
         raise
-

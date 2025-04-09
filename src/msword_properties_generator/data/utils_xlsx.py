@@ -12,11 +12,11 @@ def safely_read_excel(excel_file, sheet_name, description):
     try:
         return pd.read_excel(excel_file, sheet_name)
     except ValueError as e:
-        error_msg = f"❌ValueError occurred reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
+        error_msg = f"📗❌ ValueError occurred reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
         logging.error(error_msg)
         raise
     except Exception as e:
-        error_msg = f"❌Unexpected error reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
+        error_msg = f"📗❌ Unexpected error reading {description} Excel file '{excel_file}', sheet '{sheet_name}': {e}"
         logging.error(error_msg)
         raise
 
@@ -37,7 +37,7 @@ def create_replacements_from_xls(excel_filepath, sheet_name, optionals=None):
 
     df = pd.read_excel(excel_filepath, sheet_name=sheet_name, header=0)
     if df.empty:
-        logging.warning(f"⚠️The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data to process. Please verify the contents.")
+        logging.warning(f"📗⚠️The provided Excel file '{excel_filepath}' with sheet '{sheet_name}' is empty, No data to process. Please verify the contents.")
         sanitized_dict = {
             sanitize_spaces_to_variable_name(column_name): 'prov_0'
             for column_name in df.columns

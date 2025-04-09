@@ -5,6 +5,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 from cryptography.fernet import Fernet
 import hashlib
+import logging
 import base64
 import hmac
 import os
@@ -22,17 +23,21 @@ def get_cipher_suite():
 def encrypt(to_encrypt_string):
     cipher_suite = get_cipher_suite()
     encrypted_string = cipher_suite.encrypt(to_encrypt_string.encode()).decode()
+    logging.info("🔒 Sensitive data encrypted successfully. Processing further...")
     return encrypted_string
 
 def decrypt(to_decrypt_value):
     cipher_suite = get_cipher_suite()
     decrypted_string= cipher_suite.decrypt(to_decrypt_value.encode()).decode()
+    logging.info("🔓 Sensitive data decrypted successfully. Processing further...")
     return decrypted_string
 
 def hash(to_hash_string):
     hmac_secret = get_hash_key()
     hashed_string = hmac.new(hmac_secret.encode(), to_hash_string.encode(), hashlib.sha256).hexdigest()
+    logging.debug("🆔 Sensitive data hashed successfully. Processing further...")
     return hashed_string
+
 
 def encrypt_image(input_file, output_file):
     encryption_key = get_encryption_key()
@@ -61,6 +66,7 @@ def encrypt_image(input_file, output_file):
 
     with open(output_file, 'wb') as f:
         f.write(base64.b64encode(salt + iv + ciphertext))
+    logging.info("🔒 Sensitive image encrypted successfully. Processing further...")
 
 def decrypt_image(input_file, output_file):
     encryption_key = get_encryption_key()
@@ -92,3 +98,4 @@ def decrypt_image(input_file, output_file):
 
     with open(output_file, 'wb') as f:
         f.write(plaintext)
+    logging.info("🔓 Sensitive image decrypted successfully. Processing further...")
