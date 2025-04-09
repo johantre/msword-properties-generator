@@ -61,11 +61,13 @@ jobs:
         run: |
           if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
-          elif [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]; then
-            echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
+
+      - name: Check LOG_LEVEL in next step
+        run: |
+          echo "env.LOG_LEVEL in next step: ${{ env.LOG_LEVEL }}"
 
       - name: Checkout Repository
         uses: actions/checkout@v3
