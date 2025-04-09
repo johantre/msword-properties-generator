@@ -30,12 +30,12 @@ def convert_to_pdf(base_document):
         logging.debug("📄ℹ️ Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
         logging.debug("📄ℹ️ Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
         files = os.listdir(abs_output_path)
-        logging.debug(f"📂 Explicitly listing files from '{abs_output_path}':")
+        logging.debug(f"📂 Explicitly listing files from '{output_path}':")
         if files:
             for file in files:
                 logging.debug(f"    - {file}")
         else:
-            logging.warning(f"📭 Directory '{abs_output_path}' explicitly exists but is empty!")
+            logging.warning(f"📭 Directory '{output_path}' explicitly exists but is empty!")
     except FileNotFoundError:
         logging.error(f"📄🚨 LibreOffice not found!")
     except subprocess.CalledProcessError as e:
