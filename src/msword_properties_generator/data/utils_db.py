@@ -169,10 +169,10 @@ def insert_or_update_into_db(connection, encrypted_inputs):
         raise ValueError("Multiple records found; update must target exactly one record.")
     elif record_count == 0:
         insert_into_db(connection, leverancier_email, encrypted_inputs)
-        logging.info(f"️🛢📥 Line added to database with hashed key: {hash(leverancier_email)}")
+        logging.debug(f"️🛢📥 Line added to database with hashed key: {hash(leverancier_email)}")
     elif record_count == 1:
         update_into_db(connection, leverancier_email, encrypted_inputs)
-        logging.info(f"️🛢✏️ Line updated from database with hashed key: {hash(leverancier_email)}")
+        logging.debug(f"️🛢✏️ Line updated from database with hashed key: {hash(leverancier_email)}")
 
     connection.commit()
     cursor.close()
