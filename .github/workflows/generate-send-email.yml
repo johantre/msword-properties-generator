@@ -46,8 +46,10 @@ jobs:
         run: |
           if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
+            echo "Admin user & checkbox from input"
           elif [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
+            echo "Check from Github screen set: actions_step_debug=${ACTIONS_STEP_DEBUG} actions_runner_debug=${{ github.event.inputs.setLogLevelDebug }}"
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
@@ -55,6 +57,7 @@ jobs:
       - name: Check LOG_LEVEL in next step
         run: |
           echo "env.LOG_LEVEL in next step: ${{ env.LOG_LEVEL }}"
+          echo "2nd Check from Github screen set: actions_step_debug=${ACTIONS_STEP_DEBUG} actions_runner_debug=${{ github.event.inputs.setLogLevelDebug }}"
 
       - name: Mask email input explicitly safe and recommended
         if: github.event.inputs.leverancierEmail != ''
