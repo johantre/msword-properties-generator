@@ -205,7 +205,7 @@ jobs:
 
       - name: Run Python script to generated, send email and upload to Dropbox
         env:
-          LOG_LEVEL: INFO
+          LOG_LEVEL: DEBUG
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}

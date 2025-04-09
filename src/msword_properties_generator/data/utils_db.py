@@ -71,6 +71,7 @@ def get_leverancier_dict(connection, leverancier_email):
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM offer_providers where HashedLeverancierEmail = ?", (hash(leverancier_email),))
     rows = cursor.fetchall()
+    cursor.close()
 
     if not rows:
         logging.warning(f"⚠️The provided table 'offer_providers' in database '{get_db_path()}' has no row for key {leverancier_email}. Please verify the contents, or add one if necessary.")
@@ -201,6 +202,6 @@ def create_replacements_from_db(optionals=None):
     leverancier_email = optionals['LeverancierEmail']
     replacements_dict = get_leverancier_dict(conn, leverancier_email)
 
-    close_db_commit_push(conn)
+    conn.close()
     return replacements_dict
 
