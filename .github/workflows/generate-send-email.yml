@@ -35,8 +35,10 @@ on:
 
 
 jobs:
-  set-log-level:
+  send_email_upload_dropbox_job:
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.sendEmail == 'true' || github.event.inputs.uploadDropbox == 'true'
     runs-on: ubuntu-latest
+
     steps:
       - name: Set custom log level
         run: |
@@ -48,11 +50,6 @@ jobs:
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
 
-  send_email_upload_dropbox_job:
-    if: github.event_name != 'workflow_dispatch' || github.event.inputs.sendEmail == 'true' || github.event.inputs.uploadDropbox == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
       - uses: actions/checkout@v3
 
       - name: Mask email input explicitly safe and recommended
@@ -215,11 +212,6 @@ jobs:
         run: |
           export JAVA_HOME=$JAVA_HOME
           libreoffice --version
-
-      - name: Enable Debugging
-        run: |
-          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
-          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       - name: Run Python script to generated, send email and upload to Dropbox
         env:

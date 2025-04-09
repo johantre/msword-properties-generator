@@ -13,8 +13,12 @@ on:
         type: boolean
 
 jobs:
-  set-log-level:
+  search_and_remove_from_repo_and_db:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
       - name: Set custom log level
         run: |
@@ -26,13 +30,6 @@ jobs:
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
 
-  search_and_remove_from_repo_and_db:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-
-    steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
