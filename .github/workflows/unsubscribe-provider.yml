@@ -40,7 +40,7 @@ jobs:
 
       - name: Fetch SQLite Database and remove encrypted image
         env:
-          LOG_LEVEL: DEBUG
+          LOG_LEVEL: INFO
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
         run: |
