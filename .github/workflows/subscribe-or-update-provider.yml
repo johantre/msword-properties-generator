@@ -62,8 +62,11 @@ jobs:
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
+          echo "${{ env.LOG_LEVEL }}"
+
 
   search_and_update_or_add_to_repo_and_db:
+    needs: set-log-level
     runs-on: ubuntu-latest
 
     permissions:
