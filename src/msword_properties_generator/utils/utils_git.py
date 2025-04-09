@@ -26,7 +26,7 @@ def git_stage_commit_push(file_path: str, commit_message: str = "Automated commi
 
         # commit staged changes
         repo.index.commit(commit_message, author=bot_author, committer=bot_author)
-        logging.info(f"📝 Committed to Git: '{commit_message}'")
+        logging.info(f"📝 Committed to Git of: {relative_file_path} w commit message: '{commit_message}'")
 
         # push & verify the push
         origin = repo.remote('origin')
@@ -34,7 +34,7 @@ def git_stage_commit_push(file_path: str, commit_message: str = "Automated commi
         if push_result.flags & push_result.ERROR:
             logging.error(f"❌ Push failed: {push_result.summary}")
             raise RuntimeError(f"❌ Push failed: {push_result.summary}")
-        logging.info("🚀 Git push successful.")
+        logging.info(f"🚀 Git push successful: {relative_file_path}")
 
     except exc.GitCommandError as e:
         logging.error(f"❌ Git command error: {str(e)}")
