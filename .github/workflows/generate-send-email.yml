@@ -40,8 +40,10 @@ jobs:
     steps:
       - name: Set custom log level
         run: |
-          if [[ "${{ github.actor }}" == "johantre" ]] && ([[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]] || \
-              [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]); then
+          if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
+            echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
+            echo the actor now is: "${{ github.actor }}"
+          elif [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
