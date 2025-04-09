@@ -64,7 +64,12 @@ def remove_from_image_folder_git_commit_push():
     if os.path.exists(image_encryption_path):
         # Explicitly remove the file from filesystem only (no git here!)
         os.remove(image_encryption_path)
-        logging.info(f"📷✅ Image removed successfully from filesystem: {image_encryption_path}")
+        # Convert absolute path to relative path
+        repo_path = get_repo_root()
+        rel_image_encryption_path = image_encryption_path
+        if os.path.isabs(image_encryption_path):
+            rel_image_encryption_path = os.path.relpath(cast(str, image_encryption_path), repo_path)
+        logging.info(f"📷✅ Image removed successfully from filesystem: {rel_image_encryption_path}")
 
         # Clearly delegate staging, commit and push to the helper method
         git_stage_commit_push(file_path=cast(str, image_encryption_path), commit_message=f"Removed image {hashed_leverancier_email} from Git repository")
