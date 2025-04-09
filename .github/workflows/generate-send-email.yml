@@ -205,7 +205,7 @@ jobs:
 
       - name: Run Python script to generated, send email and upload to Dropbox
         env:
-          LOG_LEVEL: INFO
+          LOG_LEVEL: DEBUG
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
@@ -214,13 +214,13 @@ jobs:
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          echo "Display args: ${{ github.event.inputs.klantNaam }}, ${{ github.event.inputs.klantJobTitle }}, ${{ github.event.inputs.klantJobReference }}, ${{ github.event.inputs.leverancierEmail }}, ${{ github.event.inputs.uploadDropbox }}"
+          echo "::notice::Display args: ${{ github.event.inputs.klantNaam }}, ${{ github.event.inputs.klantJobTitle }}, ${{ github.event.inputs.klantJobReference }}, ${{ github.event.inputs.leverancierEmail }}, ${{ github.event.inputs.uploadDropbox }}"
           if [ -n "${{ github.event.inputs.klantNaam }}" ] && [ -n "${{ github.event.inputs.klantJobTitle }}" ] && [ -n "${{ github.event.inputs.klantJobReference }}" ]; then
-            echo "Optional args detected, manually call with args."
+            echo "::debug::Optional args detected, manually call with args."
             CMD="python3 src/msword_properties_generator/main/generate_offer_documents.py --verbose --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --leverancierEmail '${{ github.event.inputs.leverancierEmail }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
           else
             echo "No optional args detected, standard flow followed."
             CMD="python3 src/msword_properties_generator/main/generate_offer_documents.py --verbose"
           fi
-          echo "Executing command: $CMD"
+          echo "::debug::Executing command: $CMD"
           eval $CMD
