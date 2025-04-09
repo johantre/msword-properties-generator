@@ -16,6 +16,9 @@ def init_db():
 def close_db(connection):
     connection.close()
 
+def commit_db(connection):
+    connection.commit()
+
 def get_column_names(connection, table_name):
     cursor = connection.cursor()
     cursor.execute(f"SELECT * FROM {table_name} LIMIT 1;")
