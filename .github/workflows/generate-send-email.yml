@@ -42,7 +42,6 @@ jobs:
         run: |
           if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
-            echo the actor now is: "${{ github.actor }}"
           elif [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
           else
@@ -224,6 +223,7 @@ jobs:
 
       - name: Run Python script to generated, send email and upload to Dropbox
         env:
+          LOG_LEVEL: ${{ env.LOG_LEVEL }}
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
