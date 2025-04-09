@@ -23,13 +23,13 @@ def get_cipher_suite():
 def encrypt(to_encrypt_string):
     cipher_suite = get_cipher_suite()
     encrypted_string = cipher_suite.encrypt(to_encrypt_string.encode()).decode()
-    logging.info("🔒 Sensitive data encrypted successfully. Processing further...")
+    logging.debug("🔒 Sensitive data encrypted successfully. Processing further...")
     return encrypted_string
 
 def decrypt(to_decrypt_value):
     cipher_suite = get_cipher_suite()
     decrypted_string= cipher_suite.decrypt(to_decrypt_value.encode()).decode()
-    logging.info("🔓 Sensitive data decrypted successfully. Processing further...")
+    logging.debug("🔓 Sensitive data decrypted successfully. Processing further...")
     return decrypted_string
 
 def hash(to_hash_string):
@@ -98,4 +98,4 @@ def decrypt_image(input_file, output_file):
 
     with open(output_file, 'wb') as f:
         f.write(plaintext)
-    logging.info("🔓 Sensitive image decrypted successfully. Processing further...")
+    logging.debug("🔓 Sensitive image decrypted successfully. Processing further...")
