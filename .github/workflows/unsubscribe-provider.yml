@@ -18,10 +18,10 @@ jobs:
     steps:
       - name: Set custom log level
         run: |
-          if [ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]; then
+          if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
             echo the actor now is: "${{ github.actor }}"
-          elif [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]); then
+          elif [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]; then
             echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
@@ -58,7 +58,6 @@ jobs:
 
       - name: Fetch SQLite Database and remove encrypted image
         env:
-          LOG_LEVEL: INFO
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
         run: |
