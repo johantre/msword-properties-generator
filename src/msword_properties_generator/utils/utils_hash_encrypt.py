@@ -66,7 +66,7 @@ def encrypt_image(input_file, output_file):
 
     with open(output_file, 'wb') as f:
         f.write(base64.b64encode(salt + iv + ciphertext))
-    logging.info("🔒 Sensitive image encrypted successfully. Processing further...")
+    logging.debug("🔒 Sensitive image encrypted successfully. Processing further...")
 
 def decrypt_image(input_file, output_file):
     encryption_key = get_encryption_key()
