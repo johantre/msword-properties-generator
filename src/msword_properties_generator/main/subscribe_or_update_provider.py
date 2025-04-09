@@ -21,7 +21,7 @@ try:
     commit_db(conn)
 except SystemExit as e:
     if e.code != 0:
-        logging.error("An error occurred, exiting.")
+        logging.error("🛑 An error occurred, exiting.")
     else:
         raise  # Re-raise the exception if it's a normal exit
 finally:

@@ -18,29 +18,29 @@ def git_stage_commit_push(file_path: str, commit_message: str = "Automated commi
         if os.path.exists(full_path):
             # File exists, stage addition or modification clearly
             repo.index.add([relative_file_path])
-            logging.info(f"File staged explicitly for addition/update: {relative_file_path}")
+            logging.info(f"📥 File staged explicitly for addition/update: {relative_file_path}")
         else:
             # File doesn't exist, fully stage removal via git CLI
             repo.git.rm(relative_file_path)
-            logging.info(f"File staged explicitly for removal: {relative_file_path}")
+            logging.info(f"📥 File staged explicitly for removal: {relative_file_path}")
 
         # commit staged changes
         repo.index.commit(commit_message, author=bot_author, committer=bot_author)
-        logging.info(f"Committed to Git: '{commit_message}'")
+        logging.info(f"📝 Committed to Git: '{commit_message}'")
 
         # push & verify the push
         origin = repo.remote('origin')
         push_result = origin.push()[0]
         if push_result.flags & push_result.ERROR:
-            logging.error(f"Push failed: {push_result.summary}")
-            raise RuntimeError(f"Push failed: {push_result.summary}")
-        logging.info("Explicit push successful.")
+            logging.error(f"❌ Push failed: {push_result.summary}")
+            raise RuntimeError(f"❌ Push failed: {push_result.summary}")
+        logging.info("🚀 Git push successful.")
 
     except exc.GitCommandError as e:
-        logging.error(f"Explicit Git command error: {str(e)}")
+        logging.error(f"❌ Git command error: {str(e)}")
         raise
     except Exception as e:
-        logging.error(f"Explicit unexpected error: {str(e)}")
+        logging.error(f"❌ unexpected error: {str(e)}")
         raise
 
 def get_repo_root():

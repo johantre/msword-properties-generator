@@ -1,6 +1,6 @@
-from msword_properties_generator.utils.utils_git import git_stage_commit_push, get_repo_root
 from msword_properties_generator.utils.util_config import config  # importing centralized config
 from msword_properties_generator.utils.utils_hash_encrypt import encrypt, decrypt, hash
+from msword_properties_generator.utils.utils_git import git_stage_commit_push, get_repo_root
 import logging
 import sqlite3
 import os
@@ -138,7 +138,7 @@ def insert_into_db(connection, leverancier_email, encrypted_inputs):
         encrypted_inputs['LeverancierOpgemaaktte'],
         encrypted_inputs['LeverancierHoedanigheid']
     ))
-    logging.info(f"️Data encrypted and inserted successfully with hashed key")
+    logging.info(f"️🛢🔒 Data encrypted and inserted successfully with hashed key")
     connection.commit()
     cursor.close()
 
@@ -154,7 +154,7 @@ def update_into_db(connection, leverancier_email, encrypted_inputs):
     """
     # Execute update
     cursor.execute(update_query, params)
-    logging.info(f"️Data encrypted and updated successfully with hashed key")
+    logging.info(f"️🛢🔒Data encrypted and updated successfully with hashed key")
     connection.commit()
     cursor.close()
 
@@ -169,8 +169,10 @@ def insert_or_update_into_db(connection, encrypted_inputs):
         raise ValueError("Multiple records found; update must target exactly one record.")
     elif record_count == 0:
         insert_into_db(connection, leverancier_email, encrypted_inputs)
+        logging.info(f"️🛢📥 Line added to database with hashed key: {hash(leverancier_email)}")
     elif record_count == 1:
         update_into_db(connection, leverancier_email, encrypted_inputs)
+        logging.info(f"️🛢✏️ Line updated from database with hashed key: {hash(leverancier_email)}")
 
     connection.commit()
     cursor.close()
@@ -188,7 +190,7 @@ def remove_provider(connection):
 
     # Delete the provider from the table
     cursor.execute("DELETE FROM offer_providers WHERE HashedLeverancierEmail = ?", (hashed_leverancier_email,))
-    logging.info(f"Provider with email {hashed_leverancier_email} removed successfully")
+    logging.info(f"🛢🗑️Provider with email {hashed_leverancier_email} removed successfully")
     connection.commit()
     cursor.close()
     return True
