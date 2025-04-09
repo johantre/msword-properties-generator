@@ -40,6 +40,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+
       - name: Set custom log level
         run: |
           if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
@@ -49,8 +51,7 @@ jobs:
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
-
-      - uses: actions/checkout@v3
+          echo "env.LOG_LEVEL = ${{ env.LOG_LEVEL }}"
 
       - name: Mask email input explicitly safe and recommended
         if: github.event.inputs.leverancierEmail != ''
