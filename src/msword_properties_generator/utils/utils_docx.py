@@ -79,8 +79,10 @@ def repack_docx(extracted_dir, base_document):
 def update_custom_properties_docx_structure(customer_line, provider_line):
     # In the custom properties xml structure...
     base_document_to_save = set_custom_properties_docx(customer_line, provider_line)
+    logging.info(f"📝📷✅ Advanced properties successfully set in docx structure.")
     # Replace in the document itself...
     update_custom_properties_docx(base_document_to_save, customer_line, provider_line)
+    logging.info(f"📝📷✅ Property fields successfully replaced in docx itself.")
     return base_document_to_save
 
 def set_custom_properties_docx(customer_line, provider_line):
