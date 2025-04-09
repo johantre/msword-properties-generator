@@ -7,8 +7,24 @@ on:
         description: 'Leverancier Email'
         required: true
         type: string
+      setLogLevelDebug:
+        description: 'Enable DEBUG (Admin only)'
+        required: false
+        type: boolean
 
 jobs:
+  set-log-level:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set custom log level
+        run: |
+          if [[ "${{ github.actor }}" == "johantre" ]] && ([[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]] || \
+              [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]); then
+            echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
+          else
+            echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
+          fi
+
   search_and_remove_from_repo_and_db:
     runs-on: ubuntu-latest
 

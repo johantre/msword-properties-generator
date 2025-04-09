@@ -28,8 +28,25 @@ on:
         required: false
         default: false
         type: boolean
+      setLogLevelDebug:
+        description: 'Enable DEBUG (Admin only)'
+        required: false
+        type: boolean
+
 
 jobs:
+  set-log-level:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set custom log level
+        run: |
+          if [[ "${{ github.actor }}" == "johantre" ]] && ([[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]] || \
+              [[ "${ACTIONS_STEP_DEBUG}" == "true" ]] || [[ "${ACTIONS_RUNNER_DEBUG}" == "true" ]]); then
+            echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
+          else
+            echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
+          fi
+
   send_email_upload_dropbox_job:
     if: github.event_name != 'workflow_dispatch' || github.event.inputs.sendEmail == 'true' || github.event.inputs.uploadDropbox == 'true'
     runs-on: ubuntu-latest
@@ -205,7 +222,6 @@ jobs:
 
       - name: Run Python script to generated, send email and upload to Dropbox
         env:
-          LOG_LEVEL: INFO
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           APP_PASS_MAIL: ${{ secrets.APP_PASS_MAIL }}
