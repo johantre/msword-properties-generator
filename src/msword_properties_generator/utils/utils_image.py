@@ -36,9 +36,9 @@ def get_image_and_encrypt_to_image_folder():
     # Convert absolute path to relative path
     repo_path = get_repo_root()
     if os.path.isabs(target_hashed_image_path):
-        target_hashed_image_path = os.path.relpath(target_hashed_image_path, repo_path)
+        target_hashed_image_path = os.path.relpath(cast(str, target_hashed_image_path), repo_path)
 
-    git_stage_commit_push(cast(str, target_hashed_image_path), commit_message=f"Added image for {hashed_leverancier_email}")
+    git_stage_commit_push(cast(str, target_hashed_image_path), commit_message=f"Added image {hashed_leverancier_email} to Git repository")
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
@@ -67,7 +67,7 @@ def remove_from_image_folder_git_commit_push():
         logging.info(f"Image removed successfully from filesystem: {image_encryption_path}")
 
         # Clearly delegate staging, commit and push to the helper method
-        git_stage_commit_push(file_path=cast(str, image_encryption_path), commit_message=f"Removed image for {hashed_leverancier_email}")
+        git_stage_commit_push(file_path=cast(str, image_encryption_path), commit_message=f"Removed image {hashed_leverancier_email} from Git repository")
     else:
         logging.warning(f"No image found to remove: {image_encryption_path}")
 

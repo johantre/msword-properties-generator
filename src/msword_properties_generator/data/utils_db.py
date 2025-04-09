@@ -1,3 +1,4 @@
+from msword_properties_generator.utils.utils_git import git_stage_commit_push, get_repo_root
 from msword_properties_generator.utils.util_config import config  # importing centralized config
 from msword_properties_generator.utils.utils_hash_encrypt import encrypt, decrypt, hash
 import logging
@@ -13,8 +14,15 @@ def init_db():
     conn = sqlite3.connect(get_db_path())
     return conn
 
-def close_db(connection):
+def close_db_commit_push(connection):
     connection.close()
+    db_path = get_db_path()
+    # Convert absolute path to relative path
+    repo_path = get_repo_root()
+    if os.path.isabs(db_path):
+        db_path = os.path.relpath(db_path, repo_path)
+
+    git_stage_commit_push(db_path, commit_message=f"Committed and pushed {db_path} to Git repository")
 
 def commit_db(connection):
     connection.commit()
@@ -191,6 +199,6 @@ def create_replacements_from_db(optionals=None):
     leverancier_email = optionals['LeverancierEmail']
     replacements_dict = get_leverancier_dict(conn, leverancier_email)
 
-    close_db(conn)
+    close_db_commit_push(conn)
     return replacements_dict
 

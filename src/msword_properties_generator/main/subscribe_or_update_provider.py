@@ -1,4 +1,4 @@
-from msword_properties_generator.data.utils_db import init_db, create_table_if_not_exist, get_inputs_and_encrypt, insert_or_update_into_db, close_db, commit_db
+from msword_properties_generator.data.utils_db import init_db, create_table_if_not_exist, get_inputs_and_encrypt, insert_or_update_into_db, close_db_commit_push, commit_db
 from msword_properties_generator.utils.utils_image import get_image_and_encrypt_to_image_folder
 from msword_properties_generator.utils.utils_logging import setup_logging
 import logging
@@ -25,4 +25,4 @@ except SystemExit as e:
     else:
         raise  # Re-raise the exception if it's a normal exit
 finally:
-    close_db(conn)
+    close_db_commit_push(conn)
