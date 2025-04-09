@@ -47,12 +47,3 @@ jobs:
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/unsubscribe_provider.py
 
-      - name: Commit and Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add res/offers_provider.db
-          git commit -m "Remove encrypted personal data from SQLite database"
-          git push
