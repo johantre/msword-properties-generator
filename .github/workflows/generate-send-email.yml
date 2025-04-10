@@ -79,6 +79,7 @@ jobs:
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
+        shell: bash
 
       - name: Check LOG_LEVEL in next step
         run: |
@@ -95,6 +96,7 @@ jobs:
           email="${{ github.event.inputs.leverancierEmail }}"
           trimmed_email=$(echo "$email" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           echo "trimmed_email=$trimmed_email" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Fail if email is not provided when sendEmail is true
         if: ${{ github.event.inputs.sendEmail == 'true' && steps.trim_email.outputs.trimmed_email == '' }}
