@@ -16,6 +16,9 @@ jobs:
   search_and_remove_from_repo_and_db:
     runs-on: ubuntu-latest
 
+    container:
+      image: ghcr.io/johantre/github-runner-env:latest
+
     permissions:
       contents: write
 
@@ -34,25 +37,6 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v3
-
-      - name: Cache Python dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-cryptography-jproperties-pytz-gitpython-requests-google-auth-google-auth-oauthlib-google-auth-httplib2-google-api-python-client-dropbox-pillow
-          restore-keys: |
-            ${{ runner.os }}-pip-
-        continue-on-error: true
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow
 
       - name: Fetch SQLite Database and remove encrypted image
         env:
