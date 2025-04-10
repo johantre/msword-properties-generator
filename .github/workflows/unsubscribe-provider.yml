@@ -23,6 +23,15 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        run: echo ${{ secrets.GHCR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Pull the Docker image from GHCR
+        run: docker pull ghcr.io/johantre/github-runner-env:latest
+
       - name: Set custom log level
         run: |
           if [[ "${{ github.actor }}" == "johantre" ]] && [[ "${{ github.event.inputs.setLogLevelDebug }}" == "true" ]]; then
@@ -34,9 +43,6 @@ jobs:
       - name: Check LOG_LEVEL in next step
         run: |
           echo "env.LOG_LEVEL in next step: ${{ env.LOG_LEVEL }}"
-
-      - name: Checkout Repository
-        uses: actions/checkout@v3
 
       - name: Fetch SQLite Database and remove encrypted image
         env:
