@@ -97,6 +97,7 @@ jobs:
           else
             echo "LOG_LEVEL=INFO" >> $GITHUB_ENV
           fi
+        shell: bash
 
       - name: Check LOG_LEVEL in next step
         run: |
