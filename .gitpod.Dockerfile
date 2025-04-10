@@ -7,8 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     libreoffice \
     openjdk-17-jdk \
-    python3 \
-    python3-pip \
     curl \
     unzip \
     git \
