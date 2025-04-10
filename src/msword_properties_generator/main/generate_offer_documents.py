@@ -28,9 +28,9 @@ def _main(verbose=False, optional_args=None):
                 provider_line = line
                 base_document_to_save = ""
                 for key_prov, value_prov in provider_line.items():
-                    logging.debug(f'Provider: {key_prov}: {value_prov}')
+                    logging.debug(f"Provider: {key_prov}: {value_prov}")
             else:
-                logging.warning(f'No provider dict found in line: {line[index]}')
+                logging.warning(f"No provider dict found in line: {line[index]}")
         else:
             # Handling for all other items
             logging.debug(f"Running over combined_replacements. Item {index}: {key} -> {line}")
@@ -42,9 +42,9 @@ def _main(verbose=False, optional_args=None):
                 convert_to_pdf(base_document_to_save)
 
                 for key_cust, value_cust in customer_line.items():
-                    logging.debug(f'Customer(s): {key_cust}: {value_cust}')
+                    logging.debug(f"Customer(s): {key_cust}: {value_cust}")
             else:
-                logging.warning(f'No customer dict found in line: {line[index]}')
+                logging.warning(f"No customer dict found in line: {line[index]}")
 
         if base_document_to_save.strip():
             if optional_args:
@@ -80,9 +80,9 @@ def extract_combined_replacements(optional_args):
     def merge_replacements(customer_replacements, provider_replacements):
         combined_replacements = {}
         for key, value in provider_replacements.items():
-            combined_replacements[f'prov_{key}'] = value
+            combined_replacements[f"prov_{key}"] = value
         for key, value in customer_replacements.items():
-            combined_replacements[f'cust_{key}'] = value
+            combined_replacements[f"cust_{key}"] = value
         return combined_replacements
 
     provider_replacements = create_replacements_from_db(optional_args)

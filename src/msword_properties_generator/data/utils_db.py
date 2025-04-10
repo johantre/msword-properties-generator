@@ -86,7 +86,7 @@ def get_leverancier_dict(connection, leverancier_email):
                  columns[i]: decrypt(value)
                  for i, value in enumerate(row[2:])
              }
-             replacements_dict[f'{prefix}_{index}'] = decrypted_row
+             replacements_dict[f"{prefix}_{index}"] = decrypted_row
     return replacements_dict
 
 # All DB manipulations below
