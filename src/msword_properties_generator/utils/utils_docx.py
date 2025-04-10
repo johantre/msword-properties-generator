@@ -149,7 +149,7 @@ def build_base_document_to_save(provider_replacements, customer_replacements):
     klant_naam = safe_get(customer_replacements, "KlantNaam")
     klant_job_title = safe_get(customer_replacements, "KlantJobTitle")
     klant_job_reference = safe_get(customer_replacements, "KlantJobReference")
-    base_document = f"{config["paths"]["base_output_document_path"]} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
+    base_document = f"{config['paths']['base_output_document_path']} - {leverancier_naam} - {klant_naam} - {klant_job_title} - {klant_job_reference}"
 
     return base_document
 
