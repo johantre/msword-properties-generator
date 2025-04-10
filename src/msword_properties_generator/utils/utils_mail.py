@@ -66,7 +66,7 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
             smtp.starttls()
             smtp.login(config["mail"]["mail_sender_email"], sender_password)
             smtp.send_message(email_message)
-        logging.info(f'✉️✅ Email successfully sent to {email_message['To']}')
+        logging.info(f"✉️✅ Email successfully sent to {email_message['To']}")
     except Exception as e:
         logging.error('✉️❌ An error occurred:', e)
 

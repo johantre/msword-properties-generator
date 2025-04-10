@@ -32,7 +32,7 @@ def create_replacements_from_xls(excel_filepath, sheet_name, optionals=None):
             sanitize_spaces_to_variable_name(k): v
             for k, v in optionals.items()
         }
-        sanitized_dict[f'{prefix}_0'] = sanitized_row_dict
+        sanitized_dict[f"{prefix}_0"] = sanitized_row_dict
         return sanitized_dict
 
     df = pd.read_excel(excel_filepath, sheet_name=sheet_name, header=0)
@@ -50,6 +50,6 @@ def create_replacements_from_xls(excel_filepath, sheet_name, optionals=None):
                 sanitize_spaces_to_variable_name(k): v
                 for k, v in row_dict.items()
             }
-            sanitized_dict[f'{prefix}_{index}'] = sanitized_row_dict
+            sanitized_dict[f"{prefix}_{index}"] = sanitized_row_dict
 
     return sanitized_dict

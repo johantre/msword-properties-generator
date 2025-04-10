@@ -48,7 +48,7 @@ def download_image(url: str, destination: str):
             done = False
             while not done:
                 status, done = downloader.next_chunk()
-                logging.info(f'☁️✅ Google Drive: {int(status.progress() * 100)}% to "{destination}"download Complete')
+                logging.info(f"☁️✅ Google Drive: {int(status.progress() * 100)}% to '{destination}'download Complete")
 
         elif host == 'dropbox':
             dropbox_service = get_dropbox_service()
@@ -56,7 +56,7 @@ def download_image(url: str, destination: str):
             metadata, res = dropbox_service.sharing_get_shared_link_file(shared_link.url)
             with open(destination, "wb") as f:
                 f.write(res.content)
-            logging.info(f'☁️✅ Dropbox: from "{metadata.name}" to "{destination}" download Complete')
+            logging.info(f"☁️✅ Dropbox: from '{metadata.name}' to '{destination}' download Complete")
 
         elif host == 'onedrive':
             response = requests.get(url, allow_redirects=True)
