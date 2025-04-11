@@ -18,7 +18,12 @@ def get_image_and_encrypt_to_image_folder():
     # first construct decrypt temp folder
     temp_download_dir = tempfile.mkdtemp()
     temp_download_image_path = os.path.join(temp_download_dir, "decrypted_image.png")
-    download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
+    
+    try:
+        download_image(inputs["LeverancierURLSignatureImage"], temp_download_image_path)
+    except Exception as e:
+        logging.error(f"📷🔴 Failed to download image from {inputs['LeverancierURLSignatureImage']}. Error: {e}")
+        exit(1)  # Exit with non-zero status code to indicate failure
 
     # Check if the image is a properly decrypted image to encrypt
     try:
@@ -47,12 +52,14 @@ def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # construct decrypt temp folder
     temp_decrypted_dir = tempfile.mkdtemp()
     temp_decrypted_path = os.path.join(temp_decrypted_dir, "decrypted_image.png")
-    decrypt_image(image_encryption_path, temp_decrypted_path)
+    
     try:
+        decrypt_image(image_encryption_path, temp_decrypted_path)
         is_image_properly_decrypted(temp_decrypted_path)
-    except ImageDecryptionError as e:
-        logging.error(e)
+    except (Exception, ImageDecryptionError) as e:
+        logging.error(f"📷❌ Failed to decrypt image: {e}")
         temp_decrypted_path = ""
+    
     return temp_decrypted_path
 
 def remove_from_image_folder_git_commit_push():
