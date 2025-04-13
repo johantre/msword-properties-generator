@@ -1,3 +1,52 @@
+# MSWord Properties Generator
+
+A tool for generating MSWord documents with properties from a database.
+
+## Test Status
+
+![Tests](https://github.com/johantre/msword-properties-generator/actions/workflows/tests.yml/badge.svg)
+![Code Coverage](https://codecov.io/gh/johantre/msword-properties-generator/branch/main/graph/badge.svg)
+
+## Features
+
+- Database integration for storing provider information
+- PDF conversion capabilities
+- Dropbox and Google Drive integration
+- Encryption of sensitive data
+
+## Installation
+
+```bash
+pip install -e .
+```
+
+## Usage
+
+```python
+from msword_properties_generator.data.utils_db import get_leverancier_dict
+
+# Get provider data
+provider_data = get_leverancier_dict(connection, "provider@example.com")
+```
+
+## Testing
+
+Run the tests with:
+
+```bash
+pytest test/
+```
+
+For coverage report:
+
+```bash
+pytest --cov=msword_properties_generator test/
+```
+
+## License
+
+MIT
+
 # msword-properties-generator
 This repo will facilitate in generating a documents pair (MSWord and .pdf). based on an MSWord template with some parameters to provide.<br> 
 The user can provide a Dropbox or Google Drive link to a signature image to include in the document. 
