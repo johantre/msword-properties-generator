@@ -36,7 +36,7 @@ def get_column_names(connection, table_name):
     return columns
 
 def get_leverancierEmail_from_env():
-    return os.getenv('INPUT_LEVERANCIEREMAIL')
+    return os.environ.get('INPUT_LEVERANCIEREMAIL')
 
 def check_leverancier_count(connection, leverancier_email):
     count = connection.execute("SELECT COUNT(*) FROM offer_providers WHERE HashedLeverancierEmail = ?", (hash(leverancier_email),)).fetchone()[0]
@@ -45,14 +45,14 @@ def check_leverancier_count(connection, leverancier_email):
 def get_inputs_and_encrypt():
     # Get inputs from environment variables
     inputs = {
-        "LeverancierEmail": os.getenv('INPUT_LEVERANCIEREMAIL'),
-        "LeverancierNaam": os.getenv('INPUT_LEVERANCIERNAAM'),
-        "LeverancierStad": os.getenv('INPUT_LEVERANCIERSTAD'),
-        "LeverancierStraat": os.getenv('INPUT_LEVERANCIERSTRAAT'),
-        "LeverancierPostadres": os.getenv('INPUT_LEVERANCIERPOSTADRES'),
-        "LeverancierKandidaat": os.getenv('INPUT_LEVERANCIERKANDIDAAT'),
-        "LeverancierOpgemaaktte": os.getenv('INPUT_LEVERANCIEROPGEMAAKTTE'),
-        "LeverancierHoedanigheid": os.getenv('INPUT_LEVERANCIERHOEDANIGHEID')
+        "LeverancierEmail": os.environ.get('INPUT_LEVERANCIEREMAIL'),
+        "LeverancierNaam": os.environ.get('INPUT_LEVERANCIERNAAM'),
+        "LeverancierStad": os.environ.get('INPUT_LEVERANCIERSTAD'),
+        "LeverancierStraat": os.environ.get('INPUT_LEVERANCIERSTRAAT'),
+        "LeverancierPostadres": os.environ.get('INPUT_LEVERANCIERPOSTADRES'),
+        "LeverancierKandidaat": os.environ.get('INPUT_LEVERANCIERKANDIDAAT'),
+        "LeverancierOpgemaaktte": os.environ.get('INPUT_LEVERANCIEROPGEMAAKTTE'),
+        "LeverancierHoedanigheid": os.environ.get('INPUT_LEVERANCIERHOEDANIGHEID')
     }
     # Validate email format
     leverancier_email = get_leverancierEmail_from_env()
