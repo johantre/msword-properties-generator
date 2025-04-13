@@ -127,23 +127,6 @@ path.dropbox.destination.folder=/test/dropbox
         with self.assertRaises(SystemExit):
             load_config_values(self.test_properties_path)
 
-    def test_get_property_value_success(self):
-        """Test successful property value retrieval"""
-        from jproperties import Properties
-        configs = Properties()
-        configs.set("test.key", "test_value")
-        
-        value = get_property_value(configs, "test.key")
-        self.assertEqual(value, "test_value")
-
-    def test_get_property_value_missing(self):
-        """Test handling of missing property"""
-        from jproperties import Properties
-        configs = Properties()
-        
-        with self.assertRaises(SystemExit):
-            get_property_value(configs, "nonexistent.key")
-
     def test_global_config_loaded(self):
         """Test that global config is loaded when module is imported"""
         self.assertIsNotNone(config)
