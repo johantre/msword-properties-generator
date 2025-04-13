@@ -64,8 +64,8 @@ Check out the 3 screenshots in this article; they *must be the same* in order fo
 
 ## Test Status
 
-![Tests](https://github.com/johantre/msword-properties-generator/actions/workflows/tests.yml/badge.svg)
-![Code Coverage](https://codecov.io/gh/johantre/msword-properties-generator/branch/main/graph/badge.svg)
+![Tests](https://github.com/johantre/msword-properties-generator/actions/workflows/tests.yml/badge.svg?branch=master)
+![Code Coverage](https://codecov.io/gh/johantre/msword-properties-generator/branch/master/graph/badge.svg)
 
 ## Installation
 
