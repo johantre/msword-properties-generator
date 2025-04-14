@@ -4,25 +4,29 @@ from msword_properties_generator.utils.utils_logging import setup_logging
 import logging
 
 
+def main():
+    setup_logging()
+    conn = init_db()
 
-setup_logging()
-conn = init_db()
+    try:
+        create_table_if_not_exist(conn)
 
-try:
-    create_table_if_not_exist(conn)
+        encrypted_inputs = get_inputs_and_encrypt()
 
-    encrypted_inputs = get_inputs_and_encrypt()
+        get_image_and_encrypt_to_image_folder()
 
-    get_image_and_encrypt_to_image_folder()
+        insert_or_update_into_db(conn, encrypted_inputs)
 
-    insert_or_update_into_db(conn, encrypted_inputs)
+        # Commit and close
+        commit_db(conn)
+    except SystemExit as e:
+        if e.code != 0:
+            logging.error("🛑 An error occurred, exiting.")
+        else:
+            raise  # Re-raise the exception if it's a normal exit
+    finally:
+        close_db_commit_push(conn)
 
-    # Commit and close
-    commit_db(conn)
-except SystemExit as e:
-    if e.code != 0:
-        logging.error("🛑 An error occurred, exiting.")
-    else:
-        raise  # Re-raise the exception if it's a normal exit
-finally:
-    close_db_commit_push(conn)
+
+if __name__ == "__main__":
+    main()
