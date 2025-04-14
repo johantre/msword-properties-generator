@@ -3,13 +3,17 @@ from msword_properties_generator.utils.utils_image import remove_from_image_fold
 from msword_properties_generator.utils.utils_logging import setup_logging
 
 
+def main():
+    setup_logging()
+    conn = init_db()
 
-setup_logging()
-conn = init_db()
+    if remove_provider(conn):
+        remove_from_image_folder_git_commit_push()
 
-remove_provider(conn)
-remove_from_image_folder_git_commit_push()
+    # Commit and close
+    commit_db(conn)
+    close_db_commit_push(conn)
 
-# Commit and close
-commit_db(conn)
-close_db_commit_push(conn)
+
+if __name__ == '__main__':
+    main()
