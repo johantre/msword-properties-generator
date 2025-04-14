@@ -1,9 +1,6 @@
 name: Generate, Send & add to Dropbox
 
 on:
-  push:
-    paths:
-      - '**/OffersCustomer.xlsx'  # Trigger workflow on specific file update
   workflow_dispatch:
     inputs:
       klantNaam:

@@ -1,6 +1,5 @@
 from msword_properties_generator.utils.util_config import config  # importing centralized config
 from msword_properties_generator.data.utils_db import create_replacements_from_db
-from msword_properties_generator.data.utils_xlsx import create_replacements_from_xls
 from msword_properties_generator.utils.utils_docx import update_custom_properties_docx_structure
 from msword_properties_generator.utils.utils_pdf import convert_to_pdf
 from msword_properties_generator.utils.utils_mail import send_email
@@ -12,10 +11,10 @@ import logging
 
 
 
-def _main(verbose=False, optional_args=None):
+def _main(verbose=False, main_args=None):
     setup_logging()
 
-    combined_replacements = extract_combined_replacements(optional_args)
+    combined_replacements = extract_combined_replacements(main_args)
 
     # Each row in offersCustomer = new offer docx + pdf
     provider_line = None
@@ -47,8 +46,8 @@ def _main(verbose=False, optional_args=None):
                 logging.warning(f"No customer dict found in line: {line[index]}")
 
         if base_document_to_save.strip():
-            if optional_args:
-                leverancier_email = optional_args["LeverancierEmail"]
+            if main_args:
+                leverancier_email = main_args["LeverancierEmail"]
             else:
                 leverancier_email = 'johan_tre@hotmail.com'
             generated_files = [base_document_to_save + ".docx", base_document_to_save + ".pdf"]
@@ -59,10 +58,10 @@ def _main(verbose=False, optional_args=None):
                 logging.info(f"✉️ℹ️Email not sent, as requested by user.")
 
             upload_dropbox = True
-            if optional_args:
-                if not optional_args["UploadDropbox"] == 'true':
+            if main_args:
+                if not main_args["UploadDropbox"] == 'true':
                     upload_dropbox = False
-                    logging.info(f"🔄ℹ️Not uploaded to Dropbox, as requested by user. Value option_args['UploadDropbox'] is: {optional_args['UploadDropbox']}.")
+                    logging.info(f"🔄ℹ️Not uploaded to Dropbox, as requested by user. Value option_args['UploadDropbox'] is: {main_args['UploadDropbox']}.")
 
             if upload_dropbox:
                 try:
@@ -76,7 +75,7 @@ def _main(verbose=False, optional_args=None):
             else:
                 logging.info(f"🔄ℹ️Not uploaded to Dropbox Johan!")
 
-def extract_combined_replacements(optional_args):
+def extract_combined_replacements(main_args):
     def merge_replacements(customer_replacements, provider_replacements):
         combined_replacements = {}
         for key, value in provider_replacements.items():
@@ -85,11 +84,24 @@ def extract_combined_replacements(optional_args):
             combined_replacements[f"cust_{key}"] = value
         return combined_replacements
 
-    provider_replacements = create_replacements_from_db(optional_args)
-    customer_replacements = create_replacements_from_xls(config["paths"]["xls_offers_customer"], config["paths"]["xls_offers_customer_sheetname"], optional_args)
+    provider_replacements = create_replacements_from_db(main_args)
+    customer_replacements = create_replacements_from_args(main_args)
     combined_replacements = merge_replacements(customer_replacements, provider_replacements)
     return combined_replacements
 
+def create_replacements_from_args(main_args):
+    def sanitize_spaces_to_variable_name(any_string):
+        return any_string.replace(" ", "")
+
+    prefix = 'cust'
+
+    sanitized_dict = {}
+    sanitized_row_dict = {
+        sanitize_spaces_to_variable_name(k): v
+        for k, v in main_args.items()
+    }
+    sanitized_dict[f"{prefix}_0"] = sanitized_row_dict
+    return sanitized_dict
 
 if __name__ == '__main__':
     # Parse command-line arguments clearly here
@@ -104,7 +116,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.klantNaam and args.klantJobTitle and args.klantJobReference:
-        optional_args = {
+        main_args = {
             'KlantNaam': args.klantNaam,
             'KlantJobTitle': args.klantJobTitle,
             'KlantJobReference': args.klantJobReference,
@@ -113,7 +125,7 @@ if __name__ == '__main__':
         }
         _main(
             verbose=args.verbose,
-            optional_args=optional_args
+            main_args=main_args
         )
     else:
         _main(
