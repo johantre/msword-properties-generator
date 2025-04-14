@@ -199,9 +199,14 @@ def remove_provider(connection):
 def create_replacements_from_db(optionals=None):
     conn = init_db()
 
-    leverancier_email = optionals['LeverancierEmail']
+    leverancier_email = optionals.get('LeverancierEmail') if optionals else None
+    if not leverancier_email:
+        raise ValueError(
+            "LeverancierEmail ontbreekt in 'optional_args'. Zorg ervoor dat dit veld correct wordt meegegeven.")
+
     replacements_dict = get_leverancier_dict(conn, leverancier_email)
 
     conn.close()
     return replacements_dict
+
 
