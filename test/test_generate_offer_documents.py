@@ -135,8 +135,7 @@ class TestGenerateOfferDocuments(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             extract_combined_replacements(optional_args)
 
-        expected_message = ("LeverancierEmail ontbreekt in 'optional_args'. "
-                            "Zorg ervoor dat dit veld correct wordt meegegeven.")
+        expected_message = ("LeverancierEmail missing in 'optional_args'.")
         self.assertEqual(str(context.exception), expected_message)
 
 
