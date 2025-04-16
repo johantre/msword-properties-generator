@@ -52,7 +52,8 @@ This process takes on average about 2 min.
   - So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
   <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
-## ⚠️Attention⚠️ 
+## ⚠️Attention⚠️
+
 - The way this 2-way information flow has been set up is by means of the mail address as key to relate both information.<br>
 So the mail address provided for the Customer and Provider information screen must be equal.<br>
 Check out the 3 screenshots in this article; they *must be the same* in order for this to work! 
@@ -62,6 +63,11 @@ Check out the 3 screenshots in this article; they *must be the same* in order fo
 
 ![Tests](https://github.com/johantre/msword-properties-generator/actions/workflows/tests.yml/badge.svg?branch=master)
 ![Code Coverage](https://codecov.io/gh/johantre/msword-properties-generator/branch/master/graph/badge.svg)
+
+<div style="text-align:left;">
+  <img src="https://codecov.io/gh/johantre/msword-properties-generator/graphs/icicle.svg?token=CSJSNO03KU" height="100">
+</div>
+
 
 ## Installation
 
