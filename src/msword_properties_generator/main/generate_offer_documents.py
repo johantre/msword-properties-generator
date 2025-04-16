@@ -96,11 +96,14 @@ def create_replacements_from_args(main_args):
     prefix = 'cust'
 
     sanitized_dict = {}
-    sanitized_row_dict = {
-        sanitize_spaces_to_variable_name(k): v
-        for k, v in main_args.items()
-    }
-    sanitized_dict[f"{prefix}_0"] = sanitized_row_dict
+    if main_args:
+        sanitized_row_dict = {
+            sanitize_spaces_to_variable_name(k): v
+            for k, v in main_args.items()
+        }
+        sanitized_dict[f"{prefix}_0"] = sanitized_row_dict
+    else:
+        return {f"{prefix}_0": {}}
     return sanitized_dict
 
 if __name__ == '__main__':
