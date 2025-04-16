@@ -19,7 +19,8 @@ from msword_properties_generator.data.utils_db import (
     insert_into_db,
     update_into_db,
     insert_or_update_into_db,
-    remove_provider
+    remove_provider,
+    create_replacements_from_db
 )
 
 # Add src directory to Python path
@@ -46,7 +47,8 @@ class TestUtilsDB(unittest.TestCase):
             insert_into_db, update_into_db, remove_provider,
             get_leverancier_dict,
             create_table_if_not_exist,
-            insert_or_update_into_db
+            insert_or_update_into_db,
+            create_replacements_from_db
         )
         
         self.db_functions = {
@@ -60,7 +62,8 @@ class TestUtilsDB(unittest.TestCase):
             'create_table_if_not_exist': create_table_if_not_exist,
             'get_column_names': get_column_names,
             'check_leverancier_count': check_leverancier_count,
-            'insert_or_update_into_db': insert_or_update_into_db
+            'insert_or_update_into_db': insert_or_update_into_db,
+            'create_replacements_from_db': create_replacements_from_db
         }
         
         # Set up encryption and hash mocks
@@ -405,6 +408,59 @@ class TestUtilsDB(unittest.TestCase):
         row = cursor.fetchone()
 
         self.assertEqual(row[2], 'updated_value')  # LeverancierEmail
+        conn.close()
+
+    def mock_decrypt(value):
+        return value
+
+    @patch('msword_properties_generator.data.utils_db.decrypt', side_effect=mock_decrypt)
+    @patch('msword_properties_generator.utils.utils_hash_encrypt.get_encryption_key')
+    @patch('msword_properties_generator.data.utils_db.init_db')
+    def test_create_replacements_from_db(self, mock_init_db, mock_get_encryption_key, mock_decrypt):
+        from cryptography.fernet import Fernet
+        valid_key = Fernet.generate_key()
+        mock_get_encryption_key.return_value = valid_key
+        mock_init_db.return_value = sqlite3.connect(":memory:")
+
+        # Setup environment variables
+        os.environ.update(self.test_env)
+
+        conn = mock_init_db.return_value
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE offer_providers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                HashedLeverancierEmail TEXT,
+                LeverancierEmail TEXT,
+                LeverancierNaam TEXT,
+                LeverancierStad TEXT,
+                LeverancierStraat TEXT,
+                LeverancierPostadres TEXT,
+                LeverancierKandidaat TEXT,
+                LeverancierOpgemaaktte TEXT,
+                LeverancierHoedanigheid TEXT
+            )
+        ''')
+        conn.commit()
+
+        # Vul de table met testdata
+        cursor.execute('''
+            INSERT INTO offer_providers (
+                HashedLeverancierEmail, LeverancierEmail, LeverancierNaam, LeverancierStad,
+                LeverancierStraat, LeverancierPostadres, LeverancierKandidaat, LeverancierOpgemaaktte,
+                LeverancierHoedanigheid
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            'hashed_email', 'test@example.com', 'Test Name', 'Test City', 'Test Street',
+            'Test Address', 'Test Candidate', 'Test Opgemaaktte', 'Test Hoedanigheid'
+        ))
+        conn.commit()
+
+        optionals = {'LeverancierEmail': 'test@example.com'}
+        replacements = create_replacements_from_db(optionals)
+
+        self.assertIn('LeverancierEmail', replacements['prov_0'])
+        self.assertEqual(replacements['prov_0']['LeverancierEmail'], 'test@example.com')
         conn.close()
 
 if __name__ == '__main__':
