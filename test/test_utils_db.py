@@ -13,7 +13,9 @@ from msword_properties_generator.data.utils_db import (
     commit_db,
     get_inputs_and_encrypt,
     get_leverancier_dict,
+    get_column_names,
     create_table_if_not_exist,
+    check_leverancier_count,
     insert_into_db,
     update_into_db,
     insert_or_update_into_db,
@@ -42,7 +44,9 @@ class TestUtilsDB(unittest.TestCase):
         from msword_properties_generator.data.utils_db import (
             init_db, close_db_commit_push, get_inputs_and_encrypt,
             insert_into_db, update_into_db, remove_provider,
-            get_leverancier_dict
+            get_leverancier_dict,
+            create_table_if_not_exist,
+            insert_or_update_into_db
         )
         
         self.db_functions = {
@@ -52,7 +56,11 @@ class TestUtilsDB(unittest.TestCase):
             'insert_into_db': insert_into_db,
             'update_into_db': update_into_db,
             'remove_provider': remove_provider,
-            'get_leverancier_dict': get_leverancier_dict
+            'get_leverancier_dict': get_leverancier_dict,
+            'create_table_if_not_exist': create_table_if_not_exist,
+            'get_column_names': get_column_names,
+            'check_leverancier_count': check_leverancier_count,
+            'insert_or_update_into_db': insert_or_update_into_db
         }
         
         # Set up encryption and hash mocks
@@ -272,6 +280,132 @@ class TestUtilsDB(unittest.TestCase):
                         "SELECT * FROM offer_providers where HashedLeverancierEmail = ?",
                         ('hashed_email',)
                     )
+
+    def test_create_table(self):
+        conn = sqlite3.connect(':memory:')
+        create_table_if_not_exist(conn)
+        cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='offer_providers'")
+        assert cursor.fetchone() is not None
+
+    def test_commit_db_with_mock(self):
+        mock_conn = MagicMock()
+        commit_db(mock_conn)
+        mock_conn.commit.assert_called_once()
+
+    def test_get_column_names(self):
+        conn = sqlite3.connect(":memory:")
+        create_table_if_not_exist(conn)
+        expected_columns = [
+            "LeverancierEmail",
+            "LeverancierNaam",
+            "LeverancierStad",
+            "LeverancierStraat",
+            "LeverancierPostadres",
+            "LeverancierKandidaat",
+            "LeverancierOpgemaaktte",
+            "LeverancierHoedanigheid"
+        ]
+        assert get_column_names(conn, "offer_providers") == expected_columns
+
+
+    def test_get_column_names_table_does_not_exist(self):
+        conn = sqlite3.connect(":memory:")
+        with self.assertRaises(sqlite3.OperationalError):
+            get_column_names(conn, "non_existing_table")
+
+    def test_check_leverancier_count_none(self):
+        conn = sqlite3.connect(":memory:")
+        create_table_if_not_exist(conn)
+
+        count = check_leverancier_count(conn, "nonexistent@example.com")
+        self.assertEqual(count, 0)
+
+    def test_check_leverancier_count_one(self):
+        conn = sqlite3.connect(":memory:")
+        create_table_if_not_exist(conn)
+
+        email = "test@example.com"
+        test_data = {
+            "HashedLeverancierEmail": str(hash(email)),
+            "LeverancierEmail": email,
+            "LeverancierNaam": "Test Leverancier",
+            "LeverancierStad": "Gent",
+            "LeverancierStraat": "Teststraat 1",
+            "LeverancierPostadres": "9000",
+            "LeverancierKandidaat": "Jan Jansen",
+            "LeverancierOpgemaaktte": "2025-04-16",
+            "LeverancierHoedanigheid": "Manager"
+        }
+        encrypted_inputs = {
+            'LeverancierEmail': email,
+            'LeverancierNaam': "Test Leverancier",
+            'LeverancierStad': "Gent",
+            'LeverancierStraat': "Teststraat 1",
+            'LeverancierPostadres': "9000",
+            'LeverancierKandidaat': "Jan Jansen",
+            'LeverancierOpgemaaktte': "2025-04-16",
+            'LeverancierHoedanigheid': "Manager"
+        }
+        insert_into_db(conn, test_data, encrypted_inputs)
+
+        count = check_leverancier_count(conn, email)
+        self.assertEqual(count, 1)
+
+    def test_insert_or_update_into_db_insert_new(self):
+        os.environ.update(self.test_env)
+
+        conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](conn)
+
+        encrypted_inputs = {
+            'LeverancierEmail': 'encrypted_value',
+            'LeverancierNaam': 'encrypted_value',
+            'LeverancierStad': 'encrypted_value',
+            'LeverancierStraat': 'encrypted_value',
+            'LeverancierPostadres': 'encrypted_value',
+            'LeverancierKandidaat': 'encrypted_value',
+            'LeverancierOpgemaaktte': 'encrypted_value',
+            'LeverancierHoedanigheid': 'encrypted_value'
+        }
+
+        self.db_functions['insert_or_update_into_db'](conn, encrypted_inputs)
+
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM offer_providers")
+        count = cursor.fetchone()[0]
+        self.assertEqual(count, 1)
+        conn.close()
+
+    def test_insert_or_update_into_db_update_existing(self):
+        os.environ.update(self.test_env)
+
+        conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](conn)
+
+        leverancier_email = self.test_env['INPUT_LEVERANCIEREMAIL']
+        encrypted_inputs_initial = {
+            key: 'initial_value' for key in [
+                'LeverancierEmail', 'LeverancierNaam', 'LeverancierStad',
+                'LeverancierStraat', 'LeverancierPostadres',
+                'LeverancierKandidaat', 'LeverancierOpgemaaktte',
+                'LeverancierHoedanigheid'
+            ]
+        }
+
+        self.db_functions['insert_into_db'](conn, leverancier_email, encrypted_inputs_initial)
+
+        encrypted_inputs_updated = {
+            key: 'updated_value' for key in encrypted_inputs_initial
+        }
+
+        self.db_functions['insert_or_update_into_db'](conn, encrypted_inputs_updated)
+
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM offer_providers")
+        row = cursor.fetchone()
+
+        self.assertEqual(row[2], 'updated_value')  # LeverancierEmail
+        conn.close()
 
 if __name__ == '__main__':
     unittest.main() 
