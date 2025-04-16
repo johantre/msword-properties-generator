@@ -1,0 +1,22 @@
+[run]
+branch = True
+source =
+    src/msword_properties_generator
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    logger\.debug
+    logger\.info
+    logging\.debug
+    logging\.info
+    logging\.warning
+    logging\.error
+    logging\.critical
+    raise AssertionError
+    raise NotImplementedError
+    except ImportError
+    if typing.TYPE_CHECKING
+
+ignore_errors = True
