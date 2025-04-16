@@ -62,11 +62,8 @@ Check out the 3 screenshots in this article; they *must be the same* in order fo
 ## Test Status
 
 ![Tests](https://github.com/johantre/msword-properties-generator/actions/workflows/tests.yml/badge.svg?branch=master)
-![Code Coverage](https://codecov.io/gh/johantre/msword-properties-generator/branch/master/graph/badge.svg)
+[![Code Coverage](https://codecov.io/gh/johantre/msword-properties-generator/branch/master/graph/badge.svg)](https://app.codecov.io/gh/johantre/msword-properties-generator)
 
-<div style="text-align:left;">
-  <img src="https://codecov.io/gh/johantre/msword-properties-generator/graphs/icicle.svg?token=CSJSNO03KU" height="100">
-</div>
 
 
 ## Installation
