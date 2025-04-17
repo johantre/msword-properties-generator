@@ -1,14 +1,9 @@
-import unittest
 from unittest.mock import patch, mock_open
-import os
-import tempfile
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.backends import default_backend
-import base64
+import unittest
+import tempfile
+import os
+
 
 from msword_properties_generator.utils.utils_hash_encrypt import (
     get_encryption_key,

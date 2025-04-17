@@ -1,9 +1,9 @@
-import unittest
-from unittest.mock import patch, MagicMock, mock_open
-import os
-import tempfile
+from unittest.mock import patch
 from PIL import Image
-import io
+import unittest
+import tempfile
+import os
+
 
 from msword_properties_generator.utils.utils_image import (
     get_image_and_encrypt_to_image_folder,

@@ -1,7 +1,6 @@
-import unittest
-from unittest.mock import patch, MagicMock
 from msword_properties_generator.main.subscribe_or_update_provider import main
-import logging
+from unittest.mock import patch, MagicMock
+import unittest
 
 
 class TestSubscribeOrUpdateProvider(unittest.TestCase):

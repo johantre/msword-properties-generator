@@ -1,6 +1,6 @@
-import unittest
-from unittest.mock import patch, MagicMock
 from msword_properties_generator.main.unsubscribe_provider import main
+from unittest.mock import patch, MagicMock
+import unittest
 
 
 class TestUnsubscribeProvider(unittest.TestCase):

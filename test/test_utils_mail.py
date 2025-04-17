@@ -1,18 +1,16 @@
-import unittest
+from msword_properties_generator.utils.utils_mail import send_email
 from unittest.mock import patch, mock_open, MagicMock
-import os
-import tempfile
 from pathlib import Path
+import unittest
+import tempfile
 import sys
+import os
+
 
 # Add the src directory to the Python path
 src_path = str(Path(__file__).resolve().parent.parent / 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
-
-from msword_properties_generator.utils.utils_mail import send_email
-from msword_properties_generator.utils.util_config import config
-
 
 class TestUtilsMail(unittest.TestCase):
     def setUp(self):
@@ -62,8 +60,6 @@ class TestUtilsMail(unittest.TestCase):
 
     @patch('smtplib.SMTP')
     def test_send_email_with_docx_and_pdf(self, mock_smtp):
-        """Test sending email with docx and pdf attachments"""
-        # Setup
         mock_smtp_instance = MagicMock()
         mock_smtp.return_value.__enter__.return_value = mock_smtp_instance
         
@@ -98,8 +94,6 @@ class TestUtilsMail(unittest.TestCase):
     @patch('builtins.open', new_callable=mock_open)
     @patch('msword_properties_generator.utils.utils_mail.EmailMessage')
     def test_send_email_with_missing_file(self, mock_email_class, mock_file, mock_smtp):
-        """Test sending email when one of the files is missing"""
-        # Setup
         mock_smtp_instance = MagicMock()
         mock_smtp.return_value.__enter__.return_value = mock_smtp_instance
         
@@ -137,8 +131,6 @@ class TestUtilsMail(unittest.TestCase):
     @patch('smtplib.SMTP')
     @patch('logging.error')
     def test_send_email_smtp_error(self, mock_logging, mock_smtp):
-        """Test handling of SMTP errors during email sending"""
-        # Setup
         mock_smtp_instance = MagicMock()
         mock_smtp.return_value.__enter__.return_value = mock_smtp_instance
         mock_smtp_instance.send_message.side_effect = Exception("SMTP Error")

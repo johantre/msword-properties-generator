@@ -1,15 +1,16 @@
-import unittest
 from unittest.mock import patch, mock_open, MagicMock
-import os
-import tempfile
-from pathlib import Path
-import sys
-import shutil
-from docx import Document
 from docx.shared import Inches
-import zipfile
+from pathlib import Path
+from docx import Document
 from PIL import Image
+import unittest
+import tempfile
+import zipfile
+import shutil
+import sys
 import io
+import os
+
 
 # Add the src directory to the Python path
 src_path = str(Path(__file__).resolve().parent.parent / 'src')
