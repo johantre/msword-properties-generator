@@ -8,26 +8,12 @@ PROD_PROPERTIES_FILE = PROJECT_ROOT / "env" / "prod.properties"
 
 
 def get_property_value(configs, key):
-    """
-    Safely get a property value from the configs object.
-    
-    Args:
-        configs: The Properties object containing the configuration
-        key: The key to look up
-        
-    Returns:
-        The property value if found
-        
-    Raises:
-        SystemExit: If the property is not found
-    """
     prop = configs.get(key)
     if prop is None:
         error_msg = f"❌ Required property '{key}' is missing in the properties file"
         logging.error(error_msg)
         raise SystemExit(error_msg)
     return prop.data
-
 
 # Fetch properties
 def load_config_values(properties_path=PROD_PROPERTIES_FILE):

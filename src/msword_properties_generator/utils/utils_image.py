@@ -8,6 +8,7 @@ import tempfile
 import logging
 import os
 
+
 def get_image_and_encrypt_to_image_folder():
     inputs = {
         "LeverancierEmail": os.getenv('INPUT_LEVERANCIEREMAIL'),

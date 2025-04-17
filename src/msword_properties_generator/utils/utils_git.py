@@ -4,7 +4,6 @@ import git
 import os
 
 
-
 def git_stage_commit_push(file_path: str, commit_message: str = "Automated commit and push"):
     repo_path = get_repo_root()
     repo = Repo(repo_path)
