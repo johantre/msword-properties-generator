@@ -1,37 +1,17 @@
+from unittest.mock import patch, MagicMock
+import unittest
+import tempfile
+import sqlite3
+import shutil
 import os
 import sys
-import unittest
-import sqlite3
-from unittest.mock import patch, MagicMock
-import base64
-import tempfile
-import shutil
 
-from msword_properties_generator.data.utils_db import (
-    init_db,
-    close_db_commit_push,
-    commit_db,
-    get_inputs_and_encrypt,
-    get_leverancier_dict,
-    get_column_names,
-    create_table_if_not_exist,
-    check_leverancier_count,
-    insert_into_db,
-    update_into_db,
-    insert_or_update_into_db,
-    remove_provider,
-    create_replacements_from_db
-)
 
 # Add src directory to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-# Import the Git module first to avoid initialization issues
-import git
-
 class TestUtilsDB(unittest.TestCase):
     def setUp(self):
-        """Set up test fixtures."""
         # Create a temporary directory for the test database
         self.test_dir = tempfile.mkdtemp()
         self.db_path = os.path.join(self.test_dir, 'test.db')
@@ -43,16 +23,19 @@ class TestUtilsDB(unittest.TestCase):
         
         # Import the database functions after mocking config
         from msword_properties_generator.data.utils_db import (
-            init_db, close_db_commit_push, get_inputs_and_encrypt,
+            init_db, commit_db, close_db_commit_push, get_inputs_and_encrypt,
             insert_into_db, update_into_db, remove_provider,
             get_leverancier_dict,
             create_table_if_not_exist,
             insert_or_update_into_db,
-            create_replacements_from_db
+            create_replacements_from_db,
+            get_column_names,
+            check_leverancier_count
         )
         
         self.db_functions = {
             'init_db': init_db,
+            'commit_db': commit_db,
             'close_db_commit_push': close_db_commit_push,
             'get_inputs_and_encrypt': get_inputs_and_encrypt,
             'insert_into_db': insert_into_db,
@@ -89,7 +72,6 @@ class TestUtilsDB(unittest.TestCase):
         }
 
     def tearDown(self):
-        """Tear down test fixtures."""
         # Stop all patches
         self.config_patcher.stop()
         self.encrypt_patcher.stop()
@@ -99,7 +81,6 @@ class TestUtilsDB(unittest.TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_get_inputs_and_encrypt(self):
-        """Test that get_inputs_and_encrypt returns encrypted values."""
         with patch.dict('os.environ', self.test_env):
             encrypted_inputs = self.db_functions['get_inputs_and_encrypt']()
             
@@ -117,7 +98,6 @@ class TestUtilsDB(unittest.TestCase):
             self.assertEqual(self.mock_encrypt.call_count, 8)
 
     def test_invalid_email(self):
-        """Test that invalid email raises ValueError."""
         test_env = self.test_env.copy()
         test_env['INPUT_LEVERANCIEREMAIL'] = 'invalid_email'
         
@@ -126,7 +106,6 @@ class TestUtilsDB(unittest.TestCase):
                 self.db_functions['get_inputs_and_encrypt']()
 
     def test_insert_and_get_provider(self):
-        """Test inserting and retrieving a provider."""
         with patch.dict('os.environ', self.test_env):
             # Mock the database connection and cursor
             mock_conn = MagicMock()
@@ -159,9 +138,9 @@ class TestUtilsDB(unittest.TestCase):
                  'encrypted_value', 'encrypted_value', 'encrypted_value', 'encrypted_value',
                  'encrypted_value')
             )
+            mock_conn.close()
 
     def test_update_provider(self):
-        """Test updating a provider."""
         with patch.dict('os.environ', self.test_env):
             # Mock the database connection and cursor
             mock_conn = MagicMock()
@@ -186,9 +165,9 @@ class TestUtilsDB(unittest.TestCase):
     """,
                 expected_params
             )
+            mock_conn.close()
 
     def test_remove_provider(self):
-        """Test removing a provider."""
         with patch.dict('os.environ', self.test_env):
             # Mock the database connection and cursor
             mock_conn = MagicMock()
@@ -206,9 +185,9 @@ class TestUtilsDB(unittest.TestCase):
                     "DELETE FROM offer_providers WHERE HashedLeverancierEmail = ?",
                     ('hashed_email',)
                 )
+            mock_conn.close()
 
     def test_close_db_commit_push(self):
-        """Test closing the database and pushing changes."""
         with patch.dict('os.environ', self.test_env):
             # Mock the database connection
             mock_conn = MagicMock()
@@ -224,9 +203,9 @@ class TestUtilsDB(unittest.TestCase):
                     
                     # Verify git push was called
                     mock_git_push.assert_called_once()
+            mock_conn.close()
 
     def test_get_leverancier_dict(self):
-        """Test getting leverancier dictionary."""
         with patch.dict('os.environ', self.test_env):
             # Mock the database connection and cursor
             mock_conn = MagicMock()
@@ -283,21 +262,24 @@ class TestUtilsDB(unittest.TestCase):
                         "SELECT * FROM offer_providers where HashedLeverancierEmail = ?",
                         ('hashed_email',)
                     )
+            mock_conn.close()
 
     def test_create_table(self):
-        conn = sqlite3.connect(':memory:')
-        create_table_if_not_exist(conn)
-        cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='offer_providers'")
+        mock_conn = sqlite3.connect(':memory:')
+        self.db_functions['create_table_if_not_exist'](mock_conn)
+        cursor = mock_conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='offer_providers'")
         assert cursor.fetchone() is not None
+        mock_conn.close()
 
     def test_commit_db_with_mock(self):
         mock_conn = MagicMock()
-        commit_db(mock_conn)
+        self.db_functions['commit_db'](mock_conn)
         mock_conn.commit.assert_called_once()
+        mock_conn.close()
 
     def test_get_column_names(self):
-        conn = sqlite3.connect(":memory:")
-        create_table_if_not_exist(conn)
+        mock_conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](mock_conn)
         expected_columns = [
             "LeverancierEmail",
             "LeverancierNaam",
@@ -308,24 +290,26 @@ class TestUtilsDB(unittest.TestCase):
             "LeverancierOpgemaaktte",
             "LeverancierHoedanigheid"
         ]
-        assert get_column_names(conn, "offer_providers") == expected_columns
-
+        assert self.db_functions['get_column_names'](mock_conn, "offer_providers") == expected_columns
+        mock_conn.close()
 
     def test_get_column_names_table_does_not_exist(self):
-        conn = sqlite3.connect(":memory:")
+        mock_conn = sqlite3.connect(":memory:")
         with self.assertRaises(sqlite3.OperationalError):
-            get_column_names(conn, "non_existing_table")
+            self.db_functions['get_column_names'](mock_conn, "non_existing_table")
+        mock_conn.close()
 
     def test_check_leverancier_count_none(self):
-        conn = sqlite3.connect(":memory:")
-        create_table_if_not_exist(conn)
+        mock_conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](mock_conn)
 
-        count = check_leverancier_count(conn, "nonexistent@example.com")
+        count = self.db_functions['check_leverancier_count'](mock_conn, "nonexistent@example.com")
         self.assertEqual(count, 0)
+        mock_conn.close()
 
     def test_check_leverancier_count_one(self):
-        conn = sqlite3.connect(":memory:")
-        create_table_if_not_exist(conn)
+        mock_conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](mock_conn)
 
         email = "test@example.com"
         test_data = {
@@ -349,16 +333,17 @@ class TestUtilsDB(unittest.TestCase):
             'LeverancierOpgemaaktte': "2025-04-16",
             'LeverancierHoedanigheid': "Manager"
         }
-        insert_into_db(conn, test_data, encrypted_inputs)
+        self.db_functions['insert_into_db'](mock_conn, test_data, encrypted_inputs)
 
-        count = check_leverancier_count(conn, email)
+        count = self.db_functions['check_leverancier_count'](mock_conn, email)
         self.assertEqual(count, 1)
+        mock_conn.close()
 
     def test_insert_or_update_into_db_insert_new(self):
         os.environ.update(self.test_env)
 
-        conn = sqlite3.connect(":memory:")
-        self.db_functions['create_table_if_not_exist'](conn)
+        mock_conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](mock_conn)
 
         encrypted_inputs = {
             'LeverancierEmail': 'encrypted_value',
@@ -371,19 +356,19 @@ class TestUtilsDB(unittest.TestCase):
             'LeverancierHoedanigheid': 'encrypted_value'
         }
 
-        self.db_functions['insert_or_update_into_db'](conn, encrypted_inputs)
+        self.db_functions['insert_or_update_into_db'](mock_conn, encrypted_inputs)
 
-        cursor = conn.cursor()
+        cursor = mock_conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM offer_providers")
         count = cursor.fetchone()[0]
         self.assertEqual(count, 1)
-        conn.close()
+        mock_conn.close()
 
     def test_insert_or_update_into_db_update_existing(self):
         os.environ.update(self.test_env)
 
-        conn = sqlite3.connect(":memory:")
-        self.db_functions['create_table_if_not_exist'](conn)
+        mock_conn = sqlite3.connect(":memory:")
+        self.db_functions['create_table_if_not_exist'](mock_conn)
 
         leverancier_email = self.test_env['INPUT_LEVERANCIEREMAIL']
         encrypted_inputs_initial = {
@@ -395,20 +380,20 @@ class TestUtilsDB(unittest.TestCase):
             ]
         }
 
-        self.db_functions['insert_into_db'](conn, leverancier_email, encrypted_inputs_initial)
+        self.db_functions['insert_into_db'](mock_conn, leverancier_email, encrypted_inputs_initial)
 
         encrypted_inputs_updated = {
             key: 'updated_value' for key in encrypted_inputs_initial
         }
 
-        self.db_functions['insert_or_update_into_db'](conn, encrypted_inputs_updated)
+        self.db_functions['insert_or_update_into_db'](mock_conn, encrypted_inputs_updated)
 
-        cursor = conn.cursor()
+        cursor = mock_conn.cursor()
         cursor.execute("SELECT * FROM offer_providers")
         row = cursor.fetchone()
 
         self.assertEqual(row[2], 'updated_value')  # LeverancierEmail
-        conn.close()
+        mock_conn.close()
 
     def mock_decrypt(value):
         return value
@@ -425,8 +410,8 @@ class TestUtilsDB(unittest.TestCase):
         # Setup environment variables
         os.environ.update(self.test_env)
 
-        conn = mock_init_db.return_value
-        cursor = conn.cursor()
+        mock_conn = mock_init_db.return_value
+        cursor = mock_conn.cursor()
         cursor.execute('''
             CREATE TABLE offer_providers (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -441,7 +426,7 @@ class TestUtilsDB(unittest.TestCase):
                 LeverancierHoedanigheid TEXT
             )
         ''')
-        conn.commit()
+        mock_conn.commit()
 
         # Vul de table met testdata
         cursor.execute('''
@@ -454,14 +439,14 @@ class TestUtilsDB(unittest.TestCase):
             'hashed_email', 'test@example.com', 'Test Name', 'Test City', 'Test Street',
             'Test Address', 'Test Candidate', 'Test Opgemaaktte', 'Test Hoedanigheid'
         ))
-        conn.commit()
+        mock_conn.commit()
 
         optionals = {'LeverancierEmail': 'test@example.com'}
-        replacements = create_replacements_from_db(optionals)
+        replacements = self.db_functions['create_replacements_from_db'](optionals)
 
         self.assertIn('LeverancierEmail', replacements['prov_0'])
         self.assertEqual(replacements['prov_0']['LeverancierEmail'], 'test@example.com')
-        conn.close()
+        mock_conn.close()
 
 if __name__ == '__main__':
     unittest.main() 
