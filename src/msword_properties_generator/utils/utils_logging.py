@@ -3,6 +3,7 @@ import logging
 import pytz
 import os
 
+
 class LocalTimezoneFormatter(logging.Formatter):
     default_time_format = "%Y-%m-%d %H:%M:%S %Z%z"
     local_timezone = pytz.timezone('Europe/Amsterdam')

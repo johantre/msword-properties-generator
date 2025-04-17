@@ -5,7 +5,6 @@ import logging
 import os
 
 
-
 def convert_to_pdf(base_document):
     output_path = config["paths"]["output_path"]
     convert_from_docx = base_document + ".docx"
