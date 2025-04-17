@@ -1,10 +1,10 @@
-import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 from pathlib import Path
+import unittest
 import tempfile
 import os
 import sys
-import logging
+
 
 # Add the src directory to the Python path
 src_path = str(Path(__file__).resolve().parent.parent / 'src')

@@ -1,6 +1,6 @@
-import unittest
-from unittest.mock import patch
 from msword_properties_generator.main.generate_offer_documents import extract_combined_replacements, _main, create_replacements_from_args
+from unittest.mock import patch
+import unittest
 
 
 class TestGenerateOfferDocuments(unittest.TestCase):

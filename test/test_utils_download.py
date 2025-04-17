@@ -1,12 +1,8 @@
-import os
+from unittest.mock import patch, MagicMock
 import unittest
-from unittest.mock import patch, MagicMock, create_autospec
-import dropbox
-from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from googleapiclient.http import MediaIoBaseDownload
-import requests
+import os
+
+
 from msword_properties_generator.utils.utils_download import (
     detect_host,
     download_image,
@@ -60,7 +56,6 @@ class TestUtilsDownload(unittest.TestCase):
             p.stop()
 
     def test_detect_host(self):
-        """Test host detection from URLs"""
         test_cases = [
             ('https://drive.google.com/file/d/1234567890/view', 'gdrive'),
             ('https://www.dropbox.com/s/1234567890/file.jpg', 'dropbox'),
@@ -76,8 +71,6 @@ class TestUtilsDownload(unittest.TestCase):
     @patch('msword_properties_generator.utils.utils_download.build')
     @patch('msword_properties_generator.utils.utils_download.Credentials')
     def test_get_google_drive_service(self, mock_credentials_class, mock_build):
-        """Test Google Drive service initialization"""
-        # Setup mocks
         mock_creds = MagicMock()
         mock_credentials_class.return_value = mock_creds
         mock_service = MagicMock()
@@ -106,8 +99,6 @@ class TestUtilsDownload(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_download.dropbox.Dropbox')
     def test_get_dropbox_service(self, mock_dropbox):
-        """Test Dropbox service initialization"""
-        # Setup mock
         mock_client = MagicMock()
         mock_dropbox.return_value = mock_client
         
@@ -126,8 +117,6 @@ class TestUtilsDownload(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_download.get_google_drive_service')
     def test_download_image_google_drive(self, mock_get_service):
-        """Test downloading image from Google Drive"""
-        # Setup mocks
         mock_service = MagicMock()
         mock_get_service.return_value = mock_service
         
@@ -158,8 +147,6 @@ class TestUtilsDownload(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_download.get_dropbox_service')
     def test_download_image_dropbox(self, mock_get_service):
-        """Test downloading image from Dropbox"""
-        # Setup mocks
         mock_service = MagicMock()
         mock_get_service.return_value = mock_service
         
@@ -181,8 +168,6 @@ class TestUtilsDownload(unittest.TestCase):
 
     @patch('requests.get')
     def test_download_image_onedrive(self, mock_get):
-        """Test downloading image from OneDrive"""
-        # Setup mocks
         mock_response = MagicMock()
         mock_response.url = 'https://onedrive.live.com/download?cid=1234567890'
         mock_response.content = b'test content'
@@ -198,8 +183,6 @@ class TestUtilsDownload(unittest.TestCase):
         mock_get.assert_called_once()
 
     def test_download_image_invalid_host(self):
-        """Test downloading image from invalid host"""
-        # Create test file
         test_file = os.path.join(self.test_dir, 'test.jpg')
         
         # Call the function and verify it raises ValueError

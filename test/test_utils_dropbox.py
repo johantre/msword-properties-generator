@@ -1,9 +1,9 @@
-import os
-import unittest
-from unittest.mock import patch, MagicMock
-import dropbox
-from dropbox.exceptions import ApiError
 from msword_properties_generator.utils.utils_dropbox import dropbox_upload, get_dbx_client
+from unittest.mock import patch, MagicMock
+from dropbox.exceptions import ApiError
+import unittest
+import os
+
 
 class MockApiError(ApiError):
     def __init__(self):

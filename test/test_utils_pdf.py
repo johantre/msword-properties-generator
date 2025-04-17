@@ -1,19 +1,17 @@
-import unittest
-from unittest.mock import patch, mock_open, MagicMock
-import os
-import tempfile
+from msword_properties_generator.utils.utils_pdf import convert_to_pdf, convert_to_pdf_traditional
+from unittest.mock import patch, MagicMock
 from pathlib import Path
-import sys
 import subprocess
+import unittest
+import tempfile
+import sys
+import os
+
 
 # Add the src directory to the Python path
 src_path = str(Path(__file__).resolve().parent.parent / 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
-
-from msword_properties_generator.utils.utils_pdf import convert_to_pdf, convert_to_pdf_traditional
-from msword_properties_generator.utils.util_config import config
-
 
 class TestUtilsPdf(unittest.TestCase):
     def setUp(self):
@@ -52,8 +50,6 @@ class TestUtilsPdf(unittest.TestCase):
 
     @patch('subprocess.run')
     def test_convert_to_pdf_soffice_success(self, mock_run):
-        """Test successful conversion using soffice"""
-        # Setup
         mock_run.return_value = MagicMock(returncode=0)
         
         # Execute
@@ -73,8 +69,6 @@ class TestUtilsPdf(unittest.TestCase):
     @patch('subprocess.run')
     @patch('logging.error')
     def test_convert_to_pdf_soffice_not_found(self, mock_logging, mock_run):
-        """Test that the function handles LibreOffice not being found on the system"""
-        # Setup
         mock_run.side_effect = FileNotFoundError()
         
         # Execute
@@ -86,8 +80,6 @@ class TestUtilsPdf(unittest.TestCase):
 
     @patch('subprocess.run')
     def test_convert_to_pdf_soffice_conversion_error(self, mock_run):
-        """Test handling of conversion error"""
-        # Setup
         mock_run.side_effect = subprocess.CalledProcessError(1, "soffice")
         
         # Execute
@@ -97,8 +89,6 @@ class TestUtilsPdf(unittest.TestCase):
         mock_run.assert_called_once()
 
     def test_convert_to_pdf_traditional_success(self):
-        """Test successful conversion using docx2pdf"""
-        # Setup
         self.mock_convert.return_value = None
         
         # Execute
@@ -111,8 +101,6 @@ class TestUtilsPdf(unittest.TestCase):
         )
 
     def test_convert_to_pdf_traditional_error(self):
-        """Test handling of conversion error in traditional method"""
-        # Setup
         self.mock_convert.side_effect = Exception("Conversion failed")
         
         # Execute and verify
