@@ -77,9 +77,9 @@ jobs:
       - name: Mask email input explicitly safe and recommended
         if: github.event.inputs.leverancierEmail != ''
         run: |
-          email="${{ github.event.inputs.leverancierEmail }}"
-          echo "::add-mask::$email"
-          echo "MASKED_LEVERANCIER_EMAIL=$email" >> $GITHUB_ENV
+          echo "::add-mask::$MASKED_LEVERANCIER_EMAIL"
+        env:
+          MASKED_LEVERANCIER_EMAIL: ${{ github.event.inputs.leverancierEmail }}
 
       - name: Trim spaces from email input
         id: trim_email
