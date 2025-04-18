@@ -16,11 +16,12 @@ def set_custom_properties(extracted_dir, provider_replacements, customer_replace
     property_names = load_custom_property_names_map()
     # Iterate once for provider (there should only 1 provider!)
     for key_prov, value_prov in provider_replacements.items():
-        set_custom_property(extracted_dir, property_names[key_prov], value_prov)
+        if key_prov != "LeverancierEmail":
+            set_custom_property(extracted_dir, property_names[key_prov], value_prov)
 
-    # Customer replacements (the part you asked about previously)
     for key_cust, value_cust in customer_replacements.items():
-        set_custom_property(extracted_dir, property_names[key_cust], value_cust)
+        if (key_cust != "LeverancierEmail") and (key_cust != "UploadDropbox"):
+            set_custom_property(extracted_dir, property_names[key_cust], value_cust)
 
 def set_custom_property(extracted_dir, property_name, property_value):
     custom_props_path = os.path.join(extracted_dir, 'docProps', 'custom.xml')
@@ -52,7 +53,7 @@ def set_custom_property(extracted_dir, property_name, property_value):
         vt_elem.text = str(property_value)
 
     tree.write(custom_props_path, encoding='UTF-8', xml_declaration=True, standalone=True)
-    logging.debug(f"📝📋🔤 '{property_name}' successfully replaced by '{property_value}' in properties docx structure")
+    logging.debug(f"📝📋🔤 '{property_name}' successfully replaced by 'value omitted for privacy' in properties docx structure")
 
 def extract_docx(docx_path):
     extracted_dir = tempfile.mkdtemp()
@@ -73,7 +74,7 @@ def repack_docx(extracted_dir, base_document):
                 docx_zip.write(abs_name, arc_name)
     shutil.rmtree(extracted_dir)
 
-    logging.debug(f"🗜️⬅️ docx successfully repacked to '{save_as_docx}' after custom properties replacements docx structure")
+    logging.debug(f"🗜️⬅️ docx successfully repacked to 'file name omitted for privacy' after custom properties replacements docx structure")
 
 
 def update_custom_properties_docx_structure(customer_line, provider_line):
@@ -107,7 +108,7 @@ def replace_direct_text(document, provider_replacements, customer_replacements):
             for old, new in replacem.items():
                 if old in run.text:
                     run.text = run.text.replace(old, new)
-                    logging.debug(f"📝📋🔤 '{old}' successfully replaced by '{new}' in target file in paragraphs")
+                    logging.debug(f"📝📋🔤 '{old}' successfully replaced by 'new value omitted for privacy' in target file in paragraphs")
 
     # Replace in paragraphs
     for paragraph in document.paragraphs:

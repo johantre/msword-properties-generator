@@ -22,17 +22,17 @@ def _main(verbose=False, main_args=None):
     for index, (key, line) in enumerate(combined_replacements.items()):
         if index == 0:
             # Special handling for the first item
-            logging.debug(f"Running over combined_replacements. First item: {key} -> {line}")
+            logging.debug(f"Running over combined_replacements. First item: {key} -> line omitted for privacy")
             if isinstance(line, dict):
                 provider_line = line
                 base_document_to_save = ""
                 for key_prov, value_prov in provider_line.items():
-                    logging.debug(f"Provider: {key_prov}: {value_prov}")
+                    logging.debug(f"Provider: {key_prov}: value omitted for privacy")
             else:
                 logging.warning(f"No provider dict found in line: {line[index]}")
         else:
             # Handling for all other items
-            logging.debug(f"Running over combined_replacements. Item {index}: {key} -> {line}")
+            logging.debug(f"Running over combined_replacements. Item {index}: {key} -> line omitted for privacy")
             if isinstance(line, dict):
                 customer_line = line
                 # For each customer row ...
@@ -41,7 +41,7 @@ def _main(verbose=False, main_args=None):
                 convert_to_pdf(base_document_to_save)
 
                 for key_cust, value_cust in customer_line.items():
-                    logging.debug(f"Customer(s): {key_cust}: {value_cust}")
+                    logging.debug(f"Customer(s): {key_cust}: 'name omitted for privacy'")
             else:
                 logging.warning(f"No customer dict found in line: {line[index]}")
 
