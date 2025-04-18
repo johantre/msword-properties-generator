@@ -26,7 +26,7 @@ def convert_to_pdf(base_document):
             '--outdir',
             abs_output_path,
             convert_from_docx
-        ], check=True)
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         logging.debug("📄ℹ️ Word file: " + "docx name omitted for privacy" + " with absolute path: " + "docx name omitted for privacy")
         logging.debug("📄ℹ️ Successfully converted to Pdf file: " + "pdf name omitted for privacy" + " with absolute path: " + "pdf name omitted for privacy")
         files = os.listdir(abs_output_path)
