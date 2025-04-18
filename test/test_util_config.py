@@ -11,7 +11,7 @@ src_path = str(Path(__file__).resolve().parent.parent / 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-from msword_properties_generator.utils.util_config import load_config_values, get_property_value, config
+from msword_properties_generator.utils.util_config import load_config_values, config
 
 class TestUtilConfig(unittest.TestCase):
     def setUp(self):
@@ -82,12 +82,10 @@ path.dropbox.destination.folder=/test/dropbox
         self.assertEqual(result['dropbox']['dropbox_destination_folder'], '/test/dropbox')
 
     def test_load_config_values_file_not_found(self):
-        """Test handling of missing properties file"""
         with self.assertRaises(SystemExit):
             load_config_values(Path(self.test_dir) / "nonexistent.properties")
 
     def test_load_config_values_invalid_properties(self):
-        """Test handling of invalid properties file"""
         # Write properties content with one missing critical property
         with open(self.test_properties_path, 'w') as f:
             f.write("""
@@ -110,7 +108,6 @@ path.dropbox.destination.folder=/test/dropbox
             load_config_values(self.test_properties_path)
 
     def test_global_config_loaded(self):
-        """Test that global config is loaded when module is imported"""
         self.assertIsNotNone(config)
         self.assertIn('paths', config)
         self.assertIn('namespaces', config)

@@ -76,7 +76,7 @@ def download_image(url: str, destination: str):
         raise e
 
 def get_google_drive_service():
-    # Build credential explicitly from provided refresh token and client details
+    # Build credential from provided refresh token and client details
     google_creds = Credentials(
         token=None,  # initially None, SDK gets this auto-refreshed by refresh token
         refresh_token=GOOGLE_REFRESH_TOKEN,
@@ -86,9 +86,9 @@ def get_google_drive_service():
     )
     logging.debug(f"☁️✅ Google Drive service initialized with refresh token")
     try:
-        google_creds.refresh(Request())  # explicitly auto-refresh if access token required
+        google_creds.refresh(Request())  # auto-refresh if access token required
     except Exception as e:
-        logging.error("☁️🔴 Error explicitly when refreshing Google credentials:", e)
+        logging.error("☁️🔴 Error when refreshing Google credentials:", e)
         exit(1)
 
     return build('drive', 'v3', credentials=google_creds)
