@@ -26,13 +26,13 @@ def convert_to_pdf(base_document):
             output_path,
             convert_from_docx
         ], check=True)
-        logging.debug("📄ℹ️ Word file: " + convert_from_docx + " with absolute path: " + abs_full_path_convert_from_docx)
-        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + save_as_pdf + " with absolute path: " + abs_full_path_save_as_pdf)
+        logging.debug("📄ℹ️ Word file: " + "file name omitted for privacy" + " with absolute path: " + "file name omitted for privacy")
+        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + "file name omitted for privacy" + " with absolute path: " + "file name omitted for privacy")
         files = os.listdir(abs_output_path)
         logging.debug(f"📂 Explicitly listing files from '{output_path}':")
         if files:
             for file in files:
-                logging.debug(f"    - {file}")
+                logging.debug(f"    - file name omitted for privacy")
         else:
             logging.warning(f"📭 Directory '{output_path}' explicitly exists but is empty!")
     except FileNotFoundError:
@@ -48,11 +48,11 @@ def convert_to_pdf_traditional(base_document):
     try:
         # Convert the output
         convert(save_as_docx, save_as_pdf)
-        logging.debug("📄ℹ️ Word file: " + save_as_docx)
-        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + save_as_pdf)
+        logging.debug("📄ℹ️ Word file: " + "file name omitted for privacy")
+        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + "file name omitted for privacy")
     except Exception as e:
-        logging.error(f"📄❌ Failed to convert {save_as_docx} to PDF: {e}")
+        logging.error(f"📄❌ Failed to convert 'file name omitted for privacy' to PDF: {e}")
         if os.path.exists(save_as_docx):  # to avoid stale files
-            logging.debug(f"📄ℹ️ Cleaning up incomplete conversion file {save_as_docx}")
+            logging.debug(f"📄ℹ️ Cleaning up incomplete conversion file 'file name omitted for privacy'")
             os.remove(save_as_docx)
         raise
