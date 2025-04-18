@@ -1,4 +1,4 @@
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch
 from docx.shared import Inches
 from pathlib import Path
 from docx import Document
@@ -18,9 +18,9 @@ if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
 from msword_properties_generator.utils.utils_docx import (
-    set_custom_properties, set_custom_property, extract_docx, repack_docx,
-    update_custom_properties_docx_structure, set_custom_properties_docx,
-    update_custom_properties_docx, replace_direct_text, replace_images_by_alt_text,
+    extract_docx, repack_docx,
+    update_custom_properties_docx_structure,
+    replace_direct_text,
     replace_images, open_document, save_document, build_base_document_to_save,
     load_custom_property_names_map
 )
@@ -93,14 +93,12 @@ class TestUtilsDocx(unittest.TestCase):
         self.config_patch.stop()
 
     def test_load_custom_property_names_map(self):
-        """Test loading of custom property names map"""
         property_map = load_custom_property_names_map()
         self.assertIsInstance(property_map, dict)
         self.assertEqual(property_map["LeverancierNaam"], "Leverancier Naam")
         self.assertEqual(property_map["KlantNaam"], "Klant Naam")
 
     def test_extract_docx(self):
-        """Test extraction of docx file"""
         extracted_dir = extract_docx(self.test_docx)
         self.assertTrue(os.path.exists(extracted_dir))
         self.assertTrue(os.path.isdir(extracted_dir))
@@ -108,7 +106,6 @@ class TestUtilsDocx(unittest.TestCase):
         shutil.rmtree(extracted_dir)
 
     def test_repack_docx(self):
-        """Test repacking of docx file"""
         # First extract
         extracted_dir = extract_docx(self.test_docx)
         output_path = os.path.join(self.test_dir, "output.docx")
@@ -122,7 +119,6 @@ class TestUtilsDocx(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_docx.get_image_and_decrypt_from_image_folder')
     def test_replace_images(self, mock_get_image):
-        """Test image replacement in document"""
         # Create a valid PNG image
         img = Image.new('RGB', (100, 100), color='red')
         img_byte_arr = io.BytesIO()
@@ -151,13 +147,11 @@ class TestUtilsDocx(unittest.TestCase):
         mock_get_image.assert_called_once_with("test@example.com")
 
     def test_build_base_document_to_save(self):
-        """Test building base document name"""
         base_doc = build_base_document_to_save(self.provider_replacements, self.customer_replacements)
         expected = f"{self.mock_config['paths']['base_output_document_path']} - Test Provider - Test Customer - Test Job - TEST-123"
         self.assertEqual(base_doc, expected)
 
     def test_replace_direct_text(self):
-        """Test text replacement in document"""
         doc = Document()
         
         # Add paragraph with run
@@ -181,7 +175,6 @@ class TestUtilsDocx(unittest.TestCase):
         self.assertEqual(doc.tables[0].cell(0, 0).text, "Test Test Provider")
 
     def test_open_and_save_document(self):
-        """Test opening and saving documents"""
         # Test opening
         doc = open_document(self.test_docx.replace(".docx", ""))
         self.assertTrue(hasattr(doc, 'save'))  # Check if it has Document-like behavior
@@ -193,7 +186,6 @@ class TestUtilsDocx(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_docx.get_image_and_decrypt_from_image_folder')
     def test_update_custom_properties_docx_structure(self, mock_get_image):
-        """Test updating custom properties in document structure"""
         # Create a valid PNG image
         img = Image.new('RGB', (100, 100), color='red')
         img_byte_arr = io.BytesIO()

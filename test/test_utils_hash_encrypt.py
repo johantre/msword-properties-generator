@@ -1,4 +1,4 @@
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 from cryptography.fernet import Fernet
 import unittest
 import tempfile
@@ -48,24 +48,20 @@ class TestUtilsHashEncrypt(unittest.TestCase):
         self.env_patcher.stop()
 
     def test_get_encryption_key(self):
-        """Test getting encryption key from environment"""
         key = get_encryption_key()
         self.assertIsInstance(key, str)
         self.assertTrue(len(key) > 0)
 
     def test_get_hash_key(self):
-        """Test getting hash key from environment"""
         key = get_hash_key()
         self.assertEqual(key, 'test_hash_key')
 
     def test_get_cipher_suite(self):
-        """Test getting cipher suite"""
         cipher_suite = get_cipher_suite()
         self.assertIsInstance(cipher_suite, Fernet)
 
     @patch('msword_properties_generator.utils.utils_hash_encrypt.logging')
     def test_encrypt_decrypt_string(self, mock_logging):
-        """Test encrypting and decrypting a string"""
         test_string = "test sensitive data"
         
         # Encrypt
@@ -81,7 +77,6 @@ class TestUtilsHashEncrypt(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_hash_encrypt.logging')
     def test_hash_string(self, mock_logging):
-        """Test hashing a string"""
         test_string = "test@example.com"
         hashed = hash(test_string)
         
@@ -92,7 +87,6 @@ class TestUtilsHashEncrypt(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_hash_encrypt.logging')
     def test_encrypt_image(self, mock_logging):
-        """Test encrypting an image file"""
         encrypt_image(self.test_input_file, self.test_output_file)
         
         self.assertTrue(os.path.exists(self.test_output_file))
@@ -101,7 +95,6 @@ class TestUtilsHashEncrypt(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_hash_encrypt.logging')
     def test_decrypt_image(self, mock_logging):
-        """Test decrypting an encrypted image file"""
         # First encrypt the image
         encrypt_image(self.test_input_file, self.test_output_file)
         
@@ -118,17 +111,14 @@ class TestUtilsHashEncrypt(unittest.TestCase):
         mock_logging.debug.assert_called_with("🔓 Sensitive image decrypted successfully. Processing further...")
 
     def test_encrypt_image_invalid_input(self):
-        """Test encrypting with non-existent input file"""
         with self.assertRaises(FileNotFoundError):
             encrypt_image('nonexistent.png', self.test_output_file)
 
     def test_decrypt_image_invalid_input(self):
-        """Test decrypting with non-existent input file"""
         with self.assertRaises(FileNotFoundError):
             decrypt_image('nonexistent.enc', self.test_decrypted_file)
 
     def test_decrypt_image_invalid_format(self):
-        """Test decrypting an invalid encrypted file"""
         # Create an invalid encrypted file
         with open(self.test_output_file, 'wb') as f:
             f.write(b'invalid encrypted data')

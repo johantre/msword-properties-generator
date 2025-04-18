@@ -54,10 +54,7 @@ class TestUtilsImage(unittest.TestCase):
     @patch('msword_properties_generator.utils.utils_image.git_stage_commit_push')
     @patch('msword_properties_generator.utils.utils_image.hash')
     @patch('msword_properties_generator.utils.utils_image.is_image_properly_decrypted')
-    def test_get_image_and_encrypt_to_image_folder_success(
-        self, mock_is_proper, mock_hash, mock_git_push, mock_encrypt, mock_download
-    ):
-        """Test successful image download, encryption and Git commit"""
+    def test_get_image_and_encrypt_to_image_folder_success(self, mock_is_proper, mock_hash, mock_git_push, mock_encrypt, mock_download):
         # Setup
         mock_hash.return_value = "hashed_email"
         mock_download.return_value = None
@@ -77,10 +74,7 @@ class TestUtilsImage(unittest.TestCase):
     @patch('msword_properties_generator.utils.utils_image.download_image')
     @patch('msword_properties_generator.utils.utils_image.hash')
     @patch('msword_properties_generator.utils.utils_image.logging')
-    def test_get_image_and_encrypt_to_image_folder_download_failure(
-        self, mock_logging, mock_hash, mock_download
-    ):
-        """Test handling of download failure"""
+    def test_get_image_and_encrypt_to_image_folder_download_failure(self, mock_logging, mock_hash, mock_download):
         # Setup
         mock_hash.return_value = "hashed_email"
         mock_download.side_effect = Exception("Download failed")
@@ -99,10 +93,7 @@ class TestUtilsImage(unittest.TestCase):
     @patch('msword_properties_generator.utils.utils_image.decrypt_image')
     @patch('msword_properties_generator.utils.utils_image.hash')
     @patch('msword_properties_generator.utils.utils_image.is_image_properly_decrypted')
-    def test_get_image_and_decrypt_from_image_folder_success(
-        self, mock_is_proper, mock_hash, mock_decrypt
-    ):
-        """Test successful image decryption"""
+    def test_get_image_and_decrypt_from_image_folder_success(self, mock_is_proper, mock_hash, mock_decrypt):
         # Setup
         mock_hash.return_value = "hashed_email"
         mock_decrypt.return_value = None
@@ -130,10 +121,7 @@ class TestUtilsImage(unittest.TestCase):
     @patch('msword_properties_generator.utils.utils_image.hash')
     @patch('msword_properties_generator.utils.utils_image.is_image_properly_decrypted')
     @patch('msword_properties_generator.utils.utils_image.logging')
-    def test_get_image_and_decrypt_from_image_folder_decryption_failure(
-        self, mock_logging, mock_is_proper, mock_hash, mock_decrypt
-    ):
-        """Test handling of decryption failure"""
+    def test_get_image_and_decrypt_from_image_folder_decryption_failure(self, mock_logging, mock_is_proper, mock_hash, mock_decrypt):
         # Setup
         mock_hash.return_value = "hashed_email"
         mock_decrypt.side_effect = Exception("Decryption failed")
@@ -154,10 +142,7 @@ class TestUtilsImage(unittest.TestCase):
 
     @patch('msword_properties_generator.utils.utils_image.hash')
     @patch('msword_properties_generator.utils.utils_image.git_stage_commit_push')
-    def test_remove_from_image_folder_git_commit_push_success(
-        self, mock_git_push, mock_hash
-    ):
-        """Test successful image removal and Git commit"""
+    def test_remove_from_image_folder_git_commit_push_success(self, mock_git_push, mock_hash):
         # Setup
         mock_hash.return_value = "hashed_email"
         mock_git_push.return_value = None
@@ -176,10 +161,7 @@ class TestUtilsImage(unittest.TestCase):
         self.assertEqual(result, self.temp_dir)
 
     @patch('msword_properties_generator.utils.utils_image.hash')
-    def test_remove_from_image_folder_git_commit_push_no_file(
-        self, mock_hash
-    ):
-        """Test removal when file doesn't exist"""
+    def test_remove_from_image_folder_git_commit_push_no_file(self, mock_hash):
         # Setup
         mock_hash.return_value = "nonexistent_file"
         
@@ -190,7 +172,6 @@ class TestUtilsImage(unittest.TestCase):
         self.assertEqual(result, self.temp_dir)
 
     def test_is_image_properly_decrypted_success(self):
-        """Test successful image validation"""
         # Execute
         result = is_image_properly_decrypted(self.test_image_path)
         
@@ -198,7 +179,6 @@ class TestUtilsImage(unittest.TestCase):
         self.assertTrue(result)
 
     def test_is_image_properly_decrypted_failure(self):
-        """Test image validation failure"""
         # Create an invalid image file
         invalid_image_path = os.path.join(self.temp_dir, "invalid.png")
         with open(invalid_image_path, 'w') as f:
