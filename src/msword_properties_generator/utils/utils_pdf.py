@@ -17,7 +17,6 @@ def convert_to_pdf(base_document):
     abs_output_path = os.path.abspath(output_path)
 
     try:
-        os.environ["SAL_LOG"] = "+ERROR"  #mute soffice logging
         subprocess.run([
             'soffice',
             '--headless',
@@ -27,7 +26,7 @@ def convert_to_pdf(base_document):
             '--outdir',
             output_path,
             convert_from_docx
-        ], check=True)
+        ], check=True, stdout=subprocess.DEVNULL)
         logging.debug("📄ℹ️ Word file: " + "docx name omitted for privacy" + " with absolute path: " + "docx name omitted for privacy")
         logging.debug("📄ℹ️ Successfully converted to Pdf file: " + "pdf name omitted for privacy" + " with absolute path: " + "pdf name omitted for privacy")
         files = os.listdir(abs_output_path)
