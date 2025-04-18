@@ -104,6 +104,7 @@ jobs:
 
       - name: Run Python script to generated, send email and upload to Dropbox
         env:
+          SAL_LOG: +ERROR
           LOG_LEVEL: ${{ env.LOG_LEVEL }}
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
