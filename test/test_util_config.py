@@ -26,12 +26,6 @@ path.output=output
 base.word.template=template
 db.file=test.db
 path.resource.image_signature_folder=signatures
-base.excel.offers.log=offers_log.xlsx
-base.excel.offers.log.sheetname=Log
-base.excel.offers.provider=providers.xlsx
-base.excel.offers.provider.sheetname=Providers
-base.excel.offers.customer=customers.xlsx
-base.excel.offers.customer.sheetname=Customers
 base.word.namespace.cp=http://schemas.openxmlformats.org/package/2006/metadata/core-properties
 base.word.namespace.vt=http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes
 base.word.template.image_alt_text_left=Left Image
@@ -66,13 +60,7 @@ path.dropbox.destination.folder=/test/dropbox
         self.assertEqual(str(result['paths']['image_signature_folder']), str(Path('/test/root/resources/signatures')))
         self.assertEqual(str(result['paths']['word_template_path']), str(Path('/test/root/resources/template.docx')))
         self.assertEqual(str(result['paths']['base_output_document_path']), str(Path('/test/root/output/template')))
-        self.assertEqual(str(result['paths']['xls_offers_log']), str(Path('/test/root/resources/offers_log.xlsx')))
-        self.assertEqual(result['paths']['xls_offers_log_sheetname'], 'Log')
-        self.assertEqual(str(result['paths']['xls_offers_provider']), str(Path('/test/root/resources/providers.xlsx')))
-        self.assertEqual(result['paths']['xls_offers_provider_sheetname'], 'Providers')
-        self.assertEqual(str(result['paths']['xls_offers_customer']), str(Path('/test/root/resources/customers.xlsx')))
-        self.assertEqual(result['paths']['xls_offers_customer_sheetname'], 'Customers')
-        
+
         # Test namespaces configuration
         self.assertIn('namespaces', result)
         self.assertEqual(result['namespaces']['cp'], 'http://schemas.openxmlformats.org/package/2006/metadata/core-properties')
@@ -108,12 +96,6 @@ path.output=output
 base.word.template=template
 db.file=test.db
 path.resource.image_signature_folder=signatures
-base.excel.offers.log=offers_log.xlsx
-base.excel.offers.log.sheetname=Log
-base.excel.offers.provider=providers.xlsx
-base.excel.offers.provider.sheetname=Providers
-base.excel.offers.customer=customers.xlsx
-base.excel.offers.customer.sheetname=Customers
 base.word.namespace.cp=http://schemas.openxmlformats.org/package/2006/metadata/core-properties
 base.word.namespace.vt=http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes
 base.word.template.image_alt_text_left=Left Image

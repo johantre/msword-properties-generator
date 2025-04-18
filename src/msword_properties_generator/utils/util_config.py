@@ -31,12 +31,6 @@ def load_config_values(properties_path=PROD_PROPERTIES_FILE):
     template_name = get_property_value(configs, "base.word.template")
     db_file = get_property_value(configs, "db.file")
     image_signature_folder = get_property_value(configs, "path.resource.image_signature_folder")
-    xls_offers_log = get_property_value(configs, "base.excel.offers.log")
-    xls_offers_log_sheetname = get_property_value(configs, "base.excel.offers.log.sheetname")
-    xls_offers_provider = get_property_value(configs, "base.excel.offers.provider")
-    xls_offers_provider_sheetname = get_property_value(configs, "base.excel.offers.provider.sheetname")
-    xls_offers_customer = get_property_value(configs, "base.excel.offers.customer")
-    xls_offers_customer_sheetname = get_property_value(configs, "base.excel.offers.customer.sheetname")
     namespace_cp = get_property_value(configs, "base.word.namespace.cp")
     namespace_vt = get_property_value(configs, "base.word.namespace.vt")
     alt_text_left = get_property_value(configs, "base.word.template.image_alt_text_left")
@@ -54,12 +48,6 @@ def load_config_values(properties_path=PROD_PROPERTIES_FILE):
             "image_signature_folder": PROJECT_ROOT / resource_path / image_signature_folder,
             "word_template_path": PROJECT_ROOT / resource_path / f"{template_name}.docx",
             "base_output_document_path": PROJECT_ROOT / output_path / template_name,
-            "xls_offers_log": PROJECT_ROOT / resource_path / xls_offers_log,
-            "xls_offers_log_sheetname": xls_offers_log_sheetname,
-            "xls_offers_provider": PROJECT_ROOT / resource_path / xls_offers_provider,
-            "xls_offers_provider_sheetname": xls_offers_provider_sheetname,
-            "xls_offers_customer": PROJECT_ROOT / resource_path / xls_offers_customer,
-            "xls_offers_customer_sheetname": xls_offers_customer_sheetname,
             "base_document_name": template_name
         },
         "namespaces": {
