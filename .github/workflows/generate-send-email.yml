@@ -84,7 +84,7 @@ jobs:
       - name: Trim spaces from email input
         id: trim_email
         run: |
-          email="${{ env.MASKED_LEVERANCIER_EMAIL }}"
+          email="${{ github.event.inputs.leverancierEmail }}"
           trimmed_email=$(echo "$email" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           echo "trimmed_email=$trimmed_email" >> $GITHUB_OUTPUT
         shell: bash
