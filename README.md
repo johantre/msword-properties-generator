@@ -17,9 +17,10 @@ At the moment of writing, depending of your choice, after the above actions this
 - Provider data *will* be stored in this Repo, encrypted to protect your privacy.
 
 ## Resources 
-[offers_provider.db](res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key. \
-[Recht om te vertegenwoordigen.docx](res/Recht%20om%20te%20vertegenwoordigen.docx) MSWord template containing the Custom properties.\
-[prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations.
+[res/Recht om te vertegenwoordigen.docx](res/Recht%20om%20te%20vertegenwoordigen.docx) MSWord template containing the Custom properties.\
+[res/offers_provider.db](res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key. \
+[res/images folder](res/images/) Where all encrypted signature images are stored. \
+[env/prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations. 
 
 ## Future enhancements
 - Provide a proper smtp server
