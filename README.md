@@ -23,8 +23,8 @@ At the moment of writing, depending of your choice, after the above actions this
 [env/prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations. 
 
 ## Future enhancements
-- Provide a proper smtp server
-- Some code cleanup 
+- some small code cleanups
+- your suggestions are welcome!
 
 ## Usage
 In order to have proper generated documents we need Provider and Customer data. Below how to do that.
