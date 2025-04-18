@@ -17,6 +17,7 @@ def convert_to_pdf(base_document):
     abs_output_path = os.path.abspath(output_path)
 
     try:
+        os.environ["SAL_LOG"] = "+ERROR"  #mute soffice logging
         subprocess.run([
             'soffice',
             '--headless',
