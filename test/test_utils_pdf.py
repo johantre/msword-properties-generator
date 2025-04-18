@@ -60,11 +60,12 @@ class TestUtilsPdf(unittest.TestCase):
         args = mock_run.call_args[0][0]
         self.assertEqual(args[0], 'soffice')
         self.assertEqual(args[1], '--headless')
-        self.assertEqual(args[2], '--convert-to')
-        self.assertEqual(args[3], 'pdf')
-        self.assertEqual(args[4], '--outdir')
-        self.assertEqual(args[5], self.test_dir)
-        self.assertTrue(args[6].endswith('test.docx'))
+        self.assertEqual(args[2], '--nologo')
+        self.assertEqual(args[3], '--convert-to')
+        self.assertEqual(args[4], 'pdf')
+        self.assertEqual(args[5], '--outdir')
+        self.assertEqual(args[6], self.test_dir)
+        self.assertTrue(args[7].endswith('test.docx'))
 
     @patch('subprocess.run')
     @patch('logging.error')

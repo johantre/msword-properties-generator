@@ -119,7 +119,7 @@ jobs:
             CMD="python3 src/msword_properties_generator/main/generate_offer_documents.py --klantNaam '${{ github.event.inputs.klantNaam }}' --klantJobTitle '${{ github.event.inputs.klantJobTitle }}' --klantJobReference '${{ github.event.inputs.klantJobReference }}' --leverancierEmail '${{ github.event.inputs.leverancierEmail }}' --uploadDropbox '${{ github.event.inputs.uploadDropbox }}'"
           else
             echo "No optional args detected, standard flow followed."
-            CMD="python3 src/msword_properties_generator/main/generate_offer_documents.py "
+            CMD="python3 src/msword_properties_generator/main/generate_offer_documents.py"
           fi
           echo "::debug::Executing command: $CMD"
           eval $CMD
