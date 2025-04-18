@@ -20,14 +20,15 @@ def convert_to_pdf(base_document):
         subprocess.run([
             'soffice',
             '--headless',
+            '--nologo',
             '--convert-to',
             'pdf',
             '--outdir',
-            output_path,
+            abs_output_path,
             convert_from_docx
         ], check=True)
-        logging.debug("📄ℹ️ Word file: " + "file name omitted for privacy" + " with absolute path: " + "file name omitted for privacy")
-        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + "file name omitted for privacy" + " with absolute path: " + "file name omitted for privacy")
+        logging.debug("📄ℹ️ Word file: " + "docx name omitted for privacy" + " with absolute path: " + "docx name omitted for privacy")
+        logging.debug("📄ℹ️ Successfully converted to Pdf file: " + "pdf name omitted for privacy" + " with absolute path: " + "pdf name omitted for privacy")
         files = os.listdir(abs_output_path)
         logging.debug(f"📂 Explicitly listing files from '{output_path}':")
         if files:
