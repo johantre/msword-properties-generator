@@ -50,12 +50,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-apt-
 
-      - name: Ensure cache directory exists
-        run: mkdir -p /tmp/.buildx-cache
-
-      - name: Debug cache path
-        run: ls -la /tmp/.buildx-cache || echo "Cache directory does not exist"
-
       - name: Set up Docker
         run: |
           apt-get update
