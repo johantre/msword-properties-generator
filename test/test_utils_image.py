@@ -2,6 +2,7 @@ from unittest.mock import patch
 from PIL import Image
 import unittest
 import tempfile
+import shutil
 import os
 
 
@@ -42,9 +43,8 @@ class TestUtilsImage(unittest.TestCase):
     def tearDown(self):
         # Clean up temporary files
         if os.path.exists(self.test_image_path):
-            os.remove(self.test_image_path)
-        os.rmdir(self.temp_dir)
-        
+            shutil.rmtree(self.temp_dir)
+
         # Stop all patchers
         self.env_patcher.stop()
         self.config_patcher.stop()
