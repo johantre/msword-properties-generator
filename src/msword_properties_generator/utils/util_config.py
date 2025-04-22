@@ -1,6 +1,7 @@
 from jproperties import Properties
 from pathlib import Path
 import logging
+import os
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -28,7 +29,7 @@ def load_config_values(properties_path=PROD_PROPERTIES_FILE):
     # Get all required properties
     resource_path = get_property_value(configs, "path.resource")
     output_path = get_property_value(configs, "path.output")
-    template_name = get_property_value(configs, "base.word.template")
+    base_word_template = get_property_value(configs, "base.word.template")
     db_file = get_property_value(configs, "db.file")
     image_signature_folder = get_property_value(configs, "path.resource.image_signature_folder")
     namespace_cp = get_property_value(configs, "base.word.namespace.cp")
@@ -39,16 +40,20 @@ def load_config_values(properties_path=PROD_PROPERTIES_FILE):
     mail_smtp_server = get_property_value(configs, "mail.smtp_server")
     mail_sender_email = get_property_value(configs, "mail.sender_email")
     dropbox_destination_folder = get_property_value(configs, "path.dropbox.destination.folder")
+    private_assets_folder =  get_property_value(configs, "path.repo.root.msword_private_assets")
+    properties_generator_folder =  get_property_value(configs, "path.repo.root.msword_properties_generator")
 
     return {
         "paths": {
-            "db_path": PROJECT_ROOT / resource_path / db_file,
+            "db_path": os.path.join(resource_path, db_file),
             "resource_path": resource_path,
             "output_path": output_path,
-            "image_signature_folder": PROJECT_ROOT / resource_path / image_signature_folder,
-            "word_template_path": PROJECT_ROOT / resource_path / f"{template_name}.docx",
-            "base_output_document_path": PROJECT_ROOT / output_path / template_name,
-            "base_document_name": template_name
+            "image_signature_folder": os.path.join(resource_path, image_signature_folder),
+            "word_template_path": PROJECT_ROOT / resource_path / f"{base_word_template}.docx",
+            "base_output_document_path": PROJECT_ROOT / output_path / base_word_template,
+            "base_document_name": base_word_template,
+            "private_assets_folder": private_assets_folder,
+            "properties_generator_folder": properties_generator_folder
         },
         "namespaces": {
             'cp': namespace_cp,

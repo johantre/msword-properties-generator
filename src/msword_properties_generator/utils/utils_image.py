@@ -1,6 +1,6 @@
 from msword_properties_generator.utils.util_config import config  # importing centralized config
 from msword_properties_generator.utils.utils_hash_encrypt import hash, encrypt_image, decrypt_image
-from msword_properties_generator.utils.utils_git import git_stage_commit_push, get_repo_root
+from msword_properties_generator.utils.utils_git import git_stage_commit_push, get_private_assets_repo
 from msword_properties_generator.utils.utils_download import download_image
 from typing import cast
 from PIL import Image
@@ -36,11 +36,12 @@ def get_image_and_encrypt_to_image_folder():
         exit(1)  # Exit with non-zero status code to indicate failure
 
     # construct encrypted path
-    target_hashed_image_path = os.path.join(config["paths"]["image_signature_folder"], hashed_leverancier_email)
+    repo_private_path = get_private_assets_repo().working_tree_dir
+    target_hashed_image_path = os.path.join(repo_private_path, config["paths"]["image_signature_folder"], hashed_leverancier_email)
     encrypt_image(temp_download_image_path, target_hashed_image_path)
 
     # Convert absolute path to relative path
-    repo_path = get_repo_root()
+    repo_path = get_private_assets_repo().working_tree_dir
     if os.path.isabs(target_hashed_image_path):
         target_hashed_image_path = os.path.relpath(cast(str, target_hashed_image_path), repo_path)
 
@@ -48,7 +49,7 @@ def get_image_and_encrypt_to_image_folder():
 
 def get_image_and_decrypt_from_image_folder(leverancier_email: str):
     # first construct encrypted path
-    image_encryption_path = os.path.join(config["paths"]["image_signature_folder"], hash(leverancier_email))
+    image_encryption_path = os.path.join(get_private_assets_repo().working_tree_dir, config["paths"]["image_signature_folder"], hash(leverancier_email))
 
     # construct decrypt temp folder
     temp_decrypted_dir = tempfile.mkdtemp()
@@ -67,13 +68,13 @@ def remove_from_image_folder_git_commit_push():
     # Construct the path to the encrypted image
     hashed_leverancier_email = hash(os.getenv('INPUT_LEVERANCIEREMAIL'))
     image_encrypted_folder = config["paths"]["image_signature_folder"]
-    image_encryption_path = os.path.join(image_encrypted_folder, hashed_leverancier_email)
+    image_encryption_path = os.path.join(get_private_assets_repo().working_tree_dir, image_encrypted_folder, hashed_leverancier_email)
 
     if os.path.exists(image_encryption_path):
         # Explicitly remove the file from filesystem only (no git here!)
         os.remove(image_encryption_path)
         # Convert absolute path to relative path
-        repo_path = get_repo_root()
+        repo_path = get_private_assets_repo().working_tree_dir
         rel_image_encryption_path = image_encryption_path
         if os.path.isabs(image_encryption_path):
             rel_image_encryption_path = os.path.relpath(cast(str, image_encryption_path), repo_path)

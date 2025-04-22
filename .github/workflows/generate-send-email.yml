@@ -40,7 +40,14 @@ jobs:
       image: ghcr.io/johantre/github-runner-env:latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout executing Repository
+        uses: actions/checkout@v3
+
+      - name: Checkout msword-private-assets
+        uses: actions/checkout@v3
+        with:
+          repository: johantre/msword-private-assets
+          path: msword-private-assets
 
       - name: Cache Docker installation
         uses: actions/cache@v3

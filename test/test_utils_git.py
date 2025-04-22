@@ -28,13 +28,16 @@ class TestUtilsGit(unittest.TestCase):
         # Stop all patchers
         self.logging_patcher.stop()
 
+    @patch("msword_properties_generator.utils.utils_git.get_private_assets_repo")
     @patch('msword_properties_generator.utils.utils_git.get_repo_root')
     @patch('msword_properties_generator.utils.utils_git.Repo')
-    def test_git_stage_commit_push_new_file(self, mock_repo_class, mock_get_repo_root):
+    def test_git_stage_commit_push_new_file(self, mock_repo_class, mock_get_repo_root, get_private_assets_repo):
         mock_get_repo_root.return_value = self.repo_root
         mock_repo = MagicMock()
+        mock_repo.working_tree_dir = self.repo_root
         mock_repo_class.return_value = mock_repo
-        
+        get_private_assets_repo.return_value = mock_repo
+
         # Mock the remote and push
         mock_remote = MagicMock()
         mock_repo.remote.return_value = mock_remote
@@ -48,22 +51,25 @@ class TestUtilsGit(unittest.TestCase):
         git_stage_commit_push(self.test_file, "Test commit message")
         
         # Verify the calls
-        mock_repo.index.add.assert_called_once_with(['test.txt'])
+        mock_repo.index.add.assert_called_once_with([self.test_file])
         mock_repo.index.commit.assert_called_once()
         mock_remote.push.assert_called_once()
         
         # Verify logging
-        self.mock_logging.debug.assert_any_call("📥 File staged explicitly for addition/update: test.txt")
-        self.mock_logging.debug.assert_any_call("📝 Committed to Git of: test.txt w commit message: 'Test commit message'")
-        self.mock_logging.info.assert_called_with("🚀 Git push successful: test.txt")
+        self.mock_logging.debug.assert_any_call(f"📥 File staged explicitly for addition/update: {self.test_file}")
+        self.mock_logging.debug.assert_any_call(f"📝 Committed to Git of: {self.test_file} w commit message: 'Test commit message'")
+        self.mock_logging.info.assert_called_with(f"🚀 Git push successful: {self.test_file}")
 
+    @patch("msword_properties_generator.utils.utils_git.get_private_assets_repo")
     @patch('msword_properties_generator.utils.utils_git.get_repo_root')
     @patch('msword_properties_generator.utils.utils_git.Repo')
-    def test_git_stage_commit_push_delete_file(self, mock_repo_class, mock_get_repo_root):
+    def test_git_stage_commit_push_delete_file(self, mock_repo_class, mock_get_repo_root, get_private_assets_repo):
         mock_get_repo_root.return_value = self.repo_root
         mock_repo = MagicMock()
+        mock_repo.working_tree_dir = self.repo_root
         mock_repo_class.return_value = mock_repo
-        
+        get_private_assets_repo.return_value = mock_repo
+
         # Mock the remote and push
         mock_remote = MagicMock()
         mock_repo.remote.return_value = mock_remote
@@ -80,14 +86,14 @@ class TestUtilsGit(unittest.TestCase):
         git_stage_commit_push(self.test_file, "Test delete commit")
         
         # Verify the calls
-        mock_repo.git.rm.assert_called_once_with('test.txt')
+        mock_repo.git.rm.assert_called_once_with(self.test_file)
         mock_repo.index.commit.assert_called_once()
         mock_remote.push.assert_called_once()
         
         # Verify logging
-        self.mock_logging.debug.assert_any_call("📥 File staged explicitly for removal: test.txt")
-        self.mock_logging.debug.assert_any_call("📝 Committed to Git of: test.txt w commit message: 'Test delete commit'")
-        self.mock_logging.info.assert_called_with("🚀 Git push successful: test.txt")
+        self.mock_logging.debug.assert_any_call(f"📥 File staged explicitly for removal: {self.test_file}")
+        self.mock_logging.debug.assert_any_call(f"📝 Committed to Git of: {self.test_file} w commit message: 'Test delete commit'")
+        self.mock_logging.info.assert_called_with(f"🚀 Git push successful: {self.test_file}")
 
     @patch('msword_properties_generator.utils.utils_git.get_repo_root')
     @patch('msword_properties_generator.utils.utils_git.Repo')
@@ -95,7 +101,7 @@ class TestUtilsGit(unittest.TestCase):
         mock_get_repo_root.return_value = self.repo_root
         mock_repo = MagicMock()
         mock_repo_class.return_value = mock_repo
-        
+
         # Mock the remote and push with error
         mock_remote = MagicMock()
         mock_repo.remote.return_value = mock_remote
@@ -121,7 +127,7 @@ class TestUtilsGit(unittest.TestCase):
         mock_get_repo_root.return_value = self.repo_root
         mock_repo = MagicMock()
         mock_repo_class.return_value = mock_repo
-        
+
         # Mock Git command error
         mock_repo.index.add.side_effect = exc.GitCommandError('git', 'add failed')
         

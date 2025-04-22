@@ -34,8 +34,10 @@ mail.smtp_port=587
 mail.smtp_server=smtp.example.com
 mail.sender_email=sender@example.com
 path.dropbox.destination.folder=/test/dropbox
+path.repo.root.msword_private_assets=msword-private-assets
+path.repo.root.msword_properties_generator=msword-properties-generator
 """
-        
+
         # Write sample properties to temporary file
         with open(self.test_properties_path, 'w') as f:
             f.write(self.sample_properties)
@@ -56,10 +58,12 @@ path.dropbox.destination.folder=/test/dropbox
         self.assertEqual(result['paths']['resource_path'], 'resources')
         self.assertEqual(result['paths']['output_path'], 'output')
         self.assertEqual(result['paths']['base_document_name'], 'template')
-        self.assertEqual(str(result['paths']['db_path']), str(Path('/test/root/resources/test.db')))
-        self.assertEqual(str(result['paths']['image_signature_folder']), str(Path('/test/root/resources/signatures')))
+        self.assertEqual(str(result['paths']['db_path']), str(Path('resources/test.db')))
+        self.assertEqual(str(result['paths']['image_signature_folder']), str(Path('resources/signatures')))
         self.assertEqual(str(result['paths']['word_template_path']), str(Path('/test/root/resources/template.docx')))
         self.assertEqual(str(result['paths']['base_output_document_path']), str(Path('/test/root/output/template')))
+        self.assertEqual(str(result['paths']['private_assets_folder']), str(Path('msword-private-assets')))
+        self.assertEqual(str(result['paths']['properties_generator_folder']), str(Path('msword-properties-generator')))
 
         # Test namespaces configuration
         self.assertIn('namespaces', result)
@@ -102,6 +106,8 @@ mail.smtp_port=587
 mail.smtp_server=smtp.example.com
 mail.sender_email=sender@example.com
 path.dropbox.destination.folder=/test/dropbox
+path.repo.root.msword_private_assets=msword-private-assets
+path.repo.root.msword_properties_generator=msword-properties-generator
 """)
         
         with self.assertRaises(SystemExit):

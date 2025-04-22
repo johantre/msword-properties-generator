@@ -187,11 +187,13 @@ class TestUtilsDB(unittest.TestCase):
                 )
             mock_conn.close()
 
-    def test_close_db_commit_push(self):
+    @patch("msword_properties_generator.data.utils_db.get_private_assets_path")
+    def test_close_db_commit_push(self, get_private_assets_path):
         with patch.dict('os.environ', self.test_env):
             # Mock the database connection
             mock_conn = MagicMock()
-            
+            get_private_assets_path.return_value = MagicMock()
+
             # Mock git functions
             with patch('msword_properties_generator.data.utils_db.git_stage_commit_push') as mock_git_push:
                 with patch('msword_properties_generator.data.utils_db.get_repo_root', return_value='/mock/repo/root'):

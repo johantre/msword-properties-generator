@@ -1,15 +1,29 @@
+from msword_properties_generator.utils.util_config import config  # importing centralized config
 from git import Repo, Actor, exc
 import logging
 import git
 import os
 
 
+def get_repo_root():
+    repo = git.Repo('.', search_parent_directories=True)
+    repo_root = repo.git.rev_parse("--show-toplevel")
+    return repo_root
+
+def get_private_assets_repo():
+    current_repo_root = get_repo_root()
+    parent_dir = os.path.dirname(current_repo_root)
+    private_assets_folder = str(config["paths"]["private_assets_folder"])
+    private_repo_path = os.path.join(parent_dir, private_assets_folder)
+    return Repo(private_repo_path)
+
 def git_stage_commit_push(file_path: str, commit_message: str = "Automated commit and push"):
-    repo_path = get_repo_root()
-    repo = Repo(repo_path)
+    repo = get_private_assets_repo()
+    repo_path = repo.working_tree_dir
     bot_author = Actor("github-actions[bot]", "github-actions[bot]@users.noreply.github.com")
 
-    relative_file_path = os.path.relpath(file_path, repo_path)
+    # relative_file_path = os.path.relpath(file_path, repo_path)
+    relative_file_path = file_path
 
     try:
         full_path = os.path.join(repo_path, relative_file_path)
@@ -42,7 +56,3 @@ def git_stage_commit_push(file_path: str, commit_message: str = "Automated commi
         logging.error(f"❌ unexpected error: {str(e)}")
         raise
 
-def get_repo_root():
-    repo = git.Repo('.', search_parent_directories=True)
-    repo_root = repo.git.rev_parse("--show-toplevel")
-    return repo_root

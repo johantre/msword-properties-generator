@@ -14,33 +14,40 @@ jobs:
         python-version: ['3.12.6']
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-        pip install -e .
-    
-    - name: Run tests with coverage
-      run: |
-        pytest --cov=msword_properties_generator --cov-report=html --cov-report=xml test/
-    
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report-python-${{ matrix.python-version }}
-        path: htmlcov/
-    
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.xml
-        fail_ci_if_error: true 
+      - name: Checkout executing Repository
+        uses: actions/checkout@v3
+
+      - name: Checkout msword-private-assets
+        uses: actions/checkout@v3
+        with:
+          repository: johantre/msword-private-assets
+          path: msword-private-assets
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install -e .
+
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=msword_properties_generator --cov-report=html --cov-report=xml test/
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-python-${{ matrix.python-version }}
+          path: htmlcov/
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: true

@@ -6,8 +6,15 @@ import sqlite3
 import os
 import re
 
+def get_private_assets_path():
+    current_repo_root = get_repo_root()
+    properties_generator_folder = str(config["paths"]["private_assets_folder"])
+    private_assets_path = os.path.join(os.path.dirname(current_repo_root), properties_generator_folder)
+    return private_assets_path
+
 def get_db_path():
-    return config["paths"]["db_path"]
+    db_path = str(config["paths"]["db_path"])
+    return os.path.join(get_private_assets_path(), db_path)
 
 def init_db():
     # Connect to SQLite database
@@ -18,7 +25,7 @@ def close_db_commit_push(connection):
     connection.close()
     db_path = get_db_path()
     # Convert absolute path to relative path
-    repo_path = get_repo_root()
+    repo_path = get_private_assets_path()
     if os.path.isabs(db_path):
         db_path = os.path.relpath(db_path, repo_path)
 
