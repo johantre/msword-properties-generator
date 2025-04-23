@@ -23,6 +23,7 @@ At the moment of writing, depending of your choice, after the above actions this
 ⚠️Dependencies⚠️
 The following files found earlier in this repo that contained your encryped data and signature image have moved to a private repo. \
 That means, for proper working of this code we have a dependency to this private repo: msword-private-assets. \
+As this is a private repo, the links below will show a 404. \
 [msword-private-assets/res/offers_provider.db](msword-private-assets/res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key. \
 [msword-private-assets/res/images folder](msword-private-assets/res/images/) Where all encrypted signature images are stored. \
 Still you are master of your data, and can always Subscribe/Unsubscribe found in section [Provider data](###Provider data)
