@@ -17,14 +17,14 @@ jobs:
       - name: Checkout executing Repository
         uses: actions/checkout@v3
         with:
-          path: .
+          path: msword-properties-generator
 
       - name: Checkout msword-private-assets
         uses: actions/checkout@v3
         with:
           repository: johantre/msword-private-assets
           token: ${{ secrets.GH_PRIVATE_ASSETS_PAT }}
-          path: ../msword-private-assets
+          path: msword-private-assets
 
       - name: Show folder structure for debugging
         run: |
@@ -38,6 +38,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
+        working-directory: msword-properties-generator
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -45,6 +46,7 @@ jobs:
           pip install -e .
 
       - name: Run tests with coverage
+        working-directory: msword-properties-generator
         run: |
           pytest --cov=msword_properties_generator --cov-report=html --cov-report=xml test/
 
