@@ -65,6 +65,7 @@ jobs:
           python-version: '3.9'
 
       - name: Install Dependencies
+        working-directory: msword-properties-generator
         run: |
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow
@@ -74,6 +75,7 @@ jobs:
           LOG_LEVEL: ${{ env.LOG_LEVEL }}
           HASHING_KEY: ${{ secrets.HASHING_KEY }}
           INPUT_LEVERANCIEREMAIL: ${{ github.event.inputs.LeverancierEmail }}
+        working-directory: msword-properties-generator
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/unsubscribe_provider.py
