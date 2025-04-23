@@ -72,6 +72,8 @@ jobs:
 
       - name: Checkout executing Repository
         uses: actions/checkout@v3
+        with:
+          path: msword-properties-generator
 
       - name: Checkout msword-private-assets
         uses: actions/checkout@v3
@@ -79,6 +81,12 @@ jobs:
           repository: johantre/msword-private-assets
           token: ${{ secrets.GH_PRIVATE_ASSETS_PAT }}
           path: msword-private-assets
+
+      - name: Show folder structure for debugging
+        run: |
+          echo "📁 Current working directory: $(pwd)"
+          echo "📂 Contents of workspace:"
+          ls -lR /home/runner/work/msword-properties-generator
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
@@ -95,6 +103,7 @@ jobs:
           python-version: '3.9'
 
       - name: Install Dependencies
+        working-directory: msword-properties-generator
         run: |
           python -m pip install --upgrade pip
           pip install cryptography jproperties pytz gitpython requests google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client dropbox pillow
