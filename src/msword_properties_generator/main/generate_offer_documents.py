@@ -1,4 +1,4 @@
-from msword_properties_generator.utils.util_config import config  # importing centralized config
+from msword_properties_generator.utils.utils_config import config  # importing centralized config
 from msword_properties_generator.data.utils_db import create_replacements_from_db
 from msword_properties_generator.utils.utils_docx import update_custom_properties_docx_structure
 from msword_properties_generator.utils.utils_pdf import convert_to_pdf

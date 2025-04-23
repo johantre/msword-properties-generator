@@ -1,4 +1,4 @@
-from msword_properties_generator.utils.util_config import config  # importing centralized config
+from msword_properties_generator.utils.utils_config import config  # importing centralized config
 from msword_properties_generator.utils.utils_hash_encrypt import encrypt, decrypt, hash
 from msword_properties_generator.utils.utils_git import git_stage_commit_push, get_repo_root
 import logging

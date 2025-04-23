@@ -1,4 +1,4 @@
-from msword_properties_generator.utils.util_config import config  # importing centralized config
+from msword_properties_generator.utils.utils_config import config  # importing centralized config
 from msword_properties_generator.utils.utils_mail import safe_get
 from msword_properties_generator.utils.utils_image import get_image_and_decrypt_from_image_folder
 from lxml import etree as ET

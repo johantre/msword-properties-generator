@@ -1,4 +1,4 @@
-from msword_properties_generator.utils.util_config import config  # importing centralized config
+from msword_properties_generator.utils.utils_config import config  # importing centralized config
 from dropbox.exceptions import ApiError
 from dropbox.files import WriteMode
 import dropbox

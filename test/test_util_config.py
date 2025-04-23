@@ -11,7 +11,7 @@ src_path = str(Path(__file__).resolve().parent.parent / 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-from msword_properties_generator.utils.util_config import load_config_values, config
+from msword_properties_generator.utils.utils_config import load_config_values, config
 
 class TestUtilConfig(unittest.TestCase):
     def setUp(self):
@@ -48,7 +48,7 @@ path.repo.root.msword_properties_generator=msword-properties-generator
             os.remove(self.test_properties_path)
         os.rmdir(self.test_dir)
 
-    @patch('msword_properties_generator.utils.util_config.PROJECT_ROOT', Path('/test/root'))
+    @patch('msword_properties_generator.utils.utils_config.PROJECT_ROOT', Path('/test/root'))
     def test_load_config_values_success(self):
         """Test successful loading of configuration values"""
         result = load_config_values(self.test_properties_path)
