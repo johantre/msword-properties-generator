@@ -51,16 +51,15 @@ jobs:
           pytest --cov=msword_properties_generator --cov-report=html --cov-report=xml test/
 
       - name: Upload coverage report
-        working-directory: msword-properties-generator
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-python-${{ matrix.python-version }}
-          path: htmlcov/
+          path: msword-properties-generator/htmlcov/
 
       - name: Upload coverage to Codecov
-        working-directory: msword-properties-generator
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           fail_ci_if_error: true
+          path: msword-properties-generator
