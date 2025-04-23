@@ -26,18 +26,11 @@ jobs:
           token: ${{ secrets.GH_PRIVATE_ASSETS_PAT }}
           path: msword-private-assets
 
-      - name: Debug Toon mappenstructuur en locatie
+      - name: Show folder structure for debugging
         run: |
-          echo "Actuele werkdirectory:"
-          pwd
-          echo "Inhoud van $(pwd):"
-          ls -la
-          echo "Een niveau hoger:"
-          ls -la ..
-          echo "Inhoud van msword-private-assets (relatief pad):"
-          ls -la msword-private-assets || echo "Directory niet gevonden"
-          echo "Inhoud van msword-properties-generator (relatief pad):"
-          ls -la msword-properties-generator || echo "Directory niet gevonden"
+          echo "📁 Current working directory: $(pwd)"
+          echo "📂 Contents of workspace:"
+          ls -lR /home/runner/work/msword-properties-generator
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
