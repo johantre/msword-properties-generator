@@ -60,6 +60,5 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          file: msword-properties-generator/coverage.xml
           fail_ci_if_error: true
-          path: msword-properties-generator
