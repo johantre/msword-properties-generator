@@ -35,9 +35,9 @@ jobs:
           echo "Een niveau hoger:"
           ls -la ..
           echo "Inhoud van msword-private-assets (relatief pad):"
-          ls -la ../msword-private-assets || echo "Directory niet gevonden"
+          ls -la msword-private-assets || echo "Directory niet gevonden"
           echo "Inhoud van msword-properties-generator (relatief pad):"
-          ls -la ../msword-properties-generator || echo "Directory niet gevonden"
+          ls -la msword-properties-generator || echo "Directory niet gevonden"
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
