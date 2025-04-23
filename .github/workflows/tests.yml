@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout executing Repository
         uses: actions/checkout@v3
+        with:
+          path: msword-properties-generator
 
       - name: Checkout msword-private-assets
         uses: actions/checkout@v3
