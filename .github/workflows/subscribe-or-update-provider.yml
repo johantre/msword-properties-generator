@@ -128,6 +128,7 @@ jobs:
           INPUT_LEVERANCIEROPGEMAAKTTE: ${{ github.event.inputs.LeverancierOpgemaaktte }}
           INPUT_LEVERANCIERHOEDANIGHEID: ${{ github.event.inputs.LeverancierHoedanigheid }}
           INPUT_LEVERANCIERURLSIGNATUREIMAGE: ${{ github.event.inputs.LeverancierURLSignatureImage }}
+        working-directory: msword-properties-generator
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           python src/msword_properties_generator/main/subscribe_or_update_provider.py

@@ -120,6 +120,7 @@ jobs:
           DROPBOX_APP_KEY:  ${{ secrets.DROPBOX_APP_KEY }}
           DROPBOX_APP_SECRET:  ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+        working-directory: msword-properties-generator
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           echo "::notice::Display args: ${{ github.event.inputs.klantNaam }}, ${{ github.event.inputs.klantJobTitle }}, ${{ github.event.inputs.klantJobReference }}, ${{ github.event.inputs.leverancierEmail }}, ${{ github.event.inputs.uploadDropbox }}"
