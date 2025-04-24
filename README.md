@@ -17,16 +17,17 @@ At the moment of writing, depending of your choice, after the above actions this
 - Provider data *will* be stored in a separate private GitHub Repo, encrypted to protect your privacy.
 
 ## Resources 
-[res/Recht om te vertegenwoordigen.docx](res/Recht%20om%20te%20vertegenwoordigen.docx) MSWord template containing the Custom properties.\
-[env/prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations. \
+- [res/Recht om te vertegenwoordigen.docx](res/Recht%20om%20te%20vertegenwoordigen.docx) MSWord template containing the Custom properties.
+- [env/prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations. 
 
 ⚠️Dependencies⚠️
 The following files found earlier in this repo that contained your encryped data and signature image have moved to a private repo. \
 That means, for proper working of this code we have a dependency to this private repo: [msword-private-assets](https://github.com/johantre/msword-private-assets). \
-As this is a private repo, the links below will show a 404. \
-[msword-private-assets/res/offers_provider.db](https://github.com/johantre/msword-private-assets/blob/main/res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key. \
-[msword-private-assets/res/images](https://github.com/johantre/msword-private-assets/tree/main/res/images) folder where all encrypted signature images are stored. \
-Still you are master of your data, and can always Subscribe/Unsubscribe found in section [Provider data](###Provider data) to add/remove your data and signature image. 
+As this is a private repo, the links below will show a 404.
+- [msword-private-assets/res/offers_provider.db](https://github.com/johantre/msword-private-assets/blob/main/res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key.
+- [msword-private-assets/res/images](https://github.com/johantre/msword-private-assets/tree/main/res/images) folder where all encrypted signature images are stored. 
+
+Still you are master of your data, and can always Subscribe/Unsubscribe found in section [Provider data](###Provider data) to add/remove your data and signature image.
 
 ## Future enhancements
 - some small code cleanups
