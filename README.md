@@ -21,13 +21,14 @@ At the moment of writing, depending of your choice, after the above actions this
 - [env/prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations. 
 
 ⚠️Dependencies⚠️
-The following files found earlier in this repo that contained your encryped data and signature image have moved to a private repo. \
+The following files found earlier in this repo that contained your encrypted data and signature image have moved to a private repo. \
 That means, for proper working of this code we have a dependency to this private repo: [msword-private-assets](https://github.com/johantre/msword-private-assets). \
-As this is a private repo, the links below will show a 404.
-- [msword-private-assets/res/offers_provider.db](https://github.com/johantre/msword-private-assets/blob/main/res/offers_provider.db) All Providers are encrypted and stored in here with their hashed mail as key.
+As this is a private repo, the links below will show a 404. Nevertheless, the only resources in there are below: 
+- [msword-private-assets/res/offers_provider.db](https://github.com/johantre/msword-private-assets/blob/main/res/offers_provider.db) \
+All Providers are encrypted and stored in here with their hashed mail as key.
 - [msword-private-assets/res/images](https://github.com/johantre/msword-private-assets/tree/main/res/images) folder where all encrypted signature images are stored. 
 
-Still you are master of your data, and can always Subscribe/Unsubscribe found in section [Provider data](###Provider data) to add/remove your data and signature image.
+Still you are master of your data, and can always Subscribe/Unsubscribe found in section [Provider data](https://github.com/johantre/msword-properties-generator#Provider-data) to add/remove your data and signature image.
 
 ## Future enhancements
 - some small code cleanups
@@ -56,7 +57,7 @@ Customer data changes frequently.<br>Every time you need documents to be generat
 How to provide? 
 - GitHub Actions > Select **"Generate, Send and add to Dropbox"** workflow > **"Run workflow"**<br>to generate the documents and have them send to the given mail.<br>
 This process takes on average about 2 min.
-  - Behind the scenes [Provider data](#Provider data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
+  - Behind the scenes [Provider data](https://github.com/johantre/msword-properties-generator#Provider-data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
   - So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
   <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
 
