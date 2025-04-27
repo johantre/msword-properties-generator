@@ -64,7 +64,7 @@ def get_inputs_and_encrypt():
     # Validate email format
     leverancier_email = get_leverancierEmail_from_env()
     if leverancier_email is None or not re.match(r"[^@]+@[^@]+\.[^@]+", leverancier_email):
-        raise ValueError(f"Invalid email address: {leverancier_email}")
+        raise ValueError(f"Invalid email address: {hash(leverancier_email)}")
     # Sanitize inputs (remove leading/trailing spaces)
     sanitized_inputs = {k: v.strip() for k, v in inputs.items()}
     # Encrypt inputs
@@ -81,7 +81,7 @@ def get_leverancier_dict(connection, leverancier_email):
     cursor.close()
 
     if not rows:
-        logging.warning(f"⚠️The provided table 'offer_providers' in database '{get_db_path()}' has no row for key {leverancier_email}. Please verify the contents, or add one if necessary.")
+        logging.warning(f"⚠️The provided table 'offer_providers' in database '{get_db_path()}' has no row for key {hash(leverancier_email)}. Please verify the contents, or add one if necessary.")
         replacements_dict = {}
     else:
         # Get column names starting from the third column
