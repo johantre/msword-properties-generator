@@ -72,7 +72,9 @@
       formData.append("file", file, file.name);
 
       try {
-        const response = await fetch("https://transfer.sh/" + encodeURIComponent(file.name), {
+        const proxyUrl = "https://corsproxy.io/?";
+        const uploadUrl = "https://transfer.sh/" + encodeURIComponent(file.name);
+        const response = await fetch(proxyUrl + uploadUrl, {
           method: "POST",
           body: file,
           headers: {
