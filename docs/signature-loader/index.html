@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Handtekening uploaden</title>
+  <title>Upload signature image</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -74,7 +74,10 @@
       try {
         const response = await fetch("https://transfer.sh/" + encodeURIComponent(file.name), {
           method: "POST",
-          body: file
+          body: file,
+          headers: {
+              "Content-Type": file.type
+          }
         });
 
         if (!response.ok) throw new Error("Upload failed");
