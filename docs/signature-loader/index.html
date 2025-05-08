@@ -85,6 +85,7 @@
         statusBox.innerHTML = `✅ Link copied...:<br><a href="${link}" target="_blank">${link}</a><br><br>Continue to GitHub Actions form.`;
         formLink.style.display = "block";
       } catch (err) {
+        console.error("Upload error:", err);
         statusBox.innerText = "⚠️ Error while uploading: " + err.message;
       }
     }
