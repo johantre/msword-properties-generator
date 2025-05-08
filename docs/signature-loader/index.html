@@ -66,27 +66,24 @@
       }
 
       statusBox.style.display = "block";
-      statusBox.innerText = "📤 Uploading to File.io...";
+      statusBox.innerText = "📤 Uploading to Transfer.sh...";
 
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file, file.name);
 
       try {
-        const response = await fetch("https://file.io", {
+        const response = await fetch("https://transfer.sh/" + encodeURIComponent(file.name), {
           method: "POST",
-          body: formData,
+          body: file
         });
 
-        const result = await response.json();
+        if (!response.ok) throw new Error("Upload failed");
 
-        if (result.success) {
-          const link = result.link;
-          await navigator.clipboard.writeText(link);
-          statusBox.innerHTML = `✅ Link copied...:<br><a href="${link}" target="_blank">${link}</a><br><br>Continue to GitHub Actions form.`;
-          formLink.style.display = "block";
-        } else {
-          statusBox.innerText = "❌ Upload failed: " + (result.message || "unknow error.");
-        }
+        const link = await response.text();
+
+        await navigator.clipboard.writeText(link.trim());
+        statusBox.innerHTML = `✅ Link copied...:<br><a href="${link}" target="_blank">${link}</a><br><br>Continue to GitHub Actions form.`;
+        formLink.style.display = "block";
       } catch (err) {
         statusBox.innerText = "⚠️ Error while uploading: " + err.message;
       }
