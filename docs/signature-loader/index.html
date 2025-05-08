@@ -1,99 +1,95 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Upload signature image</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Signature image</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css"/>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #f6f8fa;
-      padding: 2rem;
-      max-width: 600px;
-      margin: auto;
-      color: #24292f;
-    }
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    input, button, a {
-      font-size: 1rem;
-      margin-top: 1rem;
-      display: block;
-      width: 100%;
-    }
-    button, a.button {
-      padding: 0.6rem;
-      background-color: #2ea44f;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      text-align: center;
-      text-decoration: none;
-    }
-    .status {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #ddf4ff;
-      border-left: 4px solid #0969da;
-      display: none;
-    }
+    body { font-family: sans-serif; margin: 2em; }
+    #preview { max-width: 100%; margin-top: 1em; }
+    #actions { margin-top: 1em; }
+    button { margin-right: 1em; }
   </style>
 </head>
 <body>
-  <h1>📸 Upload signature image</h1>
-  <input type="file" accept="image/*" capture="environment" id="fileInput">
-  <button onclick="upload()">Upload to Transfer.sh</button>
+  <h1>Upload your Signature image</h1>
+  <input type="file" id="fileInput" accept="image/*" capture="environment"/>
+  <div>
+    <img id="preview" style="display:none;" />
+  </div>
+  <div id="actions">
+    <button id="cropBtn" style="display:none;">Crop</button>
+    <button id="uploadBtn" style="display:none;">Upload</button>
+    <button id="openFormBtn" style="display:none;">Open GitHub Actions form</button>
+  </div>
+  <p id="status"></p>
 
-  <div class="status" id="statusBox"></div>
-
-  <a id="formLink" class="button" style="display: none;" target="_blank"
-     href="https://github.com/johantre/msword-properties-generator/actions/workflows/subscribe-or-update-provider.yml/dispatch">
-    ➡️ Open GitHub Actions form
-  </a>
-
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
   <script>
-    async function upload() {
-      const fileInput = document.getElementById("fileInput");
-      const statusBox = document.getElementById("statusBox");
-      const formLink = document.getElementById("formLink");
-      const file = fileInput.files[0];
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const cropBtn = document.getElementById('cropBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const openFormBtn = document.getElementById('openFormBtn');
+    const status = document.getElementById('status');
+    let cropper;
+    let croppedBlob;
+    let downloadURL;
 
-      if (!file) {
-        alert("Pick an image to upload.");
-        return;
-      }
-
-      statusBox.style.display = "block";
-      statusBox.innerText = "📤 Uploading to Transfer.sh...";
-
-      const formData = new FormData();
-      formData.append("file", file, file.name);
-
-      try {
-        const proxyUrl = "https://corsproxy.io/?";
-        const uploadUrl = "https://transfer.sh/" + encodeURIComponent(file.name);
-        const response = await fetch(proxyUrl + uploadUrl, {
-          method: "POST",
-          body: file,
-          headers: {
-              "Content-Type": file.type
-          }
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        preview.src = reader.result;
+        preview.style.display = 'block';
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(preview, {
+          aspectRatio: NaN,
+          viewMode: 1,
         });
+        cropBtn.style.display = 'inline';
+      };
+      reader.readAsDataURL(file);
+    });
 
-        if (!response.ok) throw new Error("Upload failed");
+    cropBtn.addEventListener('click', () => {
+      const canvas = cropper.getCroppedCanvas();
+      canvas.toBlob((blob) => {
+        croppedBlob = blob;
+        uploadBtn.style.display = 'inline';
+        status.textContent = 'Ready to upload';
+      }, 'image/png');
+    });
 
-        const link = await response.text();
+    uploadBtn.addEventListener('click', () => {
+      if (!croppedBlob) return;
+      status.textContent = 'Uploading...';
+      const formData = new FormData();
+      formData.append('file', croppedBlob, 'signature.png');
 
-        await navigator.clipboard.writeText(link.trim());
-        statusBox.innerHTML = `✅ Link copied...:<br><a href="${link}" target="_blank">${link}</a><br><br>Continue to GitHub Actions form.`;
-        formLink.style.display = "block";
-      } catch (err) {
-        console.error("Upload error:", err);
-        statusBox.innerText = "⚠️ Error while uploading: " + err.message;
-      }
-    }
+      fetch('https://uguu.se/upload.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        downloadURL = data.files[0].url;
+        navigator.clipboard.writeText(downloadURL).then(() => {
+          status.textContent = 'Upload Complete. Link copied ...';
+          openFormBtn.style.display = 'inline';
+        });
+      })
+      .catch(error => {
+        console.error('Upload error:', error);
+        status.textContent = 'Error while uploading.';
+      });
+    });
+
+    openFormBtn.addEventListener('click', () => {
+      window.open('https://github.com/johantre/msword-properties-generator/actions/workflows/subscribe-or-update-provider.yml', '_blank');
+    });
   </script>
 </body>
 </html>
