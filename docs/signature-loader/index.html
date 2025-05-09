@@ -68,12 +68,41 @@
       border-radius: 6px;
       word-break: break-all;
     }
+
+      .file-upload-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+
+      .file-upload-button {
+        background-color: #2da44e; /* GitHub Actions green */
+        color: white;
+        padding: 0.6em 1.2em;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      }
+
+      .file-upload-input {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
   </style>
 
 </head>
 <body>
   <h1>Upload your Signature image</h1>
-  <input type="file" id="fileInput" accept="image/*" capture="environment"/>
+  <div class="file-upload-wrapper">
+    <button class="file-upload-button" type="button">Choose File</button>
+    <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
+  </div>
   <div>
     <img id="preview" style="display:none;" />
   </div>
@@ -189,6 +218,10 @@
           console.error('Clipboard error:', err);
           status.textContent = 'Failed to copy link.';
         });
+    });
+
+    document.querySelector('.file-upload-button').addEventListener('click', () => {
+      document.getElementById('fileInput').click();
     });
   </script>
 </body>
