@@ -25,8 +25,8 @@ def detect_host(url):
         return 'gdrive'
     elif 'dropbox.com' in url:
         return 'dropbox'
-    elif '1drv.ms' in url or 'onedrive.live.com' in url:
-        return 'onedrive'
+    elif 'uguu.se' in url:
+        return 'uguu'
     else:
         return 'unknown'
 
@@ -57,16 +57,16 @@ def download_image(url: str, destination: str):
                 f.write(res.content)
             logging.info(f"☁️✅ Dropbox: from '{metadata.name}' to '{destination}' download Complete")
 
-        elif host == 'onedrive':
+        elif host == 'uguu':
             response = requests.get(url, allow_redirects=True)
             final_url = response.url
-            logging.info(f"☁️✅ final_url for '{url}' to '{final_url}'")
+            logging.info(f"☁️✅ Uguu: from for '{url}' to '{final_url}'")
             response.raise_for_status()
 
             with open(destination, 'wb') as file:
                 file.write(response.content)
 
-            logging.info(f"☁️✅ OneDrive '{url}' to '{destination}' 'download Complete??")
+            logging.info(f"☁️✅ Uguu '{url}' to '{destination}' 'download Complete")
         else:
             msg = f"☁️❌ Unsupported host/type for URL provided: {url}"
             logging.error(msg)
