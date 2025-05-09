@@ -103,8 +103,10 @@
     <button class="file-upload-button" type="button">Choose File</button>
     <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
   </div>
-  <div>
+  <div id="cropperContainer">
     <img id="preview" style="display:none;" />
+    <label>Brightness: <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1"></label>
+    <label>Contrast: <input type="range" id="contrast" min="0.5" max="2" step="0.01" value="1"></label>
   </div>
   <div id="actions">
     <button id="cropBtn" style="display:none;">Crop</button>
@@ -130,9 +132,23 @@
     const status = document.getElementById('status');
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const linkDisplay = document.getElementById('linkDisplay');
+    const brightnessSlider = document.getElementById("brightness");
+    const contrastSlider = document.getElementById("contrast");
+    const imagePreview = document.getElementById("preview");
+    const cropperContainer = document.getElementById("cropperContainer");
     let cropper;
     let croppedBlob;
     let downloadURL;
+
+    function updateImageFilters() {
+      const brightness = brightnessSlider.value;
+      const contrast = contrastSlider.value;
+      cropperContainer.style.filter = `brightness(${brightness}) contrast(${contrast})`;
+    }
+
+    brightnessSlider.addEventListener("input", updateImageFilters);
+
+    contrastSlider.addEventListener("input", updateImageFilters);
 
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -157,13 +173,24 @@
         status.textContent = 'Please select a larger crop area.';
         return;
       }
-      canvas.toBlob((blob) => {
+      const brightness = parseFloat(document.getElementById('brightness').value);
+      const contrast = parseFloat(document.getElementById('contrast').value);
+
+      const filteredCanvas = document.createElement('canvas');
+      filteredCanvas.width = canvas.width;
+      filteredCanvas.height = canvas.height;
+      const ctx = filteredCanvas.getContext('2d');
+      ctx.filter = `brightness(${brightness}) contrast(${contrast})`;
+      ctx.drawImage(canvas, 0, 0);
+
+      filteredCanvas.toBlob((blob) => {
         if (!blob) {
-          status.textContent = 'Error while cropping image.';
+          status.textContent = 'Error while processing image.';
           return;
         }
         croppedBlob = blob;
         uploadBtn.style.display = 'inline';
+        document.getElementById('filters').style.display = 'block';
         status.textContent = 'Ready to upload';
       }, 'image/png');
     });
