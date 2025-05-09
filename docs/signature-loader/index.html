@@ -22,6 +22,7 @@
     <button id="cropBtn" style="display:none;">Crop</button>
     <button id="uploadBtn" style="display:none;">Upload</button>
     <button id="openFormBtn" style="display:none;">Open GitHub Actions form</button>
+    <button id="copyLinkBtn" style="display:none;">Copy link again</button>
   </div>
   <p id="status"></p>
 
@@ -33,6 +34,7 @@
     const uploadBtn = document.getElementById('uploadBtn');
     const openFormBtn = document.getElementById('openFormBtn');
     const status = document.getElementById('status');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
     let cropper;
     let croppedBlob;
     let downloadURL;
@@ -73,22 +75,40 @@
         method: 'POST',
         body: formData
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then(data => {
         downloadURL = data.files[0].url;
         navigator.clipboard.writeText(downloadURL).then(() => {
           status.textContent = 'Upload Complete. Link copied ...';
           openFormBtn.style.display = 'inline';
+          copyLinkBtn.style.display = 'inline';
         });
       })
       .catch(error => {
         console.error('Upload error:', error);
-        status.textContent = 'Error while uploading.';
+        status.textContent = `Error while uploading: ${error.message}`;
       });
     });
 
     openFormBtn.addEventListener('click', () => {
       window.open('https://github.com/johantre/msword-properties-generator/actions/workflows/subscribe-or-update-provider.yml', '_blank');
+    });
+
+    copyLinkBtn.addEventListener('click', () => {
+      if (!downloadURL) return;
+      navigator.clipboard.writeText(downloadURL)
+        .then(() => {
+          status.textContent = 'Link copied to clipboard.';
+        })
+        .catch(err => {
+          console.error('Clipboard error:', err);
+          status.textContent = 'Failed to copy link.';
+        });
     });
   </script>
 </body>
