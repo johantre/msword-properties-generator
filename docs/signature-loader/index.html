@@ -67,9 +67,9 @@
       if (!croppedBlob) return;
       status.textContent = 'Uploading...';
       const formData = new FormData();
-      formData.append('file', croppedBlob, 'signature.png');
+      formData.append('files[]', croppedBlob, 'signature.png');
 
-      fetch('https://uguu.se/upload.php', {
+      fetch('https://msword-signature-proxy.johan-tre.workers.dev/', {
         method: 'POST',
         body: formData
       })
