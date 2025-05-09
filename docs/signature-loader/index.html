@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Upload Signature image</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css"/>
+  <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" type="image/svg+xml">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap');
 
@@ -78,7 +79,12 @@
   </div>
   <div id="actions">
     <button id="cropBtn" style="display:none;">Crop</button>
-    <button id="uploadBtn" style="display:none;">Upload</button>
+    <button id="uploadBtn" style="display:none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
+        <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
+      </svg>
+      Upload
+    </button>
     <button id="openFormBtn" style="display:none;">Open GitHub Actions form</button>
     <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
   </div>
