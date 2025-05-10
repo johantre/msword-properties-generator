@@ -33,10 +33,10 @@ Then adjust cropping, contrast and brightness to make your signature match with 
 In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a "Copy link again" button.
 - Click the "Open GitHub Actions form" button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
 <div style="display: flex; justify-content: space-between;">
-<a href="../../assets/signature-loader/Signature Loader1.png"><img src="../../assets/signature-loader/Signature Loader1.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader2.png"><img src="../../assets/signature-loader/Signature Loader2.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader3.png"><img src="../../assets/signature-loader/Signature Loader3.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader4.png"><img src="../../assets/signature-loader/Signature Loader4.png" width="200"></a>
+<a href="../../assets/signature-loader/Signature Loader1.png"><img src="../../assets/signature-loader/Signature Loader1.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader2.png"><img src="../../assets/signature-loader/Signature Loader2.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader3.png"><img src="../../assets/signature-loader/Signature Loader3.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader4.png"><img src="../../assets/signature-loader/Signature Loader4.png" width="300"></a>
 </div>
 
 ### Using the link
@@ -48,10 +48,10 @@ You'll see the input screen (same as explained in [msword-properties-generator](
 - Hit "Run workflow" at the bottom to persist your Provider data to the private repo.\
 Not sure what to fill out there?  Check out the template document [Recht om te vertegenwoordigen.docx](../../res/Recht om te vertegenwoordigen.docx) in this repo for some guidance. The fields are named so know what data to fill out where. 
 <div style="display: flex; justify-content: space-between;">
-<a href="../../assets/signature-loader/Signature Loader5.png"><img src="../../assets/signature-loader/Signature Loader5.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader6.png"><img src="../../assets/signature-loader/Signature Loader6.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader7.png"><img src="../../assets/signature-loader/Signature Loader7.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader8.png"><img src="../../assets/signature-loader/Signature Loader8.png" width="200"></a>
+<a href="../../assets/signature-loader/Signature Loader5.png"><img src="../../assets/signature-loader/Signature Loader5.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader6.png"><img src="../../assets/signature-loader/Signature Loader6.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader7.png"><img src="../../assets/signature-loader/Signature Loader7.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader8.png"><img src="../../assets/signature-loader/Signature Loader8.png" width="300"></a>
 </div>
 
 ### Using together with Customer data
@@ -67,10 +67,10 @@ We'll need to run another workflow to generate the document pair with all the fi
 - Hit the "Run workflow" at the bottom 
 
 <div style="display: flex; justify-content: space-between;">
-<a href="../../assets/signature-loader/Usage1.png"><img src="../../assets/signature-loader/Usage1.png" width="200"></a>
-<a href="../../assets/signature-loader/Usage2.png"><img src="../../assets/signature-loader/Usage2.png" width="200"></a>
-<a href="../../assets/signature-loader/Usage3.png"><img src="../../assets/signature-loader/Usage3.png" width="200"></a>
-<a href="../../assets/signature-loader/Usage4.png"><img src="../../assets/signature-loader/Usage4.png" width="200"></a>
+<a href="../../assets/signature-loader/Usage1.png"><img src="../../assets/signature-loader/Usage1.png" width="300"></a>
+<a href="../../assets/signature-loader/Usage2.png"><img src="../../assets/signature-loader/Usage2.png" width="300"></a>
+<a href="../../assets/signature-loader/Usage3.png"><img src="../../assets/signature-loader/Usage3.png" width="300"></a>
+<a href="../../assets/signature-loader/Usage4.png"><img src="../../assets/signature-loader/Usage4.png" width="300"></a>
 </div>
 
 ### The result 
@@ -81,10 +81,10 @@ Below what'll be the result of using your Provider data, like the signature down
 - Lo and behold; opening up the pdf shows the signature as provided in the first step in this README.md
 
 <div style="display: flex; justify-content: space-between;">
-<a href="../../assets/signature-loader/Signature Loader-GenerateSend1.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend1.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader-GenerateSend2.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend2.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader-GenerateSend3.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend3.png" width="200"></a>
-<a href="../../assets/signature-loader/Signature Loader-GenerateSend4.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend4.png" width="200"></a>
+<a href="../../assets/signature-loader/Signature Loader-GenerateSend1.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend1.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader-GenerateSend2.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend2.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader-GenerateSend3.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend3.png" width="300"></a>
+<a href="../../assets/signature-loader/Signature Loader-GenerateSend4.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend4.png" width="300"></a>
 </div>
 
 ## ⚠️ Dependencies ⚠️

@@ -43,7 +43,7 @@ How to provide and update?
 - GitHub Actions > Select **"Subscribe or Update provider"** workflow > **"Run workflow"** to add or update yourself as a Provider to the [msword-private-assets/res/offers_provider.db](https://github.com/johantre/msword-private-assets/blob/main/res/offers_provider.db).<br>
 This process takes on average about 20 sec.
   - The last field you can provide an URL to Dropbox or Google Drive to a signature image.<br>Take into account a white background so it matches the background color of the document.
-  <br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br> 
+  <br><a href="assets/img_1.png"><img src="assets/img_1.png" width="300"></a><br> 
   - In order for this to work, you'll need to share an image with permissions to **"Anyone that has the link"**.<br>
     Once this process is done, you can remove that permission of your link again.<br>
   - No account for Dropbox or Google Drive at your disposal? Head over to [msword-signature-loader](https://johantre.github.io/msword-properties-generator/signature-loader/), that helps you uploading your signature with your smartphone right away. Check out the [signature-loader README.md](https://github.com/johantre/msword-properties-generator/blob/master/docs/signature-loader/README.md) for a step-by-step explanation.  
@@ -51,7 +51,7 @@ This process takes on average about 20 sec.
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
 This process takes on average about 20 sec.
   - All your Provider data will be removed, including the encrypted signature image file stored in the private repo: [msword-private-assets](https://github.com/johantre/msword-private-assets) 
-  <br><a href="assets/img_2.png"><img src="assets/img_2.png" width="200"></a><br>
+  <br><a href="assets/img_2.png"><img src="assets/img_2.png" width="300"></a><br>
 
 ### Customer data
 Customer data changes frequently.<br>Every time you need documents to be generated these parameters are different, and are only a few fields.<br> 
@@ -60,7 +60,7 @@ How to provide?
 This process takes on average about 2 min.
   - Behind the scenes [Provider data](https://github.com/johantre/msword-properties-generator#Provider-data) will be picked up to consolidate in the generating of the document pair. (docx & pdf)<br>
   - So be aware that you'll need to have your Provider data in there as well for this to work.<br>Take into account Attention regarding the mail address.
-  <br><a href="assets/img.png"><img src="assets/img.png" width="200"></a>
+  <br><a href="assets/img.png"><img src="assets/img.png" width="300"></a>
 
 ## ⚠️Attention⚠️
 
