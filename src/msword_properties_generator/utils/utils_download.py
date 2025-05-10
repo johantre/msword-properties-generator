@@ -25,7 +25,7 @@ def detect_host(url):
         return 'gdrive'
     elif 'dropbox.com' in url:
         return 'dropbox'
-    elif 'uguu.se' in url or 'd.uguu.se' in url:
+    elif 'uguu.se' in url:
         return 'uguu'
     else:
         return 'unknown'

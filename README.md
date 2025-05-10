@@ -46,6 +46,10 @@ This process takes on average about 20 sec.
   <br><a href="assets/img_1.png"><img src="assets/img_1.png" width="200"></a><br> 
   - In order for this to work, you'll need to share an image with permissions to **"Anyone that has the link"**.<br>
     Once this process is done, you can remove that permission of your link again.<br>
+  - No account for Dropbox or Google Drive at your disposal? Head over to [msword-signature-loader](https://johantre.github.io/msword-properties-generator/signature-loader/), that helps you uploading your signature w/o Dropbox or Google Drive.\
+  This is a helper page that uploads your signature image to a third party service [Uguu.se](https://uguu.se/) to put a generated download link on your clipboard so you can paste it in the URL at the botton of this dialog.\
+  The Uguu link is only 3 hours active and purged after that.
+  It allows you to take a picture with your smartphone, crop your signature, adjust brightness and contrast so your signature background matches the white background in the final document.
   - All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
 This process takes on average about 20 sec.

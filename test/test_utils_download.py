@@ -59,11 +59,11 @@ class TestUtilsDownload(unittest.TestCase):
         test_cases = [
             ('https://drive.google.com/file/d/1234567890/view', 'gdrive'),
             ('https://www.dropbox.com/s/1234567890/file.jpg', 'dropbox'),
-            ('https://1drv.ms/u/s!1234567890', 'onedrive'),
-            ('https://onedrive.live.com/1234567890', 'onedrive'),
+            ('https://uguu.se', 'uguu'),
+            ('https://d.uguu.se', 'uguu'),
             ('https://example.com/file.jpg', 'unknown')
         ]
-        
+
         for url, expected_host in test_cases:
             with self.subTest(url=url):
                 self.assertEqual(detect_host(url), expected_host)
@@ -167,9 +167,9 @@ class TestUtilsDownload(unittest.TestCase):
         mock_service.sharing_get_shared_link_file.assert_called_once()
 
     @patch('requests.get')
-    def test_download_image_onedrive(self, mock_get):
+    def test_download_image_uguu(self, mock_get):
         mock_response = MagicMock()
-        mock_response.url = 'https://onedrive.live.com/download?cid=1234567890'
+        mock_response.url = 'https://d.uguu.se/1234567890.png'
         mock_response.content = b'test content'
         mock_get.return_value = mock_response
         
@@ -177,7 +177,7 @@ class TestUtilsDownload(unittest.TestCase):
         test_file = os.path.join(self.test_dir, 'test.jpg')
         
         # Call the function
-        download_image('https://1drv.ms/u/s!1234567890', test_file)
+        download_image('https://d.uguu.se/1234567890.png', test_file)
         
         # Verify request was made
         mock_get.assert_called_once()
