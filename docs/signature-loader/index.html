@@ -100,28 +100,27 @@
       }
 
       .slider-group {
-        display: inline-block;
-        margin-right: 1em;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1em;
       }
 
       .slider-group label {
         display: flex;
         align-items: center;
-        gap: 0.5em;
+        width: 100%;
       }
 
-      @media screen and (max-width: 600px) {
-        .slider-group {
-          display: block;
-          margin-right: 0;
-          margin-bottom: 1em;
-        }
-
-        .slider-group input[type="range"] {
-          width: 100%;
-          max-width: 300px;
-        }
+      .slider-group span {
+        min-width: 100px;
+        white-space: nowrap;
       }
+
+      .slider-group input[type="range"] {
+        flex: 1;
+        margin-left: 1em;
+      }
+
   </style>
 
 </head>
@@ -135,12 +134,19 @@
     <img id="preview" style="display:none;" />
     <div class="slider-container">
       <div class="slider-group">
-        <label>Brightness: <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1"></label>
+        <label>
+          <span>Brightness:</span>
+          <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
+        </label>
       </div>
       <div class="slider-group">
-        <label>Contrast: <input type="range" id="contrast" min="0.5" max="2" step="0.01" value="1"></label>
+        <label>
+          <span>Contrast:</span>
+          <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
+        </label>
       </div>
     </div>
+
   </div>
   <div id="actions">
     <button id="cropBtn" style="display:none;">Crop</button>
