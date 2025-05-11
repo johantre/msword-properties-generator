@@ -29,9 +29,7 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     email_subject = f"Recht om te vertegenwoordigen documents for '{klant_naam}' for '{klant_job_title}' ({klant_job_reference})"
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
-    email_message['From'] = formataddr(("Github Actions", config['mail']['mail_sender_email']))
-    email_message['Organization-Name'] = 'Dreamlead'
-    email_message['Organization-Logo-URL'] = 'https://bimi.dreamlead.be/logo-dreamlead.svg'
+    email_message['From'] = formataddr(("Dreamlead Github Actions", config['mail']['mail_sender_email']))
     email_message['To'] = email_address
     email_message.set_content(return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference), subtype='html')
 
