@@ -73,12 +73,6 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
 def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference):
     return f"""
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px;">
-    <div style="max-width:900px; margin:0 0 20px 0;">
-        Dear {leverancier_naam},<br><br>
-        
-        Here is the document you requested for {klant_naam} in the role of {klant_job_title} ({klant_job_reference}).<br>
-        The documents are attached as msword and pdf.<br>
-    </div>
 
     <!-- Container aligning content to the left (max-width: 900px, matching tables) -->
     <div style="max-width:900px; margin:0; padding:0;">
@@ -92,6 +86,14 @@ def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_titl
         <h2 style="margin:0 0 15px 0; text-align:center;">
             Recht om te vertegenwoordigen
         </h2>
+
+        <div style="max-width:900px; margin:0 0 20px 0;">
+            <br>
+            Dear {leverancier_naam},<br><br>
+            
+            Here is the document you requested for {klant_naam} in the role of {klant_job_title} ({klant_job_reference}).<br>
+            The documents are attached as msword and pdf.<br>
+        </div>
 
         <!-- Left aligned Table -->
         <table style="border-collapse: collapse; width:100%; margin: 0 0 20px 0;">
