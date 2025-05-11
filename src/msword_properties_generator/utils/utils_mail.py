@@ -73,13 +73,19 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
 def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference):
     return f"""
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px;">
+    <div style="max-width:900px; margin:0 0 20px 0;">
+        Dear {leverancier_naam},
+        
+        Here is the document you requested for {klant_naam} in the role of {klant_job_title} ({klant_job_reference}).
+        The documents are attached as msword and pdf.
+    </div>
 
     <!-- Container aligning content to the left (max-width: 900px, matching tables) -->
     <div style="max-width:900px; margin:0; padding:0;">
 
         <!-- Header Image aligned with table & h2 -->
         <div style="width:100%; margin:0 0 20px 0; text-align:center;">
-            <img src="https://johantre.github.io/msword-properties-generator/logo.png" alt="Company Logo" style="width:100%; max-width:500px; max-height: 50px; height:auto; display:block; margin: auto;">
+            <img src="https://johantre.github.io/msword-properties-generator/logo.png" alt="Dreamlead" style="width:100%; max-width:500px; max-height: 50px; height:auto; display:block; margin: auto;">
         </div>
 
         <!-- Centered H2 within exact table width -->
@@ -147,6 +153,13 @@ def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_titl
                 </td>
             </tr>
         </table>
+        <div style="margin-top: 20px;">
+            Yours sincerely,<br>
+            Dreamlead Team<br><br>
+            <small style="color: #666;">
+                This is an automated email. Please do not reply to this email.
+            </small>
+        </div>
 
     </div>
 
