@@ -30,6 +30,8 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
     email_message['From'] = formataddr(("Dreamlead Github Actions", config['mail']['mail_sender_email']))
+    email_message['X-Entity-Ref-ID'] = "dreamlead"
+    email_message['X-Entity-Logo'] = "https://johantre.github.io/msword-properties-generator/logo-dreamlead.svg"
     email_message['To'] = email_address
     email_message.set_content(return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference), subtype='html')
 
