@@ -1,6 +1,6 @@
 from msword_properties_generator.utils.utils_config import config  # importing centralized config
+from email.utils import formataddr, formatdate
 from email.message import EmailMessage
-from email.utils import formataddr
 import logging
 import smtplib
 import os
@@ -30,9 +30,13 @@ def send_email(generated_files, email_address, provider_replacements, customer_r
     email_message = EmailMessage()
     email_message['Subject'] = email_subject
     email_message['From'] = formataddr(("Dreamlead Actions", config['mail']['mail_sender_email']))
+    email_message['Sender'] = config['mail']['mail_sender_email']
+    email_message['Reply-To'] = config['mail']['mail_sender_email']
+    email_message['To'] = email_address
+    email_message['Message-ID'] = f"<{str(uuid.uuid4())}@{config['mail']['mail_sender_email'].split('@')[1]}>"
+    email_message['Date'] = formatdate(localtime=True)
     email_message['X-Entity-Ref-ID'] = "dreamlead"
     email_message['X-Entity-Logo'] = "https://johantre.github.io/msword-properties-generator/logo-dreamlead.svg"
-    email_message['To'] = email_address
     email_message.set_content(return_html_body(base_document, leverancier_naam, klant_naam, klant_job_title, klant_job_reference), subtype='html')
 
     for filepath in generated_files:
