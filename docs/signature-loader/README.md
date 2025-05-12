@@ -11,7 +11,7 @@ Under the hood, instead of Dropbox or Google Drive, the services of [Uguu.se](ht
 - has API support
 - The link [Uguu](https://uguu.se/) returns is only seen to you, and unless you pass that link to others, it stays only known by you. 
 
-"Why not directly committing & pushing to that private repo? Why using a step in between?" you might ask.\
+🗨️ "Why not directly committing & pushing to that private repo?" 🗨️"Why using a step in between?" you might ask.\
 That would leave quite a few problems unresolved:
 - The permissions to repo where the images are stored would have to be managed, which isn't sustainable.
 - Privacy: it would be possible to download all images stored, even though they are encrypted and stored with a hashed file name.
