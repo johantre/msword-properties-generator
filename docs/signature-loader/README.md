@@ -46,7 +46,7 @@ In case you copied something else and lost the download [Uguu](https://uguu.se/)
 ### Using the link
 If you clicked **"Open GitHub Actions form"** you'll see the first screen. ⚠️ Notice ⚠️ you'll need a GitHub account to start this workflow!
 - Here you click the **"Run workflow"** button. (which won't be available if you didn't log in)\
-You'll see the input screen (same as explained in [msword-properties-generator](https://github.com/johantre/msword-properties-generator) README.md)\
+You'll see the input screen (same as explained in [msword-properties-generator](https://github.com/johantre/msword-properties-generator) README.md)
 - On mobile, **long-press the signature field** at the bottom of the form, to paste your [Uguu](https://uguu.se/) link from your clipboard.
 - Fill out the other Provider data fields
 - Hit **"Run workflow"** at the bottom to persist your Provider data to the private repo.\
