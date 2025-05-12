@@ -3,6 +3,7 @@ from email.utils import formataddr, formatdate
 from email.message import EmailMessage
 import logging
 import smtplib
+import uuid
 import os
 import re
 
