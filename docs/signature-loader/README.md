@@ -21,15 +21,13 @@ That would leave quite a few problems unresolved:
 ## ⚠️ Dependencies ⚠️
 Below, everything what's under the hood.
 - [Uguu.se](https://uguu.se/)
-- Cloudflare Worker script to assure requests to [Uguu.se](https://uguu.se/) are done with the sufficient headers.\
-That is achieved by a Cloudflare Worker script [msword-signature-proxy](https://github.com/johantre/msword-signature-proxy) that needs to be deployed in Cloudflare.
+- [msword-signature-proxy](https://github.com/johantre/msword-signature-proxy). Cloudflare Worker script to assure requests to [Uguu.se](https://uguu.se/) are done with the sufficient headers.
 
 ## Usage 
 This helper is part if this repo and hosted through GitHub Pages. All you need is the link to get started.\
 It can be used through desktop or mobile. Most handy is mobile, as this offers you the means of taking a snap and work with that directly.\
-Below is a step-by-step guide on mobile to illustrate. 
-
-**https://johantre.github.io/msword-properties-generator/signature-loader/**
+Below is a step-by-step guide on mobile to illustrate.\
+💡The actual production link💡:  **https://johantre.github.io/msword-properties-generator/signature-loader/**
 
 ### Snap and adjust
 - On mobile, clicking the "Choose file" button opens up the camera app so you can take a snap of your signature.\
