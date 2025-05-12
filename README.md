@@ -22,11 +22,10 @@ At the moment of writing, depending of your choice, after the above actions this
 
 ## ⚠️Dependencies⚠️
 The following files found earlier in this repo that contained your encrypted data and signature image have moved to a private repo. \
-That means, for proper working of this code we have a dependency to this private repo: [msword-private-assets](https://github.com/johantre/msword-private-assets). \
-As this is a private repo, the links below will show a 404. Nevertheless, the only resources in there are below: 
-- [msword-private-assets/res/offers_provider.db](https://github.com/johantre/msword-private-assets/blob/main/res/offers_provider.db) \
-All Providers are encrypted and stored in here with their hashed mail as key.
-- [msword-private-assets/res/images](https://github.com/johantre/msword-private-assets/tree/main/res/images) folder where all encrypted signature images are stored. 
+That means, for proper working of this code we have a dependency to this private repo: 
+- [msword-private-assets](https://github.com/johantre/msword-private-assets). As this is a private repo, the links below will show a 404. Serves as private vault for your sensitive data.
+- [msword-signature-proxy](https://github.com/johantre/msword-signature-proxy). Cloudflare Worker acting as a proxy to avoid CORS issues when uploading signature images. 
+- [docs\signature-loader](https://johantre.github.io/msword-properties-generator/signature-loader/) which is a helper page to upload your signature image.(part of this repo) 
 
 Still you are master of your data, and can always Subscribe/Unsubscribe found in section [Provider data](https://github.com/johantre/msword-properties-generator#Provider-data) to add/remove your data and signature image.
 
@@ -47,9 +46,9 @@ This process takes on average about 20 sec.
   - In order for this to work, you'll need to share an image with permissions to **"Anyone that has the link"**.<br>
     Once this process is done, you can remove that permission of your link again.<br>
   - 💡No Dropbox or Google Drive account at your disposal?💡\
-  💡Head over to [msword-signature-loader](https://johantre.github.io/msword-properties-generator/signature-loader/)!💡\
+  💡Head over to [docs\signature-loader](https://johantre.github.io/msword-properties-generator/signature-loader/)!💡\
   💡This will help you take a snap of your signature with your smartphone right away and continue to the screen above, cropping, brightness and contrast adjustment included!!💡\
-  💡Check out the [signature-loader README.md](https://github.com/johantre/msword-properties-generator/blob/master/docs/signature-loader/README.md) for a step-by-step explanation with screenshots.💡
+  💡Check out the [docs\signature-loader\README.md](https://github.com/johantre/msword-properties-generator/blob/master/docs/signature-loader/README.md) for a step-by-step explanation with screenshots.💡
   - All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
 This process takes on average about 20 sec.

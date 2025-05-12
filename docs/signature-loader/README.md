@@ -18,6 +18,12 @@ That would leave quite a few problems unresolved:
 - The encryption would have to be done client side, which leaves too much complexity for the user.
 - We don't want to leave any traces in the repo of the unencrypted image. The only version in the private repo can be the encrypted version.
 
+## ⚠️ Dependencies ⚠️
+Below, everything what's under the hood.
+- [Uguu.se](https://uguu.se/)
+- Cloudflare Worker script to assure requests to [Uguu.se](https://uguu.se/) are done with the sufficient headers.\
+That is achieved by a Cloudflare Worker script [msword-signature-proxy](https://github.com/johantre/msword-signature-proxy) that needs to be deployed in Cloudflare.
+
 ## Usage 
 This helper is part if this repo and hosted through GitHub Pages. All you need is the link to get started.\
 It can be used through desktop or mobile. Most handy is mobile, as this offers you the means of taking a snap and work with that directly.\
@@ -87,9 +93,4 @@ Below what'll be the result of using your Provider data, like the signature down
 <a href="../../assets/signature-loader/Signature Loader-GenerateSend4.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend4.png" width="240"></a>
 </div>
 
-## ⚠️ Dependencies ⚠️
-Below, everything what's under the hood.
-- [Uguu.se](https://uguu.se/)
-- Cloudflare Worker script to assure requests to [Uguu.se](https://uguu.se/) are done with the sufficient headers.\
-That is achieved by a Cloudflare Worker script [msword-signature-proxy](https://github.com/johantre/msword-signature-proxy) that needs to be deployed in Cloudflare. 
 
