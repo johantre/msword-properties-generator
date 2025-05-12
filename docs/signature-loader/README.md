@@ -3,7 +3,7 @@
 This README.md is part of the [msword-properties-generator](https://github.com/johantre/msword-properties-generator) and explains how to upload your signature image to the private repo [msword-private-assets](https://github.com/johantre/msword-private-assets) in case one does not have an image download link available on Dropbox or Google Drive. 
 
 ## Some background
-Under the hood, instead of Dropbox or Google Drive, the services of [Uguu.se](https://uguu.se/) are being used to provide a download link in the workflow to store on Provider data in the private repo [msword-private-assets](https://github.com/johantre/msword-private-assets)\
+Under the hood, instead of Dropbox or Google Drive, the services of [Uguu.se](https://uguu.se/) are being used to provide a temporary download link in the workflow to store on Provider data in the private repo [msword-private-assets](https://github.com/johantre/msword-private-assets)\
 [Uguu](https://uguu.se/) is a service that 
 - doesn't need an account, 
 - stores your image for 3 hours of time 
