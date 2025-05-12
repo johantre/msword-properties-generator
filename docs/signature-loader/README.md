@@ -30,12 +30,12 @@ Below is a step-by-step guide on mobile to illustrate.\
 💡The actual production link💡:  **https://johantre.github.io/msword-properties-generator/signature-loader/**
 
 ### Snap and adjust
-- On mobile, clicking the "Choose file" button opens up the camera app so you can take a snap of your signature.\
+- On mobile, clicking the **"Choose file"** button opens up the camera app so you can take a snap of your signature.\
 Then adjust cropping, contrast and brightness to make your signature match with the background of the document it will be placed.
-- Click "Crop" at the bottom, and 
-- Click "Upload" so have the link copied to your clipboard.\
-In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a "Copy link again" button.
-- Click the "Open GitHub Actions form" button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
+- Click **"Crop"** at the bottom, and 
+- Click **"Upload"** so have the link copied to your clipboard.\
+In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a **"Copy link again"** button.
+- Click the **"Open GitHub Actions form"** button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Signature Loader1.png"><img src="../../assets/signature-loader/Signature Loader1.png" width="240"></a>
 <a href="../../assets/signature-loader/Signature Loader2.png"><img src="../../assets/signature-loader/Signature Loader2.png" width="240"></a>
@@ -44,12 +44,12 @@ In case you copied something else and lost the download [Uguu](https://uguu.se/)
 </div>
 
 ### Using the link
-If you clicked "Open GitHub Actions form" you'll see the first screen. ⚠️ Notice ⚠️ you'll need a GitHub account in order to start this workflow!\
-- Here you click the "Run workflow" button. (which won't be available if you didn't log in)\
+If you clicked **"Open GitHub Actions form"** you'll see the first screen. ⚠️ Notice ⚠️ you'll need a GitHub account to start this workflow!\
+- Here you click the **"Run workflow"** button. (which won't be available if you didn't log in)\
 You'll see the input screen (same as explained in [msword-properties-generator](https://github.com/johantre/msword-properties-generator) README.md)\
-- On mobile, long-press the signature field at the bottom of the form, to paste your [Uguu](https://uguu.se/) link from your clipboard.
+- On mobile, **long-press the signature field** at the bottom of the form, to paste your [Uguu](https://uguu.se/) link from your clipboard.
 - Fill out the other Provider data fields
-- Hit "Run workflow" at the bottom to persist your Provider data to the private repo.\
+- Hit **"Run workflow"** at the bottom to persist your Provider data to the private repo.\
 Not sure what to fill out there?  Check out the template document [Recht om te vertegenwoordigen.docx](../../res/Recht om te vertegenwoordigen.docx) in this repo for some guidance. The fields are named so know what data to fill out where. 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Signature Loader5.png"><img src="../../assets/signature-loader/Signature Loader5.png" width="240"></a>
@@ -64,11 +64,11 @@ See [msword-properties-generator](https://github.com/johantre/msword-properties-
 
 Once the above workflow did run, your screen will look like the first screen below.\
 We'll need to run another workflow to generate the document pair with all the filled out data.
-- Click the workflow selector on top
-- Select "Generate, Send & add to Dropbox"
+- **Click the workflow selector** on top
+- Select **"Generate, Send & add to Dropbox"**
 - Fill out the Customer data
 - Fill out the Provider mail again, ⚠️the same as in the Provider workflow⚠️
-- Hit the "Run workflow" at the bottom 
+- Hit the **"Run workflow"** at the bottom 
 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Usage1.png"><img src="../../assets/signature-loader/Usage1.png" width="240"></a>
@@ -80,9 +80,9 @@ We'll need to run another workflow to generate the document pair with all the fi
 ### The result 
 Below what'll be the result of using your Provider data, like the signature download link.
 
-- If you clicked "Run workflow" you'll see the first screen below. That means your workflow is running.  
-- Providing you selected to recieve a mail, you'll see a mail as in the second screen.
-- Lo and behold; opening up the pdf shows the signature as provided in the first step in this README.md
+- If you clicked **"Run workflow"** you'll see the first screen below. That means your workflow is running.  
+- Providing you selected to receive mail, you'll see mail in the mailbox of the provided mail as in the second screen.
+- Lo and behold; opening up the .pdf shows the signature as provided in the first step in this README.md
 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Signature Loader-GenerateSend1.png"><img src="../../assets/signature-loader/Signature Loader-GenerateSend1.png" width="240"></a>
