@@ -48,9 +48,8 @@ This process takes on average about 20 sec.
     Once this process is done, you can remove that permission of your link again.<br>
   - 💡No Dropbox or Google Drive account at your disposal?💡\
   💡Head over to [msword-signature-loader](https://johantre.github.io/msword-properties-generator/signature-loader/)!💡\
-  This will help you take a snap of your signature with your smartphone right away and continue to the screen above.\
-  Cropping, brightness and contrast adjustment is possible. 
-  Check out the [signature-loader README.md](https://github.com/johantre/msword-properties-generator/blob/master/docs/signature-loader/README.md) for a step-by-step explanation with screenshots.
+  💡This will help you take a snap of your signature with your smartphone right away and continue to the screen above, cropping, brightness and contrast adjustment included!!💡\
+  💡Check out the [signature-loader README.md](https://github.com/johantre/msword-properties-generator/blob/master/docs/signature-loader/README.md) for a step-by-step explanation with screenshots.💡
   - All your data will be encrypted. That includes the image that'll be stored in this repo under a hashed name to protect your privacy. 
 - GitHub Actions > Select **"Unsubscribe provider"** workflow > **"Run workflow"** to remove your Provider data.<br>
 This process takes on average about 20 sec.
