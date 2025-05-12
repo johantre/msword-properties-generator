@@ -20,7 +20,7 @@ At the moment of writing, depending of your choice, after the above actions this
 - [res/Recht om te vertegenwoordigen.docx](res/Recht%20om%20te%20vertegenwoordigen.docx) MSWord template containing the Custom properties.
 - [env/prod.properties](env/prod.properties) Properties for this logic to run containing all file names, folder locations. 
 
-⚠️Dependencies⚠️
+## ⚠️Dependencies⚠️
 The following files found earlier in this repo that contained your encrypted data and signature image have moved to a private repo. \
 That means, for proper working of this code we have a dependency to this private repo: [msword-private-assets](https://github.com/johantre/msword-private-assets). \
 As this is a private repo, the links below will show a 404. Nevertheless, the only resources in there are below: 
