@@ -86,6 +86,7 @@ def return_html_body(base_document, leverancier_naam, klant_naam, klant_job_titl
         <!-- Header Image aligned with table & h2 -->
         <div style="width:100%; margin:0 0 20px 0; text-align:center;">
             <img src="https://johantre.github.io/msword-properties-generator/logo.png" alt="Dreamlead" style="width:100%; max-width:500px; max-height: 50px; height:auto; display:block; margin: auto;">
+            <img src="https://www.gravatar.com/avatar/f7f30ef50d21f6c5e2d668666c42029d" alt="avatar">
         </div>
 
         <!-- Centered H2 within exact table width -->
