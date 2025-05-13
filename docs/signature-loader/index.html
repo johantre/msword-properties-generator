@@ -23,11 +23,24 @@
 
     #preview {
       max-width: 100%;
-      max-height: 50vh;
+      max-height: 70vh;
       object-fit: contain;
       margin-top: 1em;
       border: 1px solid #d0d7de;
       border-radius: 6px;
+    }
+
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .button-container {
+      margin-top: 20px;
+      padding: 10px;
     }
 
     #actions {
@@ -35,7 +48,7 @@
     }
 
     .cropper-container {
-      max-height: 50vh;
+      max-height: 70vh;
       margin: 0 auto;
     }
 
@@ -150,41 +163,43 @@
     <button class="file-upload-button" type="button">Choose File</button>
     <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
   </div>
-  <div id="cropperContainer">
-    <img id="preview" style="display:none;" />
-    <div class="slider-container">
-      <div class="slider-group">
-        <label>
-          <span>Brightness:</span>
-          <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
-        </label>
+  <div class="image-container">
+    <div id="cropperContainer">
+      <img id="preview" style="display:none;" />
+      <div class="slider-container">
+        <div class="slider-group">
+          <label>
+            <span>Brightness:</span>
+            <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
+          </label>
+        </div>
+        <div class="slider-group">
+          <label>
+            <span>Contrast:</span>
+            <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
+          </label>
+        </div>
       </div>
-      <div class="slider-group">
-        <label>
-          <span>Contrast:</span>
-          <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
-        </label>
-      </div>
-    </div>
 
-  </div>
-  <div id="actions">
-    <div class="button-group">
-      <button id="cropBtn" style="display:none;">Crop</button>
-      <button id="uploadBtn" style="display:none;" class="right-align">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
-          <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
-        </svg>
-        Upload
-      </button>
     </div>
-    <div class="button-group">
-      <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
-      <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
+    <div id="actions">
+      <div class="button-group">
+        <button id="cropBtn" style="display:none;">Crop</button>
+        <button id="uploadBtn" style="display:none;" class="right-align">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
+            <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
+          </svg>
+          Upload
+        </button>
+      </div>
+      <div class="button-group">
+        <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
+        <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
+      </div>
     </div>
+    <p id="linkDisplay" style="word-break: break-all;"></p>
+    <p id="status"></p>
   </div>
-  <p id="linkDisplay" style="word-break: break-all;"></p>
-  <p id="status"></p>
 
   <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
   <script>
