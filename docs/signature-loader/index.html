@@ -24,8 +24,8 @@
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
-      max-height: 70vh;
-      margin: 0 auto;
+      max-height: 60vh;
+      margin: 10px auto;
     }
 
     .cropper-wrap-box,
@@ -67,6 +67,7 @@
       float: none !important;
       width: 100% !important;
       clear: both !important;
+      margin-top: 1rem;
     }
 
     #actions {
@@ -78,11 +79,11 @@
       outline: 1px solid rgba(255, 255, 255, 0.75) !important;
     }
 
-    #cropperContainer {
-      width: 100%;
-      display: block;
-      position: relative;
-      margin-bottom: 20px;
+    .cropper-and-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 0;
     }
 
     #preview {
@@ -104,7 +105,16 @@
       width: 100%;
       display: block;
       position: relative;
-      margin-bottom: 20px;
+      margin-bottom: 0;
+      height: auto;
+      min-height: 0;
+      margin-top: 10px;
+      margin: 0;
+      padding: 0;
+    }
+
+    #cropperContainer.has-image {
+        min-height: 200px;
     }
 
     .cropper-view-box {
@@ -205,7 +215,9 @@
 
     .slider-container {
       width: 100% !important;
-      margin-top: 2rem;
+      margin-top: 0;
+      margin: 0;
+      padding: 0.5rem;
       position: relative;
       z-index: 10;
       background-color: #f6f8fa;
@@ -244,7 +256,7 @@
 
 @media screen and (max-width: 768px) {
   .slider-container {
-    margin-top: 1rem;
+    margin-top: 0rem;
     padding: 0.5rem;
   }
 
@@ -265,63 +277,64 @@
 
   .image-container {
     margin-top: 0;
+    margin: 0;
   }
 }
 
 @media screen and (max-width: 480px) {
   .cropper-container {
-    max-height: 45vh;
+    max-height: 50vh;
   }
 
   #preview {
-    max-height: 45vh;
+    max-height: 50vh;
   }
 }
   </style>
-
 </head>
 <body>
   <h1>Upload your Signature image</h1>
   <div class="file-upload-wrapper">
-    <button class="file-upload-button" type="button">Choose File</button>
-    <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
+      <button class="file-upload-button" type="button">Choose File</button>
+      <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
   </div>
-  <div class="image-container">
-    <div id="cropperContainer">
-      <img id="preview" style="display:none;" />
+  <div class="cropper-and-controls">
+      <div id="cropperContainer">
+          <img id="preview" style="display:none;" />
+      </div>
       <div class="slider-container">
-        <div class="slider-group">
-          <label>
-            <span>Brightness:</span>
-            <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
-          </label>
-        </div>
-        <div class="slider-group">
-          <label>
-            <span>Contrast:</span>
-            <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
-          </label>
-        </div>
+          <div class="slider-group">
+              <label>
+                  <span>Brightness:</span>
+                  <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
+              </label>
+          </div>
+          <div class="slider-group">
+              <label>
+                  <span>Contrast:</span>
+                  <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
+              </label>
+          </div>
       </div>
-
-    </div>
-    <div id="actions">
-      <div class="button-group">
-        <button id="cropBtn" style="display:none;">Crop</button>
-        <button id="uploadBtn" style="display:none;" class="right-align">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
-            <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
-          </svg>
-          Upload
-        </button>
+  </div>
+  <div class="controls-container">
+      <div id="actions">
+          <div class="button-group">
+              <button id="cropBtn" style="display:none;">Crop</button>
+              <button id="uploadBtn" style="display:none;" class="right-align">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
+                      <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
+                  </svg>
+                  Upload
+              </button>
+          </div>
+          <div class="button-group">
+              <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
+              <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
+          </div>
       </div>
-      <div class="button-group">
-        <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
-        <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
-      </div>
-    </div>
-    <p id="linkDisplay" style="word-break: break-all;"></p>
-    <p id="status"></p>
+      <p id="linkDisplay" style="word-break: break-all;"></p>
+      <p id="status"></p>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
@@ -388,6 +401,7 @@
 
           preview.style.display = 'block';
           preview.src = event.target.result;
+          cropperContainer.classList.add('has-image');
 
           cropper = new Cropper(preview, {
             aspectRatio: 945/535,
@@ -410,34 +424,34 @@
             ready: function() {
               this.cropper.clear();
 
-              const containerData = this.cropper.getContainerData();
-              const imageData = this.cropper.getImageData();
+              setTimeout(() => {
+                const cropperBox = document.getElementById('cropperContainer').getBoundingClientRect();
+                const imageData = this.cropper.getImageData();
 
-              const scaleX = containerData.width / imageData.naturalWidth;
-              const scaleY = containerData.height / imageData.naturalHeight;
-              const scale = Math.min(scaleX, scaleY);
+                const scale = cropperBox.height / imageData.naturalHeight;
 
-              const scaledWidth = imageData.naturalWidth * scale;
-              const scaledHeight = imageData.naturalHeight * scale;
+                const scaledHeight = cropperBox.height;
+                const scaledWidth = imageData.naturalWidth * scale;
 
-              this.cropper.setCanvasData({
-                left: (containerData.width - scaledWidth) / 2,
-                top: (containerData.height - scaledHeight) / 2,
-                width: scaledWidth,
-                height: scaledHeight
-              });
+                this.cropper.setCanvasData({
+                  left: (cropperBox.width - scaledWidth) / 2,
+                  top: 0,
+                  width: scaledWidth,
+                  height: scaledHeight
+                });
 
-              const cropBoxWidth = Math.min(containerData.width, scaledWidth);
-              const cropBoxHeight = (cropBoxWidth * 535) / 945;
+                const cropBoxWidth = Math.min(cropperBox.width * 0.9, scaledWidth);
+                const cropBoxHeight = (cropBoxWidth * 535) / 945;
 
-              this.cropper.setCropBoxData({
-                left: (containerData.width - cropBoxWidth) / 2,
-                top: (containerData.height - cropBoxHeight) / 2,
-                width: cropBoxWidth,
-                height: cropBoxHeight
-              });
+                this.cropper.setCropBoxData({
+                  left: (cropperBox.width - cropBoxWidth) / 2,
+                  top: (cropperBox.height - cropBoxHeight) / 3,
+                  width: cropBoxWidth,
+                  height: cropBoxHeight
+                });
 
-              this.cropper.crop();
+                this.cropper.crop();
+              }, 100);
             },
             zoom: function(e) {
               if (e.detail.ratio < 0.5) {
