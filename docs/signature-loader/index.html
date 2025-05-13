@@ -215,24 +215,45 @@
 
     contrastSlider.addEventListener("input", updateImageFilters);
 
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        preview.src = reader.result;
-        preview.style.display = 'block';
-        if (cropper) cropper.destroy();
-        cropper = new Cropper(preview, {
-          aspectRatio: NaN,
-          viewMode: 1,
-          guides: false,
-        });
-        cropBtn.style.display = 'inline';
-      };
-      reader.readAsDataURL(file);
-    });
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          uploadBtn.disabled = false;
+          cropBtn.disabled = false;
+          brightnessSlider.disabled = false;
+          contrastSlider.disabled = false;
 
+          cropBtn.style.display = 'inline';
+          uploadBtn.style.display = 'inline';
+
+          status.textContent = '';
+          linkDisplay.textContent = '';
+          openFormBtn.style.display = 'none';
+          copyLinkBtn.style.display = 'none';
+
+          brightnessSlider.value = 1;
+          contrastSlider.value = 1;
+          updateImageFilters();
+
+          if (cropper) {
+            cropper.destroy();
+          }
+
+          preview.style.display = 'block';
+          preview.src = event.target.result;
+
+          cropper = new Cropper(preview, {
+            aspectRatio: 945/535,
+            viewMode: 1,
+            autoCropArea: 1,
+            guides: false,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
     cropBtn.addEventListener('click', () => {
       const canvas = cropper.getCroppedCanvas();
       if (canvas.width < 10 || canvas.height < 10) {
@@ -265,6 +286,13 @@
       if (!croppedBlob) return;
       status.textContent = 'Uploading...';
       uploadBtn.disabled = true;
+      cropBtn.disabled = true;
+      if (cropper) {
+        cropper.disable();
+      }
+      brightnessSlider.disabled = true;
+      contrastSlider.disabled = true;
+
       const formData = new FormData();
       formData.append('files[]', croppedBlob, 'signature.png');
 
@@ -275,6 +303,12 @@
       .then(response => {
         if (!response.ok) {
           uploadBtn.disabled = false;
+          cropBtn.disabled = false;
+          brightnessSlider.disabled = false;
+          contrastSlider.disabled = false;
+          if (cropper) {
+            cropper.enable();
+          }
           throw new Error('Network response was not ok');
         }
         return response.json();
@@ -292,6 +326,10 @@
       })
       .catch(error => {
         uploadBtn.disabled = false;
+        cropBtn.disabled = false;
+        if (cropper) {
+          cropper.enable();
+        }
         console.error('Upload error:', error);
         status.textContent = `Error while uploading: ${error.message}`;
       });
