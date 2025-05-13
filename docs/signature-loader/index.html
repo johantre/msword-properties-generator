@@ -193,21 +193,44 @@
 
 @media screen and (max-width: 768px) {
   .image-container {
-      padding: 10px;
+      padding: 0px;
       height: 100vh;
   }
   .cropper-container {
     max-height: 60vh;
-    transform-origin: top center;
+    vertical-align: top;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+  }
+
+  #cropperContainer {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 0;
   }
 
   #preview {
     max-height: 60vh;
-    transform-origin: top center;
+    margin: 0;
+    position: relative;
+    top: 0;
   }
 
-  .cropper-view-box {
-    transform-origin: top center !important;
+  .cropper-view-box,
+  .cropper-face,
+  .cropper-canvas {
+    position: absolute !important;
+    top: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  .slider-container {
+    margin-top: calc(60vh + 20px);
   }
 
   .button-container {
@@ -364,7 +387,21 @@
             modal: true,
             background: true,
             autoCrop: true,
-            movable: true
+            movable: true,
+            ready: function() {
+              const canvasData = this.cropper.getCanvasData();
+              canvasData.top = 0;
+              this.cropper.setCanvasData(canvasData);
+
+              const cropBoxData = this.cropper.getCropBoxData();
+              cropBoxData.top = 0;
+              this.cropper.setCropBoxData(cropBoxData);
+
+              if (window.matchMedia("(max-width: 768px)").matches) {
+                this.cropper.clear();
+                this.cropper.crop();
+              }
+            }
           });
         };
         reader.readAsDataURL(file);
