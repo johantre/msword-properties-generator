@@ -39,7 +39,7 @@
 
     .cropper-container {
       max-height: 70vh;
-      margin: 0 auto;
+      margin: 0;
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -54,6 +54,23 @@
       max-height: 70vh;
       object-fit: contain;
       margin-top: 0;
+    }
+
+    .cropper-wrap-box {
+      margin-top: 0;
+    }
+
+    .cropper-canvas {
+      top: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    .cropper-view-box {
+      top: 0;
+    }
+
+    .cropper-face {
+      top: 0;
     }
 
     .button-container {
@@ -331,6 +348,19 @@
             viewMode: 1,
             autoCropArea: 1,
             guides: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            dragMode: 'move',
+            responsive: true,
+            restore: false,
+            checkOrientation: false,
+            initialAspectRatio: 945/535,
+            minCropBoxHeight: 100,
+            minCropBoxWidth: 100,
+            modal: true,
+            background: true,
+            autoCrop: true,
+            movable: true
           });
         };
         reader.readAsDataURL(file);
