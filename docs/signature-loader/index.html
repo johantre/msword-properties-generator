@@ -16,46 +16,16 @@
       color: #24292f;
     }
 
-    h1 {
-      font-size: 1.5em;
-      font-weight: 600;
-    }
-
-    .image-container {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      height: 100vh;
-      padding: 20px;
-      box-sizing: border-box;
-      width: 100%;
-    }
-
-    #actions {
-      margin-top: 1.5em;
-      width: 100%;
-    }
-
     .cropper-container {
+      direction: ltr;
+      font-size: 0;
+      line-height: 0;
+      position: relative;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
       max-height: 70vh;
-      margin: 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    #cropperContainer {
-      width: 100%;
-    }
-
-    #preview {
-      max-width: 100%;
-      max-height: 70vh;
-      object-fit: contain;
-      margin-top: 0;
-      transform-origin: top center;
+      margin: 0 auto;
     }
 
     .cropper-wrap-box,
@@ -63,13 +33,83 @@
     .cropper-drag-box,
     .cropper-crop-box,
     .cropper-view-box {
-      top: 0 !important;
-      margin: 0 !important;
-      transform-origin: top center !important;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
 
-    .cropper-face {
-      top: 0;
+    .cropper-bg {
+      background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+                        linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #ccc 75%),
+                        linear-gradient(-45deg, transparent 75%, #ccc 75%) !important;
+      background-size: 20px 20px !important;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
+      background-color: white !important;
+      opacity: 1 !important;
+    }
+
+    .cropper-modal {
+      opacity: 0 !important;
+      background: none !important;
+      display: none !important;
+    }
+
+    h1 {
+      font-size: 1.5em;
+      font-weight: 600;
+    }
+
+    .image-container,
+    .controls-container {
+      float: none !important;
+      width: 100% !important;
+      clear: both !important;
+    }
+
+    #actions {
+      margin-top: 1.5em;
+      width: 100%;
+    }
+
+    .cropper-view-box {
+      outline: 1px solid rgba(255, 255, 255, 0.75) !important;
+    }
+
+    #cropperContainer {
+      width: 100%;
+      display: block;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    #preview {
+      max-width: 100%;
+      max-height: 70vh;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #main-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+      display: block;
+    }
+
+    #cropperContainer {
+      width: 100%;
+      display: block;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .cropper-view-box {
+      outline: 1px solid #fff;
+      outline-color: rgba(255, 255, 255, 0.75);
     }
 
     .button-container {
@@ -164,8 +204,19 @@
     }
 
     .slider-container {
-      margin-top: 1em;
-      width: 100%;
+      width: 100% !important;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 10;
+      background-color: #f6f8fa;
+      padding: 1rem;
+      border-radius: 6px;
+      clear: both;
+    }
+
+    .slider-container input[type="range"] {
+      width: 100% !important;
+      margin: 10px 0;
     }
 
     .slider-group {
@@ -192,69 +243,23 @@
     }
 
 @media screen and (max-width: 768px) {
-  .image-container {
-      padding: 0px;
-      height: 100vh;
-  }
-  .cropper-container {
-    max-height: 60vh;
-    vertical-align: top;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-  }
-
-  #cropperContainer {
-    margin: 0;
-    padding: 0;
-    position: relative;
-    top: 0;
-  }
-
-  #preview {
-    max-height: 60vh;
-    margin: 0;
-    position: relative;
-    top: 0;
-  }
-
-  .cropper-view-box,
-  .cropper-face,
-  .cropper-canvas {
-    position: absolute !important;
-    top: 0 !important;
-    margin: 0 !important;
-    transform: none !important;
-  }
-
   .slider-container {
-    margin-top: calc(60vh + 20px);
+    margin-top: 1rem;
+    padding: 0.5rem;
   }
 
-  .button-container {
-    margin-top: 10px;
-    padding: 5px;
-    position: sticky;
-    bottom: 0;
-    background-color: white;
-    z-index: 1000;
-  }
-
-  .url-input {
-    margin-bottom: 5px;
+  .cropper-container {
+    max-height: 50vh;
   }
 }
 
 @media screen and (max-width: 480px) {
   .cropper-container {
-    max-height: 50vh;
-    vertical-align: top;
+    max-height: 45vh;
   }
 
   #preview {
-    max-height: 50vh;
+    max-height: 45vh;
   }
 }
 
@@ -372,8 +377,8 @@
 
           cropper = new Cropper(preview, {
             aspectRatio: 945/535,
-            viewMode: 3, // Verander naar viewMode 3 om de afbeelding binnen de container te houden
-            autoCropArea: 1,
+            viewMode: 1,
+            autoCropArea: 0.95,
             guides: false,
             cropBoxMovable: true,
             cropBoxResizable: true,
@@ -381,40 +386,35 @@
             responsive: true,
             restore: false,
             checkOrientation: false,
-            initialAspectRatio: 945/535,
-            minCropBoxHeight: 100,
-            minCropBoxWidth: 100,
             modal: true,
-            background: false,
+            background: true,
+            transparent: false,
             autoCrop: true,
             movable: true,
-            center: true,
+            zoomable: true,
+            scalable: true,
             ready: function() {
-              // Centreer de afbeelding binnen de container
-              const containerData = this.cropper.getContainerData();
-              const canvasData = this.cropper.getCanvasData();
+              this.cropper.clear();
 
-              // Bereken de juiste schaal om de afbeelding te laten passen
-              const scaleX = containerData.width / canvasData.naturalWidth;
-              const scaleY = containerData.height / canvasData.naturalHeight;
+              const containerData = this.cropper.getContainerData();
+              const imageData = this.cropper.getImageData();
+
+              const scaleX = containerData.width / imageData.naturalWidth;
+              const scaleY = containerData.height / imageData.naturalHeight;
               const scale = Math.min(scaleX, scaleY);
 
-              // Bereken gecentreerde positie
-              const left = (containerData.width - (canvasData.naturalWidth * scale)) / 2;
-              const top = (containerData.height - (canvasData.naturalHeight * scale)) / 2;
+              const scaledWidth = imageData.naturalWidth * scale;
+              const scaledHeight = imageData.naturalHeight * scale;
 
-              // Pas de canvas data aan
               this.cropper.setCanvasData({
-                left: left,
-                top: top,
-                width: canvasData.naturalWidth * scale,
-                height: canvasData.naturalHeight * scale
+                left: (containerData.width - scaledWidth) / 2,
+                top: (containerData.height - scaledHeight) / 2,
+                width: scaledWidth,
+                height: scaledHeight
               });
 
-              // Zorg dat de cropbox de juiste grootte heeft en gecentreerd is
-              const cropBoxData = this.cropper.getCropBoxData();
-              const cropBoxWidth = Math.min(containerData.width, cropBoxData.width);
-              const cropBoxHeight = (cropBoxWidth * 535) / 945; // Behoud aspect ratio
+              const cropBoxWidth = Math.min(containerData.width, scaledWidth);
+              const cropBoxHeight = (cropBoxWidth * 535) / 945;
 
               this.cropper.setCropBoxData({
                 left: (containerData.width - cropBoxWidth) / 2,
@@ -422,12 +422,14 @@
                 width: cropBoxWidth,
                 height: cropBoxHeight
               });
+
+              this.cropper.crop();
             },
             zoom: function(e) {
-              // Voorkom dat de afbeelding kleiner wordt dan de cropbox
-              if (e.detail.ratio < e.detail.oldRatio &&
-                  (e.detail.canvasData.width < e.detail.cropBoxData.width ||
-                   e.detail.canvasData.height < e.detail.cropBoxData.height)) {
+              if (e.detail.ratio < 0.5) {
+                e.preventDefault();
+              }
+              if (e.detail.ratio > 3) {
                 e.preventDefault();
               }
             }
