@@ -24,32 +24,49 @@
     .image-container {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
       height: 100vh;
       padding: 20px;
       box-sizing: border-box;
+      width: 100%;
     }
 
     #actions {
       margin-top: 1.5em;
+      width: 100%;
     }
 
     .cropper-container {
       max-height: 70vh;
       margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    #cropperContainer {
+      width: 100%;
     }
 
     #preview {
       max-width: 100%;
       max-height: 70vh;
       object-fit: contain;
-      margin-top: 1em;
-      border: 1px solid #d0d7de;
-      border-radius: 6px;
+      margin-top: 0;
     }
 
     .button-container {
       margin-top: 20px;
       padding: 10px;
+      width: 100%;
+      display: flex;
+      gap: 10px;
+    }
+
+    .button-container button {
+      flex: 1;
+      padding: 8px;
     }
 
     button {
@@ -100,6 +117,8 @@
       border: 1px solid #d0d7de;
       border-radius: 6px;
       word-break: break-all;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .file-upload-wrapper {
@@ -109,7 +128,7 @@
     }
 
     .file-upload-button {
-      background-color: #1f883d; /* GitHub Actions green */
+      background-color: #1f883d;
       color: white;
       padding: 0.6em 1.2em;
       font-size: 14px;
@@ -130,12 +149,14 @@
 
     .slider-container {
       margin-top: 1em;
+      width: 100%;
     }
 
     .slider-group {
       display: flex;
       align-items: center;
       margin-bottom: 1em;
+      width: 100%;
     }
 
     .slider-group label {
@@ -160,7 +181,8 @@
       height: 100vh;
   }
   .cropper-container {
-    max-height: 60vh; /* Nog kleiner op mobiel */
+    max-height: 60vh;
+    vertical-align: top;
   }
 
   #preview {
@@ -175,11 +197,16 @@
     background-color: white;
     z-index: 1000;
   }
+
+  .url-input {
+    margin-bottom: 5px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .cropper-container {
     max-height: 50vh;
+    vertical-align: top;
   }
 
   #preview {
