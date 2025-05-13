@@ -372,7 +372,7 @@
 
           cropper = new Cropper(preview, {
             aspectRatio: 945/535,
-            viewMode: 1,
+            viewMode: 3, // Verander naar viewMode 3 om de afbeelding binnen de container te houden
             autoCropArea: 1,
             guides: false,
             cropBoxMovable: true,
@@ -385,21 +385,50 @@
             minCropBoxHeight: 100,
             minCropBoxWidth: 100,
             modal: true,
-            background: true,
+            background: false,
             autoCrop: true,
             movable: true,
+            center: true,
             ready: function() {
+              // Centreer de afbeelding binnen de container
+              const containerData = this.cropper.getContainerData();
               const canvasData = this.cropper.getCanvasData();
-              canvasData.top = 0;
-              this.cropper.setCanvasData(canvasData);
 
+              // Bereken de juiste schaal om de afbeelding te laten passen
+              const scaleX = containerData.width / canvasData.naturalWidth;
+              const scaleY = containerData.height / canvasData.naturalHeight;
+              const scale = Math.min(scaleX, scaleY);
+
+              // Bereken gecentreerde positie
+              const left = (containerData.width - (canvasData.naturalWidth * scale)) / 2;
+              const top = (containerData.height - (canvasData.naturalHeight * scale)) / 2;
+
+              // Pas de canvas data aan
+              this.cropper.setCanvasData({
+                left: left,
+                top: top,
+                width: canvasData.naturalWidth * scale,
+                height: canvasData.naturalHeight * scale
+              });
+
+              // Zorg dat de cropbox de juiste grootte heeft en gecentreerd is
               const cropBoxData = this.cropper.getCropBoxData();
-              cropBoxData.top = 0;
-              this.cropper.setCropBoxData(cropBoxData);
+              const cropBoxWidth = Math.min(containerData.width, cropBoxData.width);
+              const cropBoxHeight = (cropBoxWidth * 535) / 945; // Behoud aspect ratio
 
-              if (window.matchMedia("(max-width: 768px)").matches) {
-                this.cropper.clear();
-                this.cropper.crop();
+              this.cropper.setCropBoxData({
+                left: (containerData.width - cropBoxWidth) / 2,
+                top: (containerData.height - cropBoxHeight) / 2,
+                width: cropBoxWidth,
+                height: cropBoxHeight
+              });
+            },
+            zoom: function(e) {
+              // Voorkom dat de afbeelding kleiner wordt dan de cropbox
+              if (e.detail.ratio < e.detail.oldRatio &&
+                  (e.detail.canvasData.width < e.detail.cropBoxData.width ||
+                   e.detail.canvasData.height < e.detail.cropBoxData.height)) {
+                e.preventDefault();
               }
             }
           });
