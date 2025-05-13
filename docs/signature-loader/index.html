@@ -55,6 +55,19 @@
       cursor: default;
     }
 
+    .right-align {
+      float: right;
+    }
+
+    .button-group {
+      margin-bottom: 0.5em;
+      clear: both;
+    }
+
+    .button-group:last-child {
+      margin-bottom: 0;
+    }
+
     #status {
       margin-top: 1em;
     }
@@ -69,57 +82,57 @@
       word-break: break-all;
     }
 
-      .file-upload-wrapper {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-      }
+    .file-upload-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
 
-      .file-upload-button {
-        background-color: #1f883d; /* GitHub Actions green */
-        color: white;
-        padding: 0.6em 1.2em;
-        font-size: 14px;
-        font-weight: 600;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      }
+    .file-upload-button {
+      background-color: #1f883d; /* GitHub Actions green */
+      color: white;
+      padding: 0.6em 1.2em;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
 
-      .file-upload-input {
-        font-size: 100px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
-      }
+    .file-upload-input {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
 
-      .slider-container {
-        margin-top: 1em;
-      }
+    .slider-container {
+      margin-top: 1em;
+    }
 
-      .slider-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1em;
-      }
+    .slider-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1em;
+    }
 
-      .slider-group label {
-        display: flex;
-        align-items: center;
-        width: 100%;
-      }
+    .slider-group label {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
 
-      .slider-group span {
-        min-width: 100px;
-        white-space: nowrap;
-      }
+    .slider-group span {
+      min-width: 100px;
+      white-space: nowrap;
+    }
 
-      .slider-group input[type="range"] {
-        flex: 1;
-        margin-left: 1em;
-      }
+    .slider-group input[type="range"] {
+      flex: 1;
+      margin-left: 1em;
+    }
 
   </style>
 
@@ -149,15 +162,19 @@
 
   </div>
   <div id="actions">
-    <button id="cropBtn" style="display:none;">Crop</button>
-    <button id="uploadBtn" style="display:none;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
-        <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
-      </svg>
-      Upload
-    </button>
-    <button id="openFormBtn" style="display:none;">Open GitHub Actions form</button>
-    <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
+    <div class="button-group">
+      <button id="cropBtn" style="display:none;">Crop</button>
+      <button id="uploadBtn" style="display:none;" class="right-align">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
+          <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
+        </svg>
+        Upload
+      </button>
+    </div>
+    <div class="button-group">
+      <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
+      <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
+    </div>
   </div>
   <p id="linkDisplay" style="word-break: break-all;"></p>
   <p id="status"></p>
@@ -186,6 +203,14 @@
       cropperContainer.style.filter = `brightness(${brightness}) contrast(${contrast})`;
     }
 
+    function updateButtonText() {
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      const uploadButton = document.querySelector('.file-upload-button');
+      uploadButton.textContent = isMobile ? "Snap Signature" : "Choose Signature image";
+    }
+
+    updateButtonText();
+
     brightnessSlider.addEventListener("input", updateImageFilters);
 
     contrastSlider.addEventListener("input", updateImageFilters);
@@ -201,6 +226,7 @@
         cropper = new Cropper(preview, {
           aspectRatio: NaN,
           viewMode: 1,
+          guides: false,
         });
         cropBtn.style.display = 'inline';
       };
