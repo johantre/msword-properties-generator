@@ -220,7 +220,7 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-          uploadBtn.disabled = false;
+          uploadBtn.disabled = true;
           cropBtn.disabled = false;
           brightnessSlider.disabled = false;
           contrastSlider.disabled = false;
@@ -262,6 +262,7 @@
       }
       const brightness = parseFloat(document.getElementById('brightness').value);
       const contrast = parseFloat(document.getElementById('contrast').value);
+      uploadBtn.disabled = false;
 
       const filteredCanvas = document.createElement('canvas');
       filteredCanvas.width = canvas.width;
