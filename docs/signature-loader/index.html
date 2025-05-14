@@ -94,10 +94,6 @@
           width: 100%;
         }
 
-        .cropper-view-box {
-          outline: 1px solid rgba(255, 255, 255, 0.75) !important;
-        }
-
         .cropper-and-controls {
             display: flex;
             flex-direction: column;
@@ -137,11 +133,6 @@
 
         #cropperContainer.has-image {
             min-height: 200px;
-        }
-
-        .cropper-view-box {
-          outline: 1px solid #fff;
-          outline-color: rgba(255, 255, 255, 0.75);
         }
 
         .button-container {
@@ -213,6 +204,7 @@
           position: relative;
           overflow: hidden;
           display: inline-block;
+          margin-bottom: 10px;
         }
 
         .file-upload-button {
@@ -239,11 +231,9 @@
           width: 100% !important;
           margin-top: 0;
           margin: 0;
-          padding: 0.5rem;
           position: relative;
           z-index: 10;
           background-color: #f6f8fa;
-          padding: 1rem;
           border-radius: 6px;
           clear: both;
         }
@@ -277,13 +267,12 @@
         }
 
     @media screen and (max-width: 768px) {
-      .slider-container {
-        margin-top: 0rem;
-        padding: 0.5rem;
-      }
-
       body {
         margin: 1em;
+      }
+
+      #preview {
+        max-height: 50vh;
       }
 
       #cropperContainer {
@@ -297,15 +286,6 @@
           align-items: center;
           justify-content: center;
       }
-
-      .file-upload-wrapper {
-        margin-bottom: 10px;
-      }
-
-      .image-container {
-        margin-top: 0;
-        margin: 0;
-      }
     }
 
     @media screen and (max-width: 480px) {
@@ -316,54 +296,71 @@
     </style>
 </head>
 <body>
-<h1>Upload your Signature image</h1>
-<div class="file-upload-wrapper">
-    <button class="file-upload-button" type="button">Choose File</button>
-    <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
-</div>
-<div class="cropper-and-controls" style="display:none;">
-    <div id="cropperContainer">
-        <img id="preview" style="display:none;"/>
-    </div>
-    <div class="slider-container">
-        <div class="slider-group">
-            <label>
-                <span>Brightness:</span>
-                <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
-            </label>
+<header>
+    <h1>Upload your Signature image</h1>
+</header>
+<main>
+    <section>
+        <!-- File upload -->
+        <div class="file-upload-wrapper">
+            <button class="file-upload-button" type="button">Choose File</button>
+            <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
         </div>
-        <div class="slider-group">
-            <label>
-                <span>Contrast:</span>
-                <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
-            </label>
+    </section>
+    <section>
+        <!-- Cropper & sliders -->
+        <div class="cropper-and-controls" style="display:none;">
+            <div id="cropperContainer">
+                <img id="preview" style="display:none;"/>
+            </div>
         </div>
-    </div>
-</div>
-<div class="controls-container">
-    <div id="actions">
-        <div class="button-group">
-            <button id="cropBtn" style="display:none;">Crop</button>
-            <button id="uploadBtn" style="display:none;" class="right-align">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"
-                     style="margin-right: 4px; vertical-align: text-bottom;">
-                    <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
-                </svg>
-                Upload
-            </button>
+    </section>
+    <section>
+        <!-- Controls/buttons & status -->
+        <div class="controls-container">
+            <div class="slider-container">
+                <div class="slider-group">
+                    <label>
+                        <span>Brightness:</span>
+                        <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
+                    </label>
+                </div>
+                <div class="slider-group">
+                    <label>
+                        <span>Contrast:</span>
+                        <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
+                    </label>
+                </div>
+            </div>
+            <div id="actions">
+                <div class="button-group">
+                    <button id="cropBtn" style="display:none;">Crop</button>
+                    <button id="uploadBtn" style="display:none;" class="right-align">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"
+                             style="margin-right: 4px; vertical-align: text-bottom;">
+                            <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
+                        </svg>
+                        Upload
+                    </button>
+                </div>
+                <div class="button-group">
+                    <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
+                    <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
+                </div>
+            </div>
+            <p id="linkDisplay" style="word-break: break-all;"></p>
+            <p id="status"></p>
         </div>
-        <div class="button-group">
-            <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
-            <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
-        </div>
-    </div>
-    <p id="linkDisplay" style="word-break: break-all;"></p>
-    <p id="status"></p>
-</div>
-
+    </section>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
 <script>
+    // ===============================================
+    // Variable declarations
+    // ===============================================
+
+    // DOM references
     const fileInput = document.getElementById('fileInput');
     const preview = document.getElementById('preview');
     const cropBtn = document.getElementById('cropBtn');
@@ -376,11 +373,17 @@
     const contrastSlider = document.getElementById("contrast");
     const imagePreview = document.getElementById("preview");
     const cropperContainer = document.getElementById("cropperContainer");
+
+    // Cropper and image state
     let cropper;
     let cropperState = null;
     let croppedBlob;
     let downloadURL;
     let resizeTimer;
+
+    // ===============================================
+    // Function declarations
+    // ===============================================
 
     function updateImageFilters() {
       const brightness = brightnessSlider.value;
@@ -479,6 +482,9 @@
       }
     }
 
+    // ===============================================
+    // Event listeners / Initializations
+    // ===============================================
 
     updateButtonText();
 
@@ -627,6 +633,7 @@
     const styleSheet = document.createElement("style");
     styleSheet.innerText = containerStyle;
     document.head.appendChild(styleSheet);
+
     cropBtn.addEventListener('click', () => {
       const canvas = cropper.getCroppedCanvas();
       if (canvas.width < 10 || canvas.height < 10) {
