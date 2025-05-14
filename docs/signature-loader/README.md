@@ -35,7 +35,7 @@ Then adjust cropping, contrast and brightness to make your signature match with 
 - Click **"Crop"** at the bottom, and 
 - Click **"Upload"** to copy the generated link to your clipboard.\
 In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a **"Copy link again"** button.
-- Click the **"Open GitHub Actions form"** button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
+- Click the **"GitHub Actions form"** button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Signature Loader1.png"><img src="../../assets/signature-loader/Signature Loader1.png" width="240"></a>
 <a href="../../assets/signature-loader/Signature Loader2.png"><img src="../../assets/signature-loader/Signature Loader2.png" width="240"></a>
