@@ -1,344 +1,361 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Upload Signature image</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css"/>
-  <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" type="image/svg+xml">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap');
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Upload Signature image</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css"/>
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg" type="image/svg+xml">
+    <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+          margin: 2em;
+          background-color: #f6f8fa;
+          color: #24292f;
+        }
 
-    body {
-      font-family: "Segoe UI", sans-serif;
-      margin: 2em;
-      background-color: #f6f8fa;
-      color: #24292f;
-    }
+        .cropper-container {
+          position: relative;
+          font-size: 0;
+          line-height: 0;
+          direction: ltr;
+          touch-action: none;
+          -webkit-tap-highlight-color: transparent;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
 
-    .cropper-container {
-      direction: ltr;
-      font-size: 0;
-      line-height: 0;
-      position: relative;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      max-height: 60vh;
-      margin: 10px auto;
-    }
+        .cropper-wrap-box,
+        .cropper-canvas,
+        .cropper-drag-box {
+          bottom: 0;
+          left: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
 
-    .cropper-wrap-box,
-    .cropper-canvas,
-    .cropper-drag-box,
-    .cropper-crop-box,
-    .cropper-view-box {
-      bottom: 0;
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
+        .cropper-crop-box {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform-origin: 0% 0%;
+          cursor: move;
+          border: 1px solid #39f;
+          box-sizing: border-box;
+          background-color: rgba(255, 255, 255, 0.3);
+          z-index: 1000;
+        }
 
-    .cropper-bg {
-      background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
-                        linear-gradient(-45deg, #ccc 25%, transparent 25%),
-                        linear-gradient(45deg, transparent 75%, #ccc 75%),
-                        linear-gradient(-45deg, transparent 75%, #ccc 75%) !important;
-      background-size: 20px 20px !important;
-      background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
-      background-color: white !important;
-      opacity: 1 !important;
-    }
+        .cropper-view-box {
+          display: block;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          outline: 1px solid #39f;
+          outline-color: rgba(51, 153, 255, 0.75);
+        }
 
-    .cropper-modal {
-      opacity: 0 !important;
-      background: none !important;
-      display: none !important;
-    }
+        .cropper-bg {
+          background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+                            linear-gradient(-45deg, #ccc 25%, transparent 25%),
+                            linear-gradient(45deg, transparent 75%, #ccc 75%),
+                            linear-gradient(-45deg, transparent 75%, #ccc 75%) !important;
+          background-size: 20px 20px !important;
+          background-position: 0 0, 0 10px, 10px -10px, -10px 0px !important;
+          background-color: white !important;
+          opacity: 1 !important;
+        }
 
-    h1 {
-      font-size: 1.5em;
-      font-weight: 600;
-    }
+        .cropper-modal {
+          opacity: 0 !important;
+          background: none !important;
+          display: none !important;
+        }
 
-    .image-container,
-    .controls-container {
-      float: none !important;
-      width: 100% !important;
-      clear: both !important;
-      margin-top: 1rem;
-    }
+        h1 {
+          font-size: 1.5em;
+          font-weight: 600;
+        }
 
-    #actions {
-      margin-top: 1.5em;
-      width: 100%;
-    }
+        .image-container,
+        .controls-container {
+          float: none !important;
+          width: 100% !important;
+          clear: both !important;
+          margin-top: 1rem;
+        }
 
-    .cropper-view-box {
-      outline: 1px solid rgba(255, 255, 255, 0.75) !important;
-    }
+        #actions {
+          margin-top: 1.5em;
+          width: 100%;
+        }
 
-    .cropper-and-controls {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
+        .cropper-view-box {
+          outline: 1px solid rgba(255, 255, 255, 0.75) !important;
+        }
+
+        .cropper-and-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 0;
+        }
+
+        #preview {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        #main-container {
+          width: 100%;
+          max-width: 100%;
+          padding: 0;
+          margin: 0;
+          display: block;
+        }
+
+        #cropperContainer {
+          width: 100%;
+          max-width: 100%;
+          max-height: calc(100vh - 450px);
+          margin: 0 auto;
+          overflow: hidden;
+          position: relative;
+          display: flex;
+          align-items: center;   /* optioneel, voor vertical align */
+          justify-content: center;
+        }
+
+        #cropperContainer.has-image {
+            min-height: 200px;
+        }
+
+        .cropper-view-box {
+          outline: 1px solid #fff;
+          outline-color: rgba(255, 255, 255, 0.75);
+        }
+
+        .button-container {
+          margin-top: 20px;
+          padding: 10px;
+          width: 100%;
+          display: flex;
+          gap: 10px;
+        }
+
+        .button-container button {
+          flex: 1;
+          padding: 8px;
+        }
+
+        button {
+          background-color: #1f883d;
+          color: white;
+          border: 1px solid rgba(27, 31, 36, 0.15);
+          border-radius: 6px;
+          padding: 6px 16px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          box-shadow: rgba(27, 31, 36, 0.04) 0 1px 0;
+          transition: background-color 0.2s ease;
+          margin-right: 0.5em;
+        }
+
+        button:hover {
+          background-color: #1a7f37;
+        }
+
+        button:disabled {
+          background-color: #94d3a2;
+          cursor: default;
+        }
+
+        .right-align {
+          float: right;
+        }
+
+        .button-group {
+          margin-bottom: 0.5em;
+          clear: both;
+        }
+
+        .button-group:last-child {
+          margin-bottom: 0;
+        }
+
+        #status {
+          margin-top: 1em;
+        }
+
+        #linkDisplay {
+          margin-top: 1em;
+          font-family: monospace;
+          background: #fff;
+          padding: 0.5em;
+          border: 1px solid #d0d7de;
+          border-radius: 6px;
+          word-break: break-all;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .file-upload-wrapper {
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+        }
+
+        .file-upload-button {
+          background-color: #1f883d;
+          color: white;
+          padding: 0.6em 1.2em;
+          font-size: 14px;
+          font-weight: 600;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        .file-upload-input {
+          font-size: 100px;
+          position: absolute;
+          left: 0;
+          top: 0;
+          opacity: 0;
+        }
+
+        .slider-container {
+          width: 100% !important;
+          margin-top: 0;
+          margin: 0;
+          padding: 0.5rem;
+          position: relative;
+          z-index: 10;
+          background-color: #f6f8fa;
+          padding: 1rem;
+          border-radius: 6px;
+          clear: both;
+        }
+
+        .slider-container input[type="range"] {
+          width: 100% !important;
+          margin: 10px 0;
+        }
+
+        .slider-group {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1em;
+          width: 100%;
+        }
+
+        .slider-group label {
+          display: flex;
+          align-items: center;
+          width: 100%;
+        }
+
+        .slider-group span {
+          min-width: 100px;
+          white-space: nowrap;
+        }
+
+        .slider-group input[type="range"] {
+          flex: 1;
+          margin-left: 1em;
+        }
+
+    @media screen and (max-width: 768px) {
+      .slider-container {
+        margin-top: 0rem;
+        padding: 0.5rem;
+      }
+
+      body {
+        margin: 1em;
+      }
+
+      #cropperContainer {
+        margin-top: 10px;
+      }
+
+      .file-upload-wrapper {
+        margin-bottom: 10px;
+      }
+
+      .image-container {
+        margin-top: 0;
         margin: 0;
+      }
     }
 
-    #preview {
-      max-width: 100%;
-      max-height: 70vh;
-      display: block;
-      margin: 0 auto;
+    @media screen and (max-width: 480px) {
+      #preview {
+        max-height: 50vh;
+      }
     }
-
-    #main-container {
-      width: 100%;
-      max-width: 100%;
-      padding: 0;
-      margin: 0;
-      display: block;
-    }
-
-    #cropperContainer {
-      width: 100%;
-      display: block;
-      position: relative;
-      margin-bottom: 0;
-      height: auto;
-      min-height: 0;
-      margin-top: 10px;
-      margin: 0;
-      padding: 0;
-    }
-
-    #cropperContainer.has-image {
-        min-height: 200px;
-    }
-
-    .cropper-view-box {
-      outline: 1px solid #fff;
-      outline-color: rgba(255, 255, 255, 0.75);
-    }
-
-    .button-container {
-      margin-top: 20px;
-      padding: 10px;
-      width: 100%;
-      display: flex;
-      gap: 10px;
-    }
-
-    .button-container button {
-      flex: 1;
-      padding: 8px;
-    }
-
-    button {
-      background-color: #1f883d;
-      color: white;
-      border: 1px solid rgba(27, 31, 36, 0.15);
-      border-radius: 6px;
-      padding: 6px 16px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: rgba(27, 31, 36, 0.04) 0 1px 0;
-      transition: background-color 0.2s ease;
-      margin-right: 0.5em;
-    }
-
-    button:hover {
-      background-color: #1a7f37;
-    }
-
-    button:disabled {
-      background-color: #94d3a2;
-      cursor: default;
-    }
-
-    .right-align {
-      float: right;
-    }
-
-    .button-group {
-      margin-bottom: 0.5em;
-      clear: both;
-    }
-
-    .button-group:last-child {
-      margin-bottom: 0;
-    }
-
-    #status {
-      margin-top: 1em;
-    }
-
-    #linkDisplay {
-      margin-top: 1em;
-      font-family: monospace;
-      background: #fff;
-      padding: 0.5em;
-      border: 1px solid #d0d7de;
-      border-radius: 6px;
-      word-break: break-all;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .file-upload-wrapper {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-    }
-
-    .file-upload-button {
-      background-color: #1f883d;
-      color: white;
-      padding: 0.6em 1.2em;
-      font-size: 14px;
-      font-weight: 600;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    }
-
-    .file-upload-input {
-      font-size: 100px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-    }
-
-    .slider-container {
-      width: 100% !important;
-      margin-top: 0;
-      margin: 0;
-      padding: 0.5rem;
-      position: relative;
-      z-index: 10;
-      background-color: #f6f8fa;
-      padding: 1rem;
-      border-radius: 6px;
-      clear: both;
-    }
-
-    .slider-container input[type="range"] {
-      width: 100% !important;
-      margin: 10px 0;
-    }
-
-    .slider-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1em;
-      width: 100%;
-    }
-
-    .slider-group label {
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
-
-    .slider-group span {
-      min-width: 100px;
-      white-space: nowrap;
-    }
-
-    .slider-group input[type="range"] {
-      flex: 1;
-      margin-left: 1em;
-    }
-
-@media screen and (max-width: 768px) {
-  .slider-container {
-    margin-top: 0rem;
-    padding: 0.5rem;
-  }
-
-  .cropper-container {
-    max-height: 50vh;
-  }
-  body {
-    margin: 1em;
-  }
-
-  #cropperContainer {
-    margin-top: 10px;
-  }
-
-  .file-upload-wrapper {
-    margin-bottom: 10px;
-  }
-
-  .image-container {
-    margin-top: 0;
-    margin: 0;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .cropper-container {
-    max-height: 50vh;
-  }
-
-  #preview {
-    max-height: 50vh;
-  }
-}
-  </style>
+    </style>
 </head>
 <body>
-  <h1>Upload your Signature image</h1>
-  <div class="file-upload-wrapper">
-      <button class="file-upload-button" type="button">Choose File</button>
-      <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
-  </div>
-  <div class="cropper-and-controls">
-      <div id="cropperContainer">
-          <img id="preview" style="display:none;" />
-      </div>
-      <div class="slider-container">
-          <div class="slider-group">
-              <label>
-                  <span>Brightness:</span>
-                  <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
-              </label>
-          </div>
-          <div class="slider-group">
-              <label>
-                  <span>Contrast:</span>
-                  <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
-              </label>
-          </div>
-      </div>
-  </div>
-  <div class="controls-container">
-      <div id="actions">
-          <div class="button-group">
-              <button id="cropBtn" style="display:none;">Crop</button>
-              <button id="uploadBtn" style="display:none;" class="right-align">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: text-bottom;">
-                      <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
-                  </svg>
-                  Upload
-              </button>
-          </div>
-          <div class="button-group">
-              <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
-              <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
-          </div>
-      </div>
-      <p id="linkDisplay" style="word-break: break-all;"></p>
-      <p id="status"></p>
-  </div>
+<h1>Upload your Signature image</h1>
+<div class="file-upload-wrapper">
+    <button class="file-upload-button" type="button">Choose File</button>
+    <input type="file" id="fileInput" class="file-upload-input" accept="image/*" capture="environment">
+</div>
+<div class="cropper-and-controls" style="display:none;">
+    <div id="cropperContainer">
+        <img id="preview" style="display:none;"/>
+    </div>
+    <div class="slider-container">
+        <div class="slider-group">
+            <label>
+                <span>Brightness:</span>
+                <input type="range" id="brightness" min="0.5" max="1.5" step="0.01" value="1">
+            </label>
+        </div>
+        <div class="slider-group">
+            <label>
+                <span>Contrast:</span>
+                <input type="range" id="contrast" min="0.5" max="1.5" step="0.01" value="1">
+            </label>
+        </div>
+    </div>
+</div>
+<div class="controls-container">
+    <div id="actions">
+        <div class="button-group">
+            <button id="cropBtn" style="display:none;">Crop</button>
+            <button id="uploadBtn" style="display:none;" class="right-align">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 16 16"
+                     style="margin-right: 4px; vertical-align: text-bottom;">
+                    <path d="M4.5 3.5v9l7-4.5-7-4.5z"/>
+                </svg>
+                Upload
+            </button>
+        </div>
+        <div class="button-group">
+            <button id="copyLinkBtn" style="display:none;" disabled>Copy link again</button>
+            <button id="openFormBtn" style="display:none;" class="right-align">Open GitHub Actions form</button>
+        </div>
+    </div>
+    <p id="linkDisplay" style="word-break: break-all;"></p>
+    <p id="status"></p>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
-  <script>
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
+<script>
     const fileInput = document.getElementById('fileInput');
     const preview = document.getElementById('preview');
     const cropBtn = document.getElementById('cropBtn');
@@ -352,8 +369,10 @@
     const imagePreview = document.getElementById("preview");
     const cropperContainer = document.getElementById("cropperContainer");
     let cropper;
+    let cropperState = null;
     let croppedBlob;
     let downloadURL;
+    let resizeTimer;
 
     function updateImageFilters() {
       const brightness = brightnessSlider.value;
@@ -367,6 +386,92 @@
       uploadButton.textContent = isMobile ? "Snap Signature" : "Choose Signature image";
     }
 
+    function updateCropperScale() {
+      if (!cropper) return;
+
+      const container = document.getElementById('cropperContainer');
+      const containerRect = container.getBoundingClientRect();
+      const targetRatio = 945/535;
+
+      let width = containerRect.width;
+      let height = width / targetRatio;
+
+      if (height > containerRect.height) {
+          height = containerRect.height;
+          width = height * targetRatio;
+      }
+
+      const left = (containerRect.width - width) / 2;
+      const top = (containerRect.height - height) / 2;
+
+      cropper.setCanvasData({
+          left: left,
+          top: top,
+          width: width,
+          height: height
+      });
+
+      cropper.setCropBoxData({
+          left: left,
+          top: top,
+          width: width,
+          height: height
+      });
+    }
+
+    function resizeCanvasToWindow() {
+      if (!cropper) return;
+
+      const headerHeight = 100;
+      const controlsHeight = 200;
+      const availableHeight = window.innerHeight - headerHeight - controlsHeight;
+      const availableWidth = window.innerWidth * 0.9;
+      const container = document.getElementById('cropperContainer');
+
+      const targetRatio = 945/535;
+      let containerWidth = availableWidth;
+      let containerHeight = containerWidth / targetRatio;
+
+      if (containerHeight > availableHeight) {
+          containerHeight = availableHeight;
+          containerWidth = containerHeight * targetRatio;
+      }
+
+      container.style.width = containerWidth + 'px';
+      container.style.height = containerHeight + 'px';
+
+      if (cropper) {
+          const canvasData = {
+              left: 0,
+              top: 0,
+              width: containerWidth,
+              height: containerHeight
+          };
+          console.log("canvasData before setCanvasData:", canvasData);
+          cropper.setCanvasData(canvasData);
+
+          const cropBoxData = cropper.getCropBoxData();
+          if (cropBoxData) {
+              const aspectRatio = 945/535;
+              let newWidth = containerWidth * 0.9;
+              let newHeight = newWidth / aspectRatio;
+
+              if (newHeight > containerHeight * 0.9) {
+                  newHeight = containerHeight * 0.9;
+                  newWidth = newHeight * aspectRatio;
+              }
+
+              cropper.setCropBoxData({
+                  left: (containerWidth - newWidth) / 2,
+                  top: (containerHeight - newHeight) / 2,
+                  width: newWidth,
+                  height: newHeight
+              });
+          }
+      }
+    }
+
+
     updateButtonText();
 
     brightnessSlider.addEventListener("input", updateImageFilters);
@@ -376,8 +481,25 @@
     fileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
+        document.querySelector('.cropper-and-controls').style.display = 'flex';
         const reader = new FileReader();
         reader.onload = function(event) {
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+
+          preview.onload = function() {
+            if (cropper) {
+              cropper.destroy();
+            }
+            cropper = new Cropper(preview, {
+                aspectRatio: 945/535,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true,
+                background: true,
+                guides: false
+            });
+          }
           uploadBtn.disabled = true;
           cropBtn.disabled = false;
           brightnessSlider.disabled = false;
@@ -404,25 +526,23 @@
           cropperContainer.classList.add('has-image');
 
           cropper = new Cropper(preview, {
+            viewMode: 2,
+            dragMode: 'move',
             aspectRatio: 945/535,
-            viewMode: 1,
-            autoCropArea: 0.95,
+            autoCropArea: 1,
+            restore: false,
             guides: false,
+            center: true,
+            highlight: false,
             cropBoxMovable: true,
             cropBoxResizable: true,
-            dragMode: 'move',
+            toggleDragModeOnDblclick: false,
             responsive: true,
-            restore: false,
-            checkOrientation: false,
-            modal: true,
-            background: true,
-            transparent: false,
-            autoCrop: true,
-            movable: true,
-            zoomable: true,
-            scalable: true,
             ready: function() {
               this.cropper.clear();
+              resizeCanvasToWindow();
+              updateCropperScale();
+              setTimeout(updateCropperScale, 100);
 
               setTimeout(() => {
                 const cropperBox = document.getElementById('cropperContainer').getBoundingClientRect();
@@ -451,6 +571,7 @@
                 });
 
                 this.cropper.crop();
+                updateCropperScale();
               }, 100);
             },
             zoom: function(e) {
@@ -466,6 +587,38 @@
         reader.readAsDataURL(file);
       }
     });
+
+    cropperContainer.style.overflow = "visible";
+
+    window.addEventListener('load', resizeCanvasToWindow);
+
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+        if (cropper && preview.src) {
+          cropper.destroy();
+          cropper = new Cropper(preview, {
+            aspectRatio: 945 / 535,
+            viewMode: 1,
+            autoCropArea: 1,
+            guides: false,
+            responsive: true,
+            background: true,
+          });
+        }
+        }, 200);
+    });
+
+    const containerStyle = `
+    #cropperContainer {
+        overflow: hidden;
+        position: relative;
+    }
+    `;
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = containerStyle;
+    document.head.appendChild(styleSheet);
     cropBtn.addEventListener('click', () => {
       const canvas = cropper.getCroppedCanvas();
       if (canvas.width < 10 || canvas.height < 10) {
@@ -567,6 +720,6 @@
     document.querySelector('.file-upload-button').addEventListener('click', () => {
       document.getElementById('fileInput').click();
     });
-  </script>
+</script>
 </body>
 </html>
