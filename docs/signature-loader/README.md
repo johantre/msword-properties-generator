@@ -5,10 +5,10 @@ This README.md is part of the [msword-properties-generator](https://github.com/j
 ## Some background
 Under the hood, instead of Dropbox or Google Drive, the services of [Uguu.se](https://uguu.se/) are being used to provide a temporary download link in the workflow to store on Provider data in the private repo [msword-private-assets](https://github.com/johantre/msword-private-assets)\
 [Uguu](https://uguu.se/) is a service that 
-- doesn't need an account, 
-- stores your image for 3 hours of time 
-- removes your image after that period of 3 hours.
-- has API support
+- Doesn't need an account.
+- Stores your image for 3 hours.
+- Removes your image after that period.
+- Has API support.
 - The link [Uguu](https://uguu.se/) returns is only seen to you, and unless you pass that link to others, it stays only known by you. 
 
 🗨️ "Why not directly committing & pushing to that private repo?" 🗨️"Why using a step in between?" you might ask.\
@@ -16,7 +16,7 @@ That would leave quite a few problems unresolved:
 - The permissions to repo where the images are stored would have to be managed, which isn't sustainable.
 - Privacy: it would be possible to download all images stored, even though they are encrypted and stored with a hashed file name.
 - The encryption would have to be done client side, which leaves too much complexity for the user.
-- We don't want to leave any traces in the repo of the unencrypted image. The only version in the private repo can be the encrypted version.
+- We don't want to leave any traces in the repo of the unencrypted image. The only version of your image in the private repo is the encrypted version.
 
 ## ⚠️ Dependencies ⚠️
 Below, everything what's under the hood.
@@ -24,8 +24,8 @@ Below, everything what's under the hood.
 - [msword-signature-proxy](https://github.com/johantre/msword-signature-proxy). Cloudflare Worker script to assure requests to [Uguu.se](https://uguu.se/) are done with the sufficient headers.
 
 ## Usage 
-This helper is part if this repo and hosted through GitHub Pages. All you need is the link to get started.\
-It can be used through desktop or mobile. Most handy is mobile, as this offers you the means of taking a snap and work with that directly.\
+This helper is part of this repo and hosted through GitHub Pages. All you need is the link to get started.\
+It can be used through desktop or mobile. Most practical is mobile, as this offers you the means of taking a snap and work with that directly, but desktop works as well.\
 Below is a step-by-step guide on mobile to illustrate.\
 💡The actual production link💡:  **https://johantre.github.io/msword-properties-generator/signature-loader/**
 
@@ -48,7 +48,7 @@ If you clicked **"Open GitHub Actions form"** you'll see the first screen. ⚠�
 - Here you click the **"Run workflow"** button. (which won't be available if you didn't log in)\
 You'll see the input screen (same as explained in [msword-properties-generator](https://github.com/johantre/msword-properties-generator) README.md)
 - On mobile, **long-press the signature field** at the bottom of the form, select **"Paste"** to paste your [Uguu](https://uguu.se/) link from your clipboard.
-- Fill out the other Provider data fields
+- Fill out the other Provider data fields.
 - Hit **"Run workflow"** at the bottom to persist your Provider data to the private repo.\
 Not sure what to fill out there?  Check out the template document [Recht om te vertegenwoordigen.docx](../../res/Recht om te vertegenwoordigen.docx) in this repo for some guidance. The fields are named so know what data to fill out where. 
 <div style="display: flex; justify-content: space-between;">
@@ -64,11 +64,11 @@ See [msword-properties-generator](https://github.com/johantre/msword-properties-
 
 Once the above workflow did run, your screen will look like the first screen below.\
 We'll need to run another workflow to generate the document pair with all the filled out data.
-- **Click the workflow selector** on top
-- Select **"Generate, Send & add to Dropbox"**
-- Fill out the Customer data
-- Fill out the Provider mail again, ⚠️the same as in the Provider workflow⚠️
-- Hit the **"Run workflow"** at the bottom 
+- **Click the workflow selector** on top.
+- Select **"Generate, Send & add to Dropbox"**.
+- Fill out the Customer data.
+- Fill out the Provider mail again, ⚠️the same as in the Provider workflow⚠️.
+- Hit the **"Run workflow"** at the bottom.
 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Usage1.png"><img src="../../assets/signature-loader/Usage1.png" width="240"></a>
