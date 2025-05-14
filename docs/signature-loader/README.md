@@ -33,7 +33,7 @@ Below is a step-by-step guide on mobile to illustrate.\
 - On mobile, clicking the **"Choose file"** button opens up the camera app so you can take a snap of your signature.\
 Then adjust cropping, contrast and brightness to make your signature match with the background of the document it will be placed.
 - Click **"Crop"** at the bottom, and 
-- Click **"Upload"** so have the link copied to your clipboard.\
+- Click **"Upload"** to copy the generated link to your clipboard.\
 In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a **"Copy link again"** button.
 - Click the **"Open GitHub Actions form"** button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
 <div style="display: flex; justify-content: space-between;">
