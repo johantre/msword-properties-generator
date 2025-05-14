@@ -287,7 +287,15 @@
       }
 
       #cropperContainer {
-        margin-top: 10px;
+          width: 100%;
+          max-width: 100%;
+          max-height: calc(100vh - 450px);
+          margin: 0 auto;
+          overflow: hidden;
+          position: relative;
+          display: flex;
+          align-items: center;   /* optioneel, voor vertical align */
+          justify-content: center;
       }
 
       .file-upload-wrapper {
