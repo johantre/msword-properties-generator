@@ -130,12 +130,41 @@ function updateButtonText() {
   uploadButton.textContent = isMobile ? "Snap Signature" : "Choose Signature image";
 }
 
+function rotateLeftHandler() {
+  rotateAndFit(-90);
+  setTimeout(() => {
+    fitAndCenter();
+    setTimeout(() => {
+      if (cropper) {
+        centerCropBox();
+      }
+    }, 70);
+  }, 80);
+}
+
+function rotateRightHandler() {
+  rotateAndFit(90);
+  setTimeout(() => {
+    fitAndCenter();
+    setTimeout(() => {
+      if (cropper) {
+        centerCropBox();
+      }
+    }, 70);
+  }, 80);
+}
+
 // ===============================================
 // Event listeners / Initializations
 // ===============================================
 updateButtonText();
 
-window.addEventListener('DOMContentLoaded', resizeCropperContainer);
+// window.addEventListener('DOMContentLoaded', resizeCropperContainer);
+window.addEventListener('DOMContentLoaded', function () {
+  resizeCropperContainer()
+  rotateLeft.addEventListener('click', rotateLeftHandler);
+  rotateRight.addEventListener('click', rotateRightHandler);
+});
 
 window.addEventListener('resize', resizeCropperContainer);
 
@@ -194,7 +223,7 @@ contrastSlider.addEventListener("input", updateImageFilters);
 openFormBtn.addEventListener('click', () => {
   window.open('https://github.com/johantre/msword-properties-generator/actions/workflows/subscribe-or-update-provider.yml', '_blank');
 });
-
+/*
 rotateRight.addEventListener('click', function () {
   rotateAndFit(90);
   setTimeout(() => {
@@ -218,7 +247,7 @@ rotateLeft.addEventListener('click', function () {
     }, 70);
   }, 80);
 });
-
+*/
 uploadBtn.addEventListener('click', () => {
   if (!croppedBlob) return;
   status.textContent = 'Uploading...';
