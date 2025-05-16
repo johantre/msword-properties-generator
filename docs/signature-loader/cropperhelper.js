@@ -262,7 +262,7 @@ fileInput.addEventListener('change', function (e) {
           background: true,
           responsive: true,
           autoCrop: true,
-          dragMode: 'move',
+          dragMode: 'none',
           movable: true,
           zoomable: true,
           ready: () => {
