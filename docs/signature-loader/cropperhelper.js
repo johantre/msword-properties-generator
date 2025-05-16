@@ -130,8 +130,7 @@ function updateButtonText() {
   uploadButton.textContent = isMobile ? "Snap Signature" : "Choose Signature image";
 }
 
-function rotateLeftHandler() {
-  console.log('LEFT rotate', Date.now(), e);
+function rotateLeftHandler(e) {
   rotateAndFit(-90);
   setTimeout(() => {
     fitAndCenter();
@@ -141,10 +140,10 @@ function rotateLeftHandler() {
       }
     }, 70);
   }, 80);
+  logToScreen('LEFT rotate');
 }
 
-function rotateRightHandler() {
-  console.log('RIGHT rotate', Date.now(), e);
+function rotateRightHandler(e) {
   rotateAndFit(90);
   setTimeout(() => {
     fitAndCenter();
@@ -154,6 +153,19 @@ function rotateRightHandler() {
       }
     }, 70);
   }, 80);
+  logToScreen('RIGHT rotate');
+}
+
+function logToScreen(msg) {
+  let el = document.getElementById('logDisplay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'logDisplay';
+    el.style = 'position:fixed;bottom:0;left:0;width:100vw;z-index:9999;background:rgba(0,0,0,0.85);color:#fff;padding:6px;font-size:12px;max-height:30vh;overflow:auto;';
+    document.body.appendChild(el);
+  }
+  const t = new Date().toLocaleTimeString();
+  el.innerHTML = `[${t}] ${msg}<br>` + el.innerHTML;
 }
 
 // ===============================================
