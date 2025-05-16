@@ -140,6 +140,7 @@ function rotateLeftHandler(e) {
       }
     }, 70);
   }, 80);
+  logToScreen('LEFT rotate');
 }
 
 function rotateRightHandler(e) {
@@ -152,6 +153,7 @@ function rotateRightHandler(e) {
       }
     }, 70);
   }, 80);
+  logToScreen('RIGHT rotate');
 }
 
 function logToScreen(msg) {
