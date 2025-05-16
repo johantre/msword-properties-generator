@@ -179,8 +179,15 @@ function logToScreen(msg) {
 
   const t = new Date().toLocaleTimeString();
   const newLine = document.createElement('div');
-  newLine.textContent = `[${t}] ${msg}`;
+  if (typeof msg === 'object') {
+    try {
+      msg = JSON.stringify(msg, null, 2);
+    } catch {
+      msg = String(msg);
+    }
+  }
 
+  newLine.textContent = `[${t}] ${msg}`;
   el.appendChild(newLine);
 }
 
@@ -205,12 +212,26 @@ fileInput.addEventListener('change', function (e) {
   loadImage(
     file,
     function (img) {
+      if (!img) {
+        logToScreen('FOUT: img is null of undefined');
+        return;
+      }
+      logToScreen('Type: ' + img.nodeName);
+      if (img.nodeName === "CANVAS") {
+        logToScreen('Canvas size: ' + img.width + ' x ' + img.height);
+      } else if (img.nodeName === "IMG") {
+        logToScreen('Image size: ' + img.naturalWidth + ' x ' + img.naturalHeight);
+      } else {
+        logToScreen('Unknown type. img=' + img);
+      }
+
       let dataUrl;
       if (img.toDataURL) {
-        dataUrl = img.toDataURL(); // canvas variant
+        dataUrl = img.toDataURL();
       } else if (img.src) {
-        dataUrl = img.src; // img element
+        dataUrl = img.src;
       } else {
+        logToScreen('couldnt find dataUrl on img!');
         return;
       }
 
