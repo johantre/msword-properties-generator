@@ -202,48 +202,62 @@ fileInput.addEventListener('change', function (e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    preview.onload = function () {
-      cropperAndControls.style.display = 'flex';
-      preview.style.display = 'block';
-      rotateButtons.style.display = 'flex';
-      cropBtn.style.display = 'inline-block';
-      uploadBtn.style.display = 'inline-block';
+  loadImage(
+    file,
+    function (img) {
+      let dataUrl;
+      if (img.toDataURL) {
+        dataUrl = img.toDataURL(); // canvas variant
+      } else if (img.src) {
+        dataUrl = img.src; // img element
+      } else {
+        return;
+      }
 
-      brightnessSlider.disabled = false;
-      contrastSlider.disabled = false;
-      rotateLeft.disabled = false;
-      rotateRight.disabled = false;
-      cropBtn.disabled = false;
+      preview.onload = function () {
+        cropperAndControls.style.display = 'flex';
+        preview.style.display = 'block';
+        rotateButtons.style.display = 'flex';
+        cropBtn.style.display = 'inline-block';
+        uploadBtn.style.display = 'inline-block';
 
-      originalWidth = preview.naturalWidth;
-      originalHeight = preview.naturalHeight;
-      currentWidth = originalWidth;
-      currentHeight = originalHeight;
-      rotation = 0;
+        brightnessSlider.disabled = false;
+        contrastSlider.disabled = false;
+        rotateLeft.disabled = false;
+        rotateRight.disabled = false;
+        cropBtn.disabled = false;
 
-      if (cropper) cropper.destroy();
-      cropper = new Cropper(preview, {
-        aspectRatio: 945 / 535,
-        viewMode: 1,
-        autoCropArea: 0.4,
-        background: true,
-        responsive: true,
-        autoCrop: true,
-        dragMode: 'move',
-        movable: true,
-        zoomable: true,
-        ready: () => {
-          fitAndCenter();
-          centerCropBox();
-        },
-      });
-      resizeCropperContainer();
-    };
-    preview.src = event.target.result;
-  };
-  reader.readAsDataURL(file);
+        originalWidth = preview.naturalWidth;
+        originalHeight = preview.naturalHeight;
+        currentWidth = originalWidth;
+        currentHeight = originalHeight;
+        rotation = 0;
+
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(preview, {
+          aspectRatio: 945 / 535,
+          viewMode: 1,
+          autoCropArea: 0.4,
+          background: true,
+          responsive: true,
+          autoCrop: true,
+          dragMode: 'move',
+          movable: true,
+          zoomable: true,
+          ready: () => {
+            fitAndCenter();
+            centerCropBox();
+          },
+        });
+        resizeCropperContainer();
+      };
+      preview.src = dataUrl;
+    },
+    {
+      canvas: true,
+      orientation: true,
+    }
+  );
 });
 
 brightnessSlider.addEventListener("input", updateImageFilters);
