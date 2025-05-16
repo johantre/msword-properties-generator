@@ -264,7 +264,7 @@ fileInput.addEventListener('change', function (e) {
           autoCrop: true,
           dragMode: 'none',
           movable: true,
-          zoomable: false,
+          zoomable: true,
           ready: () => {
             fitAndCenter();
             centerCropBox();
