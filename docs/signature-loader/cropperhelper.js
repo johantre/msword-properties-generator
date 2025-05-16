@@ -62,6 +62,9 @@ function fitAndCenter() {
 function rotateAndFit(degrees) {
   if (!cropper) return;
 
+  logString = degrees + " " + "rotation: " + rotation
+  logToScreen(logString);
+
   rotation = (rotation + degrees) % 360;
   if (rotation < 0) rotation += 360;
   cropper.rotateTo(rotation);
@@ -140,7 +143,6 @@ function rotateLeftHandler(e) {
       }
     }, 70);
   }, 80);
-  logToScreen('LEFT rotate');
 }
 
 function rotateRightHandler(e) {
@@ -153,7 +155,6 @@ function rotateRightHandler(e) {
       }
     }, 70);
   }, 80);
-  logToScreen('RIGHT rotate');
 }
 
 function logToScreen(msg) {
