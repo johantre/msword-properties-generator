@@ -8,7 +8,7 @@ let originalWidth = 0;
 let originalHeight = 0;
 let currentWidth = 0;
 let currentHeight = 0;
-let LOGGING_ENABLED = false;
+let LOGGING_ENABLED = true;
 
 // Cropper and image state
 const preview = document.getElementById('preview');
