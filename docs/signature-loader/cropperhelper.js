@@ -131,6 +131,7 @@ function updateButtonText() {
 }
 
 function rotateLeftHandler() {
+  console.log('LEFT rotate', Date.now(), e);
   rotateAndFit(-90);
   setTimeout(() => {
     fitAndCenter();
@@ -143,6 +144,7 @@ function rotateLeftHandler() {
 }
 
 function rotateRightHandler() {
+  console.log('RIGHT rotate', Date.now(), e);
   rotateAndFit(90);
   setTimeout(() => {
     fitAndCenter();
