@@ -161,11 +161,26 @@ function logToScreen(msg) {
 
   if (!el) {
     el = document.createElement('div');
-    el.style = 'position:fixed;bottom:0;left:0;width:100vw;z-index:9999;background:rgba(0,0,0,0.85);color:#fff;padding:6px;font-size:12px;max-height:30vh;overflow:auto;';
+    el.id = 'logOverlay';
+    el.style.position = 'fixed';
+    el.style.bottom = '0';
+    el.style.left = '0';
+    el.style.width = '100vw';
+    el.style.zIndex = '9999';
+    el.style.background = 'rgba(0,0,0,0.85)';
+    el.style.color = '#fff';
+    el.style.padding = '6px';
+    el.style.fontSize = '12px';
+    el.style.maxHeight = '30vh';
+    el.style.overflowY = 'auto';
     document.body.appendChild(el);
   }
+
   const t = new Date().toLocaleTimeString();
-  el.innerHTML = `[${t}] ${msg}<br>` + el.innerHTML;
+  const newLine = document.createElement('div');
+  newLine.textContent = `[${t}] ${msg}`;
+
+  el.appendChild(newLine);
 }
 
 // ===============================================
