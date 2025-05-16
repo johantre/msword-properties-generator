@@ -157,10 +157,10 @@ function rotateRightHandler(e) {
 }
 
 function logToScreen(msg) {
-  let el = document.getElementById('logDisplay');
+  let el = document.getElementById('logOverlay');
+
   if (!el) {
     el = document.createElement('div');
-    el.id = 'logDisplay';
     el.style = 'position:fixed;bottom:0;left:0;width:100vw;z-index:9999;background:rgba(0,0,0,0.85);color:#fff;padding:6px;font-size:12px;max-height:30vh;overflow:auto;';
     document.body.appendChild(el);
   }
