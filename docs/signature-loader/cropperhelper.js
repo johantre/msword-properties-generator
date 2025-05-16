@@ -291,31 +291,7 @@ contrastSlider.addEventListener("input", updateImageFilters);
 openFormBtn.addEventListener('click', () => {
   window.open('https://github.com/johantre/msword-properties-generator/actions/workflows/subscribe-or-update-provider.yml', '_blank');
 });
-/*
-rotateRight.addEventListener('click', function () {
-  rotateAndFit(90);
-  setTimeout(() => {
-    fitAndCenter();
-    setTimeout(() => {
-      if (cropper) {
-        centerCropBox();
-      }
-    }, 70);
-  }, 80);
-});
 
-rotateLeft.addEventListener('click', function () {
-  rotateAndFit(-90);
-  setTimeout(() => {
-    fitAndCenter();
-    setTimeout(() => {
-      if (cropper) {
-        centerCropBox();
-      }
-    }, 70);
-  }, 80);
-});
-*/
 uploadBtn.addEventListener('click', () => {
   if (!croppedBlob) return;
   status.textContent = 'Uploading...';
