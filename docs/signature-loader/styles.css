@@ -20,7 +20,6 @@ body {
 }
 
 .cropper-wrap-box,
-.cropper-canvas,
 .cropper-drag-box {
   bottom: 0;
   left: 0;
@@ -112,14 +111,24 @@ h1 {
 
 #cropperContainer {
   width: 100%;
-  max-width: 100%;
-  max-height: calc(100vh - 460px);
+  /*max-width: 600px;*/
+  /* height wordt nu automatisch door JS gezet, dus mag hier weg */
   margin: 0 auto;
   overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #f1f1f1;
+  transition: height 0.2s;
+}
+
+#cropperContainer .cropper-canvas {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  max-width: 100% !important;
+  margin: 0 auto;
 }
 
 #cropperContainer.has-image {
@@ -293,7 +302,12 @@ button:disabled {
   }
 
   #preview {
-    max-height: 50vh;
+    //max-height: 50vh;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: white;
   }
 
   #cropperContainer {
