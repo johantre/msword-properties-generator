@@ -8,6 +8,7 @@ let originalWidth = 0;
 let originalHeight = 0;
 let currentWidth = 0;
 let currentHeight = 0;
+let LOGGING_ENABLED = false;
 
 // Cropper and image state
 const preview = document.getElementById('preview');
@@ -158,6 +159,8 @@ function rotateRightHandler(e) {
 }
 
 function logToScreen(msg) {
+  if (!LOGGING_ENABLED) return;
+
   let el = document.getElementById('logOverlay');
 
   if (!el) {
