@@ -275,6 +275,9 @@ fileInput.addEventListener('change', function (e) {
           },
         });
         resizeCropperContainer();
+        document.getElementById('cropperContainer').addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+        });
       };
       preview.src = dataUrl;
     },
