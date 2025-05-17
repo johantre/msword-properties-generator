@@ -35,10 +35,11 @@ Below is a step-by-step guide on mobile to illustrate.\
 - On mobile, clicking the **"Snap Signature"** button opens up the camera app so you can take a snap of your signature.\
 Then adjust cropping, contrast and brightness to make your signature match with the background of the document it will be placed.\
 On desktop, that same button will show **"Choose Signature image"**, where you can select an image from your device.
-- Signature snaps can be taken in an other orientation than shown on screen. Use the rotation buttons to orient them correctly.  
+- Signature snaps can be taken in an other orientation than shown on screen. Use the rotation buttons to oriënt them correctly.  
 - Click **"Crop"** at the bottom, and 
 - Click **"Upload"** to copy the generated link to your clipboard.\
-In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a **"Copy link again"** button.
+Once the Upload button is clicked the other controls are disabled. In case you want to take another snap, click the "Snap Signature" again.
+- In case you copied something else and lost the download [Uguu](https://uguu.se/) link from your clipboard, you have a **"Copy link again"** button.
 - Click the **"GitHub Actions form"** button to start the workflow of filling out the Provider data, including copy pasting the [Uguu](https://uguu.se/) download link. 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Signature Loader1.png"><img src="../../assets/signature-loader/Signature Loader1.png" width="240"></a>
