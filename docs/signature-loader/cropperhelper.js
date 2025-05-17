@@ -204,17 +204,6 @@ window.addEventListener('DOMContentLoaded', function () {
   resizeCropperContainer()
   rotateLeft.addEventListener('click', rotateLeftHandler);
   rotateRight.addEventListener('click', rotateRightHandler);
-  document.getElementById('cropperContainer').addEventListener('touchmove', function(e) {
-    if (e.touches.length > 1) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-  document.getElementById('cropperContainer').addEventListener('gesturestart', function(e) {
-    e.preventDefault();
-  });
-  document.addEventListener('gesturestart', function(e) {
-    e.preventDefault();
-  });
 });
 
 window.addEventListener('resize', resizeCropperContainer);
