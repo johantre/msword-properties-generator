@@ -209,6 +209,9 @@ window.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
     }
     }, { passive: false });
+  document.getElementById('cropperContainer').addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  });
 });
 
 window.addEventListener('resize', resizeCropperContainer);
