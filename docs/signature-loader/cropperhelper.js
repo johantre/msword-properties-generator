@@ -208,8 +208,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if (e.touches.length > 1) {
       e.preventDefault();
     }
-    }, { passive: false });
+  }, { passive: false });
   document.getElementById('cropperContainer').addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  });
+  document.addEventListener('gesturestart', function(e) {
     e.preventDefault();
   });
 });
