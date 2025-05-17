@@ -199,7 +199,6 @@ function logToScreen(msg) {
 // ===============================================
 updateButtonText();
 
-// window.addEventListener('DOMContentLoaded', resizeCropperContainer);
 window.addEventListener('DOMContentLoaded', function () {
   resizeCropperContainer()
   rotateLeft.addEventListener('click', rotateLeftHandler);

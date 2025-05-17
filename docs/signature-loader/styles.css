@@ -111,8 +111,7 @@ h1 {
 
 #cropperContainer {
   width: 100%;
-  /*max-width: 600px;*/
-  /* height wordt nu automatisch door JS gezet, dus mag hier weg */
+  max-width: 1059px;
   margin: 0 auto;
   overflow: hidden;
   position: relative;
