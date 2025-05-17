@@ -50,13 +50,13 @@ Once the Upload button is clicked the other controls are disabled. In case you w
 </div>
 
 ### Using the link
-If you clicked **"Open GitHub Actions form"** you'll see the first screen. ⚠️ Notice ⚠️ you'll need a GitHub account to start this workflow!
+If you clicked **"Open GitHub Actions form"** you'll see the first screen below. ⚠️ Notice ⚠️ you'll need a GitHub account to start this workflow!
 - Here you click the **"Run workflow"** button (which won't be available if you didn't log in).\
 You'll see the input screen (same as explained in [msword-properties-generator](https://github.com/johantre/msword-properties-generator) README.md).
 - On mobile, **long-press the signature field** at the bottom of the form, select **"Paste"** to paste your [Uguu](https://uguu.se/) link from your clipboard.
 - Fill out the other Provider data fields.
 - Hit **"Run workflow"** at the bottom to persist your Provider data to the private repo.\
-Not sure what to fill out there?  Check out the template document [Recht om te vertegenwoordigen.docx](../../res/Recht om te vertegenwoordigen.docx) in this repo for some guidance. The fields are named so know what data to fill out where. 
+Not sure what to fill out there?  Check out the template document [Recht om te vertegenwoordigen.docx](../../res/Recht om te vertegenwoordigen.docx) in this repo for some guidance. The fields are named so you know what data to fill out where. 
 <div style="display: flex; justify-content: space-between;">
 <a href="../../assets/signature-loader/Signature Loader5.png"><img src="../../assets/signature-loader/Signature Loader5.png" width="240"></a>
 <a href="../../assets/signature-loader/Signature Loader6.png"><img src="../../assets/signature-loader/Signature Loader6.png" width="240"></a>
