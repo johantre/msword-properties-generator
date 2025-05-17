@@ -33,10 +33,10 @@ Below is a step-by-step guide on mobile to illustrate.\
 
 ### Snap and adjust
 - On mobile, clicking the **"Snap Signature"** button opens up the camera app so you can take a snap of your signature.\
-Then adjust cropping, contrast and brightness to make your signature match with the background of the document it will be placed.\
+Then adjust cropping, contrast and brightness to make your signature match with the background of the document it will be placed on.\
 On desktop, that same button will show **"Choose Signature image"**, where you can select an image from your device.\
 Once the image is loaded, the other controls will appear.
-- Signature snaps can be taken in an other orientation than shown on screen. Use the rotation buttons to oriënt them correctly.  
+- Signature snaps can be taken in an other orientation than shown on screen. Use the rotation buttons to orient them correctly.  
 - Click **"Crop"** at the bottom, and 
 - Click **"Upload"** to copy the generated link to your clipboard.\
 Once the Upload button is clicked the other controls are disabled. In case you want to take another snap, click the "Snap Signature" again.
