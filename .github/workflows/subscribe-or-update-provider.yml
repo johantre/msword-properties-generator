@@ -43,8 +43,8 @@ on:
       LeverancierURLSignatureImage:
         description: | 
           Leverancier URL Signature image -----------(supported: Dropbox, GoogleDrive, Uguu.se)
-          Use https://bimi.dreamlead.be/signature-loader/ for assisted URL generation first.
-          Check out /docs/signature-loader/README.md of this repo for more info.
+          💡Use https://bimi.dreamlead.be/signature-loader/ for assisted URL generation first.
+          💡Check out /docs/signature-loader/README.md of this repo for more info.
         required: true
         type: string
       setLogLevelDebug:
