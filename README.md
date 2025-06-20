@@ -46,7 +46,7 @@ This process takes on average about 20 sec.
   - In order for this to work, you'll need to share an image with permissions to **"Anyone that has the link"**.<br>
     Once this process is done, you can remove that permission of your link again.<br>
   - 💡No Dropbox or Google Drive account at your disposal?💡\
-  💡Head over to [MSWord Signature loader](https://johantre.github.io/msword-signature-loader/)!💡\
+  💡Head over to **https://johantre.github.io/msword-signature-loader/**!💡\
   💡This will help you take a snap of your signature with your smartphone right away and continue to the screen above, cropping, brightness and contrast adjustment included!!💡\
   💡Check out the [msword-signature-loader\README.md](https://github.com/johantre/msword-signature-loader/README.md) for a step-by-step explanation with screenshots.💡
   - All your data will be encrypted. That includes the image that'll be stored in the [msword-private-assets](https://github.com/johantre/msword-private-assets) repo under a hashed name to protect your privacy. 
