@@ -112,3 +112,6 @@ Under the following terms:
 
 See the [LICENSE](LICENSE) file for details.
 
+---
+
+**Made with ❤️ for efficiency and automation**
