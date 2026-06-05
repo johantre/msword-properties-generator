@@ -103,11 +103,10 @@ jobs:
           echo "trimmed_email=$trimmed_email" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Fail if email is not provided when sendEmail is true
-        if: ${{ github.event.inputs.sendEmail == 'true' && steps.trim_email.outputs.trimmed_email == '' }}
+      - name: Fail if email is not provided when args are given
+        if: ${{ steps.trim_email.outputs.trimmed_email == '' && (github.event.inputs.klantNaam != '' || github.event.inputs.klantJobTitle != '' || github.event.inputs.klantJobReference != '') }}
         run: |
-          echo "trimmed mail should not be empty, right? *${{steps.trim_email.outputs.trimmed_email}}*"
-          echo "❌ Error: Email is required when 'Send in Email' is checked. Aborting pipeline."
+          echo "❌ Error: Leverancier Email is required when klant args are provided. Aborting pipeline."
           exit 1
 
       - name: Run Python script to generated, send email and upload to Dropbox
