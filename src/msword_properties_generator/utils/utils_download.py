@@ -2,8 +2,6 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload
-from dropbox.files import SharedLink
-import dropbox
 import requests
 import logging
 import io
@@ -14,10 +12,6 @@ import re
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 GOOGLE_REFRESH_TOKEN = os.getenv('GOOGLE_REFRESH_TOKEN')
-
-DROPBOX_APP_KEY = os.getenv('DROPBOX_APP_KEY')
-DROPBOX_APP_SECRET = os.getenv('DROPBOX_APP_SECRET')
-DROPBOX_REFRESH_TOKEN = os.getenv('DROPBOX_REFRESH_TOKEN')
 
 
 def detect_host(url):
@@ -50,12 +44,14 @@ def download_image(url: str, destination: str):
                 logging.info(f"☁️✅ Google Drive: {int(status.progress() * 100)}% to '{destination}'download Complete")
 
         elif host == 'dropbox':
-            dropbox_service = get_dropbox_service()
-            shared_link = dropbox.files.SharedLink(url=url)
-            metadata, res = dropbox_service.sharing_get_shared_link_file(shared_link.url)
+            direct_url = re.sub(r'[?&]dl=0', lambda m: m.group(0).replace('dl=0', 'dl=1'), url)
+            if 'dl=1' not in direct_url:
+                direct_url += ('&' if '?' in direct_url else '?') + 'dl=1'
+            response = requests.get(direct_url, allow_redirects=True)
+            response.raise_for_status()
             with open(destination, "wb") as f:
-                f.write(res.content)
-            logging.info(f"☁️✅ Dropbox: from '{metadata.name}' to '{destination}' download Complete")
+                f.write(response.content)
+            logging.info(f"☁️✅ Dropbox: from '{url}' to '{destination}' download Complete")
 
         elif host == 'uguu':
             response = requests.get(url, allow_redirects=True)
@@ -93,11 +89,4 @@ def get_google_drive_service():
 
     return build('drive', 'v3', credentials=google_creds)
 
-def get_dropbox_service():
-    logging.debug(f"☁️✅ Dropbox service initialized with refresh token")
-    return dropbox.Dropbox(
-        oauth2_refresh_token=DROPBOX_REFRESH_TOKEN,
-        app_key=DROPBOX_APP_KEY,
-        app_secret=DROPBOX_APP_SECRET
-    )
 
